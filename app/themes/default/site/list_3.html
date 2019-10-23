@@ -1,0 +1,113 @@
+{template 'common/header'}
+<body>
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>{$title}</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="hasTimeList">
+			<ul>
+				{loop $articles $index $row}
+				<li>
+					<a href="{php echo $row['linkurl']}">
+						<dl>
+							<dt>{$row['title']}</dt>
+							<dd>{php echo date('Y-m-d', $row['createtime'])}</dd>
+						</dl>
+						<div class="pic"><img src="{php echo tomedia($row['thumb']);}" /></div>
+					</a>
+				</li>
+				{/loop}
+				<!-- <li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);">
+						<dl>
+							<dt>水的硬度对人体有什么影响？</dt>
+							<dd>2018-08-08</dd>
+						</dl>
+						<div class="pic"><img src="assets/img/pic.jpg" /></div>
+					</a>
+				</li>
+			</ul>
+			<div class="moreBtn"><a href="javascript:void(0);">加载更多</a></div>
+			<div class="moreBtn"><a href="javascript:void(0);" class="unclick">全部加载完毕</a></div> -->
+		</div>
+	</div>
+	{template 'common/inner_footer'}
+	{template 'common/menu'}
+</body>
+</html>

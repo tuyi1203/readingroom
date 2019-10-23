@@ -1,0 +1,250 @@
+{template 'common/header'}
+<body>
+<style>
+.result .table ul li {
+    font-size: 50%;
+}
+.query .result .alert {
+    margin-bottom: 5%;
+    font-size: .4rem;
+    color:red;
+}
+
+.invoiceBtn {
+    width: 50%;
+    background: #f1122f;
+    color: #fff;
+    height: 1rem;
+    line-height: 1rem;
+    border: 1px solid #f1122f;
+    text-align: center;
+    border-radius: .1rem;
+    transition: all .3s;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.kaipiaoBtn {
+    width: 80%;
+    background: #006db2;
+    color: #fff;
+    height: 1rem;
+    line-height: 1rem;
+    border: 1px solid #006db2;
+    text-align: center;
+    border-radius: .1rem;
+    transition: all .3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.huizong {
+  margin-top:10px;
+}
+
+.tit2 {
+    border-top: 0px solid #dadada;
+    height: 1rem;
+    line-height: 1rem;
+    background: #fff;
+}
+
+.notice {
+	margin-top:15px;
+	margin-bottom: 5%;
+    font-size: .2rem;
+    color:red;
+}
+
+.showchk {
+  -webkit-appearance:checkbox;
+}
+
+</style>
+	<header>
+		<div class="header">
+			<!-- <div class="l"><a href="javascript:history.go(-1);" class="back"></a></div> -->
+			<h1>{$title}</h1>
+			<!-- <div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div> -->
+		</div>
+	</header>
+	<div class="container">
+		<div class="query">
+			<div class="form">
+				<div class="mod">
+				</div>
+        <div class="mod" id="cardno_div"><p>学生姓名</p><input type="text" name="name" class="text" id="name" value="" placeholder="请输入学生姓名"></div>
+        <div class="mod"><p>学生性别</p>
+          <select name="gender" id="gender">
+            <option value="1" >男</option>
+            <option value="2" >女</option>
+          </select>
+          </div>
+        <div class="mod" id="cardno_div"><p>就读幼儿园</p><input type="text" name="youeryuan" class="text" id="youeryuan" value="" placeholder="请输入就读幼儿园"></div>
+        <div class="mod"><p>请选择学生的出生日期</p><input type="date" name="birthday" class="text" id="birthday" value=""></div>
+        <div class="mod" ><p>家庭住址</p><textarea name="addr" class="textarea" id="addr" placeholder="请输入家庭住址"></textarea></div>
+        <div class="mod" id="cardno_div"><p>家长姓名</p><input type="text" name="p1_name" class="text" id="p1_name" value="" placeholder="请输入家长姓名"></div>
+        <div class="mod" ><p>与学生关系</p>
+        <select name="p1_relation" id="p1_relation">
+          <option value="1" >父亲</option>
+          <option value="2" >母亲</option>
+          <option value="3" >其他</option>
+        </select>
+        </div>
+        <div class="mod" id=""><p>家长学历</p>
+        <select name="p1_xueli" id="p1_xueli">
+          <option value="1" >研究生</option>
+          <option value="2" >本科</option>
+          <option value="3" >专科</option>
+          <option value="4" >高中</option>
+          <option value="5" >其他</option>
+        </select>
+        </div>
+        <div class="mod" id="cardno_div"><p>家长毕业院校</p><input type="text" name="p1_biye" class="text" id="p1_biye" value="" placeholder="请输入家长毕业院校"></div>
+        <div class="mod" id="cardno_div"><p>家长电话号码</p><input type="text" name="p1_tel" class="text" id="p1_tel" value="" placeholder="请输入家长电话号码"></div>
+        <div class="mod" id="cardno_div"><p>家长工作单位</p><input type="text" name="p1_danwei" class="text" id="p1_danwei" value="" placeholder="请输入家长工作单位"></div>
+        <div class="mod" id="cardno_div"><p>家长姓名</p><input type="text" name="p2_name" class="text" id="p2_name" value="" placeholder="请输入家长姓名"></div>
+        <div class="mod" ><p>与学生关系</p>
+        <select name="p2_relation" id="p2_relation">
+          <option value="1" >父亲</option>
+          <option value="2" >母亲</option>
+          <option value="3" >其他</option>
+        </select>
+        </div>
+        <div class="mod" id="cardno_div"><p>家长学历</p>
+        <select name="p2_xueli" id="p2_xueli">
+          <option value="1" >研究生</option>
+          <option value="2" >本科</option>
+          <option value="3" >专科</option>
+          <option value="4" >高中</option>
+          <option value="5" >其他</option>
+        </select>
+        </div>
+        <div class="mod" id="cardno_div"><p>家长毕业院校</p><input type="text" name="p2_biye" class="text" id="p2_biye" value="" placeholder="请输入家长毕业院校"></div>
+        <div class="mod" id="cardno_div"><p>家长电话号码</p><input type="text" name="p2_tel" class="text" id="p2_tel" value="" placeholder="请输入家长电话号码"></div>
+        <div class="mod" id="cardno_div"><p>家长工作单位</p><input type="text" name="p2_danwei" class="text" id="p2_danwei" value="" placeholder="请输入家长工作单位"></div>
+        <div class="modBtn"><button id="_check">提交</button></div>
+			</div>
+
+			<div class="notice">
+				<p>温馨提示：</p>
+				<ol>
+					<li>家长信息可以只填写第一个</li>
+				</ol>
+			</div>
+			<div class="result" id="_result" style="display:none;">
+			</div>
+		</div>
+	</div>
+	{template 'common/inner_footer'}
+
+	<div class="pageLoad displayCenter" id="_pageLoad">
+		<div class="box">
+			<p></p>
+			<div class="img">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+<script>
+// var flag = 0;
+require(["jquery","script"], function($,script){
+	$('#_check').bind('click',function(){
+    var options = {
+      method:'POST',
+      url:"{php echo url('site/site/rmquest_do');}",
+      data:{
+        name : $('#name').val(),
+        gender : $('#gender').val(),
+        birthday : $('#birthday').val(),
+        youeryuan : $('#youeryuan').val(),
+        addr : $('#addr').val(),
+        p1_name : $('#p1_name').val(),
+        p1_relation : $('#p1_relation').val(),
+        p1_biye : $('#p1_biye').val(),
+        p1_xueli : $('#p1_xueli').val(),
+        p1_tel : $('#p1_tel').val(),
+        p1_danwei : $('#p1_danwei').val(),
+        p2_name : $('#p2_name').val(),
+        p2_relation : $('#p2_relation').val(),
+        p2_biye : $('#p2_biye').val(),
+        p2_xueli : $('#p2_xueli').val(),
+        p2_tel : $('#p2_tel').val(),
+        p2_danwei : $('#2_danwei').val(),
+      },
+      beforeSend:function(){
+          // $('#_result').html('<div class="tips">以下是您的查询结果</div>').hide();
+          script.pageLoadShow('#_pageLoad','提交中，请稍候...');
+      },
+      dataType:'json'
+    };
+    $.ajax(options).done(function(response)
+    {
+        console.log(response);
+        if (response.result == "success")
+        {
+          alert('感谢您的报名！');
+          // location.reload();
+        }
+        else 
+        {
+          if ($.type(response.msg) == 'string' )
+          {
+            alert(response.msg);
+          }
+          else
+          {
+            alert(response.msg.join("\n"));
+          }
+        }
+        script.pageLoadHide('#_pageLoad');
+      });
+	})
+});
+
+function openurl(url)
+{
+	var a = $('<a href="'+ url +'" target="_blank"></a>').get(0);
+	var e = document.createEvent('MouseEvents');
+	e.initEvent( 'click', true, true );
+	a.dispatchEvent(e);
+}
+
+
+require(["jquery","script"], function($,script){
+  $(document).ready(() => {
+      const title = '两江人民小学报名登记表';
+      const desc = '需要报名的家长可以点击链接填写资料';
+      const link= '{php echo murl("site/site/rmquest_default",array("i"=>$_W["uniacid"]), true, true)}';
+      const imgUrl = '{$_W["siteroot"]}app/resource/ljrmxx/assets/img/share.png';
+      wx.ready(() => {
+        wx.updateAppMessageShareData({ 
+          title: title, // 分享标题
+          desc: desc, // 分享描述
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: imgUrl, // 分享图标
+          success: function () {
+            // 设置成功
+          }
+        });
+        wx.updateTimelineShareData({ 
+          title: title, // 分享标题
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: imgUrl, // 分享图标
+          success: function () {
+            // 设置成功
+          }
+        });
+      });
+    });
+});
+</script>
+
+</body>
+</html>

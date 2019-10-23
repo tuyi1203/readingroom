@@ -1,0 +1,81 @@
+{template 'common/header'}
+<body>
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>咨询留言</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="words">
+			<div class="tips">
+				<dl>
+					<dt>尊敬的客户您好！</dt>
+					<dd>
+						<p>您对本官微提供的服务和资讯还满意吗？欢迎您在此向我们进行咨询，我们会认真对待您的反馈，感谢您的关注和支持。我们将参考您的留言来改善我们的服务。谢谢！</p>
+					</dd>
+				</dl>
+			</div>
+			<div class="form">
+				<form action="" id="ajaxForm" >
+				<div class="mod"><p>您的姓名（必填）</p><input type="text" class="text" name="data[name]"></div>
+				<div class="mod"><p>用户号</p><input type="number" class="text" name="data[cardno]"></div>
+				<div class="mod"><p>联系电话（必填）</p><input type="tel" class="text" name="data[tel]"></div>
+				<div class="mod"><p>电子邮箱</p><input type="email" class="text" name="data[email]"></div>
+				<div class="mod"><p>联系地址（必填）</p><input type="text" class="text" name="data[addr]"></div>
+				<div class="mod"><p>咨询内容（必填）</p><textarea class="textarea" rows="4" name="data[content]"></textarea></div>
+				<div class="modBtn"><button id="_submit" type="button">立即提交</button></div>
+				</form>
+			</div>
+		</div>
+		<div class="guide">
+			<img src="{$_W['siteroot']}app/resource/img/code.jpg" />
+		</div>
+	</div>
+	{template 'common/inner_footer'}
+	{template 'common/menu'}
+<script>
+var flag = 0;
+require(["jquery","script"], function($,script){
+	$('#_submit').bind('click',function(){
+		// flag = 1;
+		// if(flag == 1){
+		// 	script.pageLoadShow('#_pageLoad','提交中，请稍候...');
+		// 	setTimeout(function(){
+		// 		script.pageLoadHide('#_pageLoad');
+		// 		flag = 0;
+		// 	},3000)
+		// }
+		var url = 'http://njswpc.ty.com/index.php/site/customer/message/add/ajaxinsert.json?callback=?';
+		$.getJSON(url, $("#ajaxForm").serialize() , function(response){
+			if(response.result == 'fail') {
+
+               if($.type(response.message) == 'object')
+               {
+                   var str = new Array();
+                   for (ms in response.message)
+                   {
+                       str.push(response.message[ms]);
+                       // if (ms == "captcha") {
+                    	  //  getCaptcha(document.getElementById('captchaimg'));
+                       // }
+                   }
+                   alert(str.join('\n'));
+               }
+
+               if($.type(response.message) == 'string')
+               {
+                   alert(response.message);
+               }
+
+           } else {
+               alert(response.message);
+               location.reload();
+           }
+       });
+	})
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.6,0.7,0.8">
+	<application setting="false">
+		<name><![CDATA[微信直播]]></name>
+		<identifie><![CDATA[wxz_wzb]]></identifie>
+		<version><![CDATA[2.3.3]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[微信直播]]></ability>
+		<description><![CDATA[微信直播]]></description>
+		<author><![CDATA[大白奔奔科技]]></author>
+		<url><![CDATA[]]></url>
+	</application>
+	<platform>
+		<handles>
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+	</platform>
+	<bindings>
+		<cover>
+		</cover>
+		<menu>
+			<entry title="直播间分类" do="category_list" state="" direct="false" />
+			<entry title="直播间列表" do="liveList" state="" direct="false" />
+			<entry title="红包公共参数" do="redPacketSetting" state="" direct="false" />
+			<entry title="首页(列表)设置" do="List" state="" direct="false" />
+			<entry title="首页(列表)banner" do="banner_list" state="" direct="false" />
+			<entry title="批量修改" do="batch" state="" direct="false" />
+        </menu>
+		<home>
+			<entry title="首页" do="index" />
+		</home>
+	</bindings>
+	<install><![CDATA[install.php]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>

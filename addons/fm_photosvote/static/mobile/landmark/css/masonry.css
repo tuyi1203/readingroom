@@ -1,0 +1,41 @@
+.waterfull{
+	margin: 0 auto;
+}
+.waterfull ul li{
+	float: left;
+	width: 50%;
+/*	padding: 8px;*/
+	margin: 0 0 10px;
+/*	background: #fff;*/
+/*	border-radius: 3px;*/
+	position: relative;
+	overflow: hidden;
+	/*border:solid 1px #BCBCBC;
+	box-shadow: 0 0 10px #BCBCBC;*/
+}
+.waterfull ul li .box{
+	border:1px solid #dadada;box-shadow:0 0 10px #dadada;background:#fff;margin:0 3%;padding-bottom:3%;
+}
+.waterfull ul li .box .pics{margin-bottom:5%;}
+.waterfull ul li .box .tit{
+	margin:0;padding:0 5%;font-size:1.5rem;line-height:1.5;
+}
+.waterfull ul li .box .info{
+	margin:0;padding:0 5%;font-size:1rem;
+}
+.waterfull ul li .box .info p{
+	margin:0;padding:0;line-height:1.5;
+}
+.imloading{
+	width:150px;
+	height:30px;
+	line-height:30px;
+	font-size:16px;
+	text-align:center;
+	border-radius:3px;
+	opacity:0.7;
+	background:#000;
+	margin:10px auto 30px;
+	color:#fff;
+	/*display:none;*/
+}

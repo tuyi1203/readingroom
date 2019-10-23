@@ -1,0 +1,27 @@
+{template 'common/header'}
+<body class="fLevel">
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>{$title}</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="fLevelPage">
+		<div class="fLevelNav displayCenter">
+			<ul>
+				{data module="site" func="site_category" parentid="$cid"}
+				<li><a href="{$row['linkurl']}" style="background-image:url({$row['icon']})" class="displayCenter"><b>{$row['name']}</b></a></li>
+				{/data}
+				{loop $articles $index $row}
+				<li>
+					<a href='{php echo $row['linkurl']}' style="background-image:url({php echo tomedia($row['thumb']);})" class="displayCenter"><b>{$row['title']}</b></a>
+									</li>
+				{/loop}
+			</ul>
+		</div>
+	</div>
+	{template 'common/inner_footer'}
+	{template 'common/menu'}
+</body>
+</html>

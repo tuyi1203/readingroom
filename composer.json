@@ -1,0 +1,7 @@
+{
+    "name": "administrator/rmquestionnaire",
+    "type": "project",
+    "require": {
+    	"phpoffice/phpspreadsheet": "^1.6"
+    }
+}

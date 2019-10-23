@@ -1,0 +1,229 @@
+{template 'common/header'}
+<body>
+<style>
+.result .table ul li {
+    font-size: 50%;
+}
+.query .result .alert {
+    margin-bottom: 5%;
+    font-size: .4rem;
+    color:red;
+}
+
+.invoiceBtn {
+    width: 50%;
+    background: #f1122f;
+    color: #fff;
+    height: 1rem;
+    line-height: 1rem;
+    border: 1px solid #f1122f;
+    text-align: center;
+    border-radius: .1rem;
+    transition: all .3s;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.modBtn2 button{
+    width: 100%;
+    background: #f1122f;
+    color: #fff;
+    height: 1rem;
+    line-height: 1rem;
+    border: 1px solid #f1122f;
+    text-align: center;
+    border-radius: .1rem;
+    transition: all .3s;
+	margin-bottom:15px;
+}
+
+.tit2 {
+    border-top: 0px solid #dadada;
+    height: 1rem;
+    line-height: 1rem;
+    background: #fff;
+}
+
+.notice {
+	margin-top:15px;
+	margin-bottom: 5%;
+    font-size: .2rem;
+    color:red;
+}
+
+</style>
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>{$title}</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="query">
+			<div class="form">
+				<div class="mod">
+					<p>查询类型选择</p>
+					<!-- <div>
+						<input type="radio" name="type" value="type_cardno" checked="checked" onchange="changeType('cardno_div');" id="type_cardno"/><label for="type_cardno" class="radio-inline">户号</label>
+						<input type="radio" name="type" value="type_companyno" id="type_companyno" onchange="changeType('companyno_div');"/><label for="type_companyno" class="radio-inline">单位号</label>
+					</div> -->
+					<select name="type" onchange="changeType();" id="select_type">
+						<option value="type_cardno">按户号</option>
+						<option value="type_companyno">按单位号</option>
+					</select>
+						<!-- <input type="radio" name="type" value="type_cardno" checked="checked" onchange="changeType('cardno_div');" id="type_cardno"/><label for="type_cardno" class="radio-inline">户号</label>
+						<input type="radio" name="type" value="type_companyno" id="type_companyno" onchange="changeType('companyno_div');"/><label for="type_companyno" class="radio-inline">单位号</label> -->
+				</div>
+				<div class="mod" id="cardno_div"><p>请输入您的户号</p><input type="number" name="cardno" class="text" id="cardno" value="40054868"></div>
+				<div class="mod" id="companyno_div" style="display:none;">
+					<p>单位号</p>
+					<input type="text" class="text" style="width:150px;" name="companyno" id="companyno" value="808">
+				</div>
+                <div class="mod"><p>请输入您的电话号码</p><input type="number" name="tel" class="text" id="tel" value="15908354206"></div>
+                <div class="mod"><p>请选择缴费月份</p><input type="month" name="feestartdate" class="text" id="feestartdate" value="2019-01"></div>
+				<div class="modBtn"><button id="_check">开票</button></div>
+			</div>
+
+			<div class="notice">
+				<p>温馨提示：</p>
+				<ol>
+					<li>只有当月已经销账、并且没有开具现金发票的才能成功开具电子发票。</li>
+				</ol>
+			</div>
+			<div class="result" id="_result" style="display:none;">
+				<div class="tips"></div>
+				<!-- <div class="table">
+					<ul>
+						<li class="tit">用户信息</li>
+						<li><i>用户编号</i><em>346346346</em></li>
+						<li><i>当前余额（元）</i><em class="red">465456.00</em></li>
+						<li><i>抄表周期</i><em>每月抄</em></li>
+						<li><i>用水类别</i><em>居民生活用水</em></li>
+					</ul>
+				</div> -->
+				<!-- <div class="table">
+					<ul>
+						<li class="tit">水费信息</li>
+						<li><i>抄表年度</i><em>2018</em></li>
+						<li><i>抄表月份</i><em>9</em></li>
+						<li><i>抄表起吨</i><em>1506</em></li>
+						<li><i>抄表止吨</i><em>1660</em></li>
+						<li><i>抄表量</i><em>35</em></li>
+						<li><i>水费金额（元）</i><em class="red">59.08</em></li>
+					</ul>
+				</div> -->
+				<!-- <div class="txt">
+					<p>温馨提示：</p>
+					<ol>
+						<li>请认真核实缴费号码及用户信息；</li>
+						<li>水费信息中的水费金额不含违约金，请以实际缴费金额为准；</li>
+						<li>水费实时查询仅提供2013年4月后的数据，如要查询2013年4月以前数据，请拨打2227111电话咨询。</li>
+					</ol>
+				</div> -->
+				<!-- <div class="txt">
+					<p>温馨提示：</p>
+					<ol>
+						<li>苹果手机用户无法下载发票的，请前往水务公司PC端官网自行下载；</li>
+					</ol>
+				</div> -->
+			</div>
+		</div>
+		{template 'common/inner_guide'}
+	</div>
+	{template 'common/inner_footer'}
+
+	<div class="pageLoad displayCenter" id="_pageLoad">
+		<div class="box">
+			<p></p>
+			<div class="img">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+<script>
+// var flag = 0;
+require(["jquery","script"], function($,script){
+	$('#_check').bind('click',function(){
+        var options = {
+                        method:'POST',
+                        url:"{php echo url('site/site/waterinvoice_do');}",
+                        data:{cardno:$('#cardno').val() , companyno:$('#companyno').val() , type:$('#select_type option:selected').val(), tel:$('#tel').val() , feestartdate:$('#feestartdate').val()},
+                        beforeSend:function(){
+                            $('#_result').html('<div class="tips"></div>').hide();
+                            script.pageLoadShow('#_pageLoad','查询中，请稍候...');
+                        },
+                        dataType:'json'
+                    };
+        $.ajax(options).done(function(response)
+        {
+            console.log(response);
+            if (response.result == "success")
+            {
+				var html = new Array();
+				$.each(response.data , function(index , value)
+				{
+					if (!value['success'])
+					{
+						html.push('<p class="notice">尝试生成' + value['type_name'] + '：' + value['msg'] + '</p>');
+					} 
+					else if (value['url'] !== '' || typeof(value['url']) != "undefined")
+					{
+						html.push('<div class="modBtn2">');
+						html.push('<button onclick="openurl(\''+ value['url'] +'\');">查看'+ value['type_name'] +'</button>');
+						// html.push('<a href="'+ value['url'] +'" target="_blank" class="btnsFb btn14" >'+ '查看' + value['type_name'] +'</a>');
+						html.push('</div>');
+					}
+				});
+                $(html.join('')).appendTo('#_result');
+                
+			} 
+			else 
+			{
+                if ($.type(response.msg) == 'string' )
+                {
+                    $('#_result').html('<div class="alert">'+ response.msg +'</div>');
+                }
+                else
+                {
+                    $('#_result').html('<div class="alert">'+ response.msg.join("<br>") +'</div>');
+                }
+                // alert(response.msg);
+            }
+            script.pageLoadHide('#_pageLoad');
+            $('#_result').css('display','block');
+        });
+	})
+});
+
+function openurl(url)
+{
+	var a = $('<a href="'+ url +'" target="_blank"></a>').get(0);
+	var e = document.createEvent('MouseEvents');
+	e.initEvent( 'click', true, true );
+	a.dispatchEvent(e);
+}
+
+function changeType()
+{
+	$("#companyno_div").hide();
+    $("#cardno_div").hide();
+	if ($('#select_type option:selected').val() == 'type_cardno')
+	{
+		$('#cardno_div').show();
+	}
+    if ($('#select_type option:selected').val() == 'type_companyno')
+	{
+		$('#companyno_div').show();
+	}
+}
+</script>
+{template 'common/menu'}
+</body>
+</html>

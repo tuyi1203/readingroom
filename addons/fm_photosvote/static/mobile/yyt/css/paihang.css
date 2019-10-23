@@ -1,0 +1,13 @@
+﻿@charset "utf-8";
+/* PAIHANG CSS Document*/
+.pagination ul > li > a, .pagination ul > li > span{padding: 5px 5px;}
+.h{height:10px}
+/**{-webkit-box-sizing: initial;-moz-box-sizing: initial;box-sizing: initial;}*/
+.btns{width: auto;padding-right: 5px;}
+.txt{width: 68%;}
+.banner{max-width: 640px;margin: 0 auto;max-height: 100%;}
+.one1{text-align: center;margin: 0 auto;}
+.one2{text-align: center;margin: 0 auto;}
+.one3{text-align: center;margin: 0 auto;}
+.two{text-align: center;margin: 0 auto;}
+.usr_more{width: 95%;border: 0px solid #c4d4d0;line-height: 35px;text-align: center;font-size: 14px;margin-top: 0px;color: #FFFFFF;background: rgba(0, 0, 0, 0.4);}

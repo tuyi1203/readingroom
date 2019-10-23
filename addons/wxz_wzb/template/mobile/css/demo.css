@@ -1,0 +1,92 @@
+﻿*,*:before,*:after {box-sizing: border-box;}
+* {padding:0;marging:0}；
+html,body {min-height: 100%;}
+html { font-size: 10px;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,em{margin:0;padding:0;font-family:Microsoft Yahei;}
+body{text-align:center;font-size:100%;background: #efefef; color: #4c4c4c;font-size: 1.6rem; line-height: 2.2rem; }
+table{text-align:center;margin:0px auto;border-collapse:collapse;border-spacing:0;}
+table tr{}
+table tr td{border : 1px #dededf solid;}
+fieldset,img{border: 0;}
+li{list-style:none;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+input,button,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;font:100% Tahoma,Helvetica,Arial,sans-serif;}
+input{padding-left:0px;}
+blockquote, q {quotes: "" "";}
+a{color:#333;text-decoration:none;}
+a:hover, a:focus{text-decoration:none;}
+.clear{clear:both;height:0px;overflow:hidden;}
+::-webkit-scrollbar {
+    width: 0px;
+}
+.banner .top_bg{ height:210px; width:100%; background: url("../img/bg.jpeg") no-repeat; background-size: 100% auto; }
+.contain ul{ }
+.contain ul li{}
+.contain .body{ margin: 14px 14px; overflow:hidden; border:1px solid #dfdfdf; background-color:#FFFFFF;}
+.contain .body .logo{width: 15%; float: left;}
+.contain .body .logo img{ float: left; width: 100%;}
+
+.contain .body .text{ width:99.9%;  text-align: left; padding:10px;}
+.contain .body .text .my-gallery{ overflow: hidden; width:100%;}
+.contain .body .text .my-gallery .k_div{ width: 31.1%; overflow: hidden; float: left; margin-top: 5px;margin-right: 5px; }
+.contain .body .text .my-gallery img{  }
+.contain .body .text .title{ color: #576788; font-size: 1.6rem; line-height:2rem; height:2rem;}
+.contain .body .text .txt{color: #323232; font-size: 1.5rem;}
+.contain .body .text .tm{font-size: 1.4rem;    overflow: hidden;}
+.contain .body .text .tm .fl{float: left;  padding-left: 5px;}
+.contain .body .text .tm .fr{float: right; padding-right: 15px;}
+.contain .body .text .cmt{ color: #444444; font-size: 1.5rem;    background-color: #eeeeee; margin-top: 5px; padding: 5px;}
+.contain .body .text .cmt .fav{ color: #576788; border-bottom: 1px solid #d5d5d5; padding-bottom: 5px;}
+.contain .body .text .cmt span{ color: #576788;}
+figure{
+ -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+}
+.x_tab_title{background-color:#FFFFFF; position:fixed; top:0; left:0; width:100%; line-height:36px; font-size: 1.6rem; z-index:1000;}
+.x_tab_title ul{ display:block; height:36px; width:100%; text-align:center;}
+.x_tab_title ul li{ float:left; width:25%;}
+.x_tab_title ul #li_001{ float:left; line-height:36px;}
+.x_tab_title ul #li_002{ float:left; line-height:36px;}
+.news_hover{ color:#FF0000;}
+#contain1 ol{ display:none;}
+
+.fuqi{ position:fixed; bottom:40px; right:0; width:80px; height:92px; z-index:2;}
+.fuqi .close_hb{ position:absolute; right:2px; top:10px; width:18px; height:18px;  z-index:4;}
+.show_hb{ position:absolute; left:10px; bottom:0px; width:52px; height:84px; z-index:4;}
+
+
+.timeline{position:absolute;top:24px;left:4px; padding-left:10px;}
+.circle{position:absolute;top:-6px;left:7px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;width:6px;height:6px;border-radius:6px;background:red}
+.circle-inner{width:4px;height:4px;border-radius:4px;background:#fff}
+.timeline .line{width:1px;height:10px;border-left:1px solid #dbe0ea}
+.time-text{position:absolute;left:20px;top:-1.4rem;;color:red;width:2rem; font-size:14px;}
+
+.avatar{margin-right:0.2rem;width:1.6rem;height:1.6rem;border-radius:1.6rem; vertical-align:text-top;}
+.i_right .say_box{ font-weight:400; display:block; background-color:#FFFFFF; border-radius:6px; padding:20px; line-height:40px; color:#000000; font-size:26px;}
+.i_right .say_box span{ display:block; color:#999999; font-size:22px; line-height:26px; margin-bottom:10px; position:relative;}
+.i_right .say_box span em{ font-style:normal; position:absolute; line-height:26px; right:0px; top:0px;}
+
+.say_write{ position:fixed; bottom:0px; left:0px; width:100%; height:40px; padding:6px; background-color:#FFFFFF;bottom:0px; left:0; border-top:1px solid #bbbbbb;}
+.say_write .write_input{ width:86%; float:left; height:30px; border:1px solid #c6c6c6; border-radius:20px; padding:0 1%;}
+.say_write .write_input input{ width:90%; height:30px; background:none; border:none; font-size:14px; line-height:30px;}
+
+.say_write .write_btn{ width:10%; float:left; height:22px; margin-left:6px; padding-top:6px;}
+.say_write .write_btn button{ width:100%; height:28px;border:none; line-height:32px; color:#FFFFFF; font-size:18px; text-align:center;}
+
+.fixfixed.navbar-fixed-top {
+    position:fixed !important;
+}
+
+.main_ctn {
+    /* main绝对定位，进行内部滚动 */
+    position: absolute;
+	width:100%;
+    top: 236px;
+    bottom: 34px;
+    /* 使之可以滚动 */
+    overflow-y: scroll;
+    /* 增加该属性，可以增加弹性 */
+    -webkit-overflow-scrolling: touch;
+}

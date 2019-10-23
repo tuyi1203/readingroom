@@ -1,0 +1,50 @@
+<div class="menu" id="_menu">
+		<a href="javascript:void(0);" class="closeMenu" id="_closeMenu"></a>
+		<div class="box">
+			<div class="menuLogo"><img src="{$_W['siteroot']}app/resource/img/logo-menu.png" /></div>
+			<nav id="_nav">
+				<dl>
+					<dt class="noDown"><a href="{php echo url('site/site/home',array('i'=>3,'c'=>'home','t'=>3));}">首页</a></dt>
+				</dl>
+				<dl>
+					<dt><a href="javascript:void(0);">用水信息</a></dt>
+					<dd>
+						<ul>
+							<li><a href="{php echo url('site/site/detail',array('i'=>3,'id'=>2,'uniacid'=>3));}">用水须知</a></li>
+							<li><a href="{php echo url('site/site/detail',array('i'=>3,'id'=>3,'uniacid'=>3));}">现行水价</a></li>
+							<li><a href="{php echo url('site/site/list',array('i'=>3,'cid'=>11));}">用水知识</a></li>
+							<li><a href="{php echo url('site/site/list',array('i'=>3,'id'=>4,'cid'=>12));}">服务点介绍</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl>
+					<dt><a href="javascript:void(0);">客户服务</a></dt>
+					<dd>
+						<ul>
+							<li><a href="{php echo url('site/site/watercharge_default');}">水费查询</a></li>
+							<!-- <li><a href="{php echo url('site/site/waterinvoice_default');}">电子发票开具</a></li> -->
+							<li><a href="{php echo url('site/site/message');}">咨询留言</a></li>
+							<li><a href="{php echo url('site/site/detail',array('i'=>3,'id'=>1,'uniacid'=>3));}">水费缴纳</a></li>
+							<li><a href="{php echo url('site/site/detail',array('i'=>3,'id'=>4,'uniacid'=>3));}">服务指南</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl>
+					<dt><a href="javascript:void(0);">水务资讯</a></dt>
+					<dd>
+						<ul>
+							<li><a href="{php echo url('site/site/list',array('i'=>3,'cid'=>5));}">停水公告</a></li>
+							<li><a href="{php echo url('site/site/list',array('i'=>3,'cid'=>6));}">公司公告</a></li>
+							<li><a href="{php echo url('site/site/list',array('i'=>3,'cid'=>7));}">新闻资讯</a></li>
+						</ul>
+					</dd>
+				</dl>
+			</nav>
+		</div>
+	</div>
+<script>
+require(["jquery","script"], function($,script){
+	script.menu('#_menuLnk','#_menu','#_closeMenu');
+	script.nav('#_nav');
+});
+</script>

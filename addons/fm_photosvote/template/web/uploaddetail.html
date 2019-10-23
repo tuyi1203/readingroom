@@ -1,0 +1,988 @@
+{template 'common/header'}
+  {if $rid!=''}
+    {template 'web/nav'}
+  {/if}
+  <style>
+  .sub-search input,.sub-search select{margin-bottom:0;}
+   #main{margin:100px auto;}
+   #main .info{line-height:20px; border-bottom:1px dashed #FC0;}
+   #main .info a{color:#666; text-decoration:none; position:relative; display:block;}
+   #main .info a div{display:none;}
+   #main .info a:hover{ visibility:visible; color:#333;}
+   #main .info a:hover div{position:absolute; left:80px; top:-50px; border:1px solid #D4D4D4;background-color:#F2F2F2; display:block; width:200px; height:180px; color:#333; overflow:hidden;text-align:left; padding:10px;z-index:99;}
+   .stat #table-list .table tbody td {
+  text-align: center;
+  color: #666;
+}
+   </style>
+
+<style>
+  #progress,#progress0,#progress1,#progress2,#progress3,#progress4,#progress5,#progress6,#progress7,#progress8,#progressm,#progressv  {
+      border:1px solid #ccc;
+      display:none;
+      height:14px;
+
+      border-radius:10px;
+      -moz-border-radius:10px;
+      -ms-border-radius:10px;
+      -o-border-radius:10px;
+      -webkit-border-radius:10px;
+
+      background: -moz-linear-gradient(#66cc00, #4b9500);
+      background: -ms-linear-gradient(#66cc00, #4b9500);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #66cc00), color-stop(100%, #4b9500));
+      background: -webkit-linear-gradient(#66cc00, #4b9500);
+      background: -o-linear-gradient(#66cc00, #4b9500);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500');
+      -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500')";
+      background: linear-gradient(#66cc00, #4b9500);
+      padding: 10px;
+  }
+  .upsuccess {
+   text-align: center;  color: #000;  font-size: 15px;  /* margin: 0 90px; */  position: relative;  /* left: 60px; */  top: 15px;
+   }
+   .uploadimg{  width: 150px;height: 250px;  line-height:250px;    float: left;
+    border: 1px solid #FFFFFF;
+    -webkit-box-shadow:  inset 5px 5px 12px rgba(5, 110, 165, 0.2);
+    -moz-box-shadow:  inset 5px 5px 12px rgba(5, 110, 165, 0.2);
+    box-shadow:  inset 5px 5px 12px rgba(5, 110, 165, 0.2);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+   #upsuccess {position: fixed;width: 100%;height: 30px;line-height: 23px;top: 60px;background: rgba(36, 166, 234, 0.71);font-size: 100%;}
+  .uploadimg span{  color:#fff}
+
+
+  /****上传图片****/
+  .webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px,1px,1px,1px);
+  }
+  .fmwebuploader-pick {
+    position: absolute;
+    display: inline-block;
+    cursor: pointer;
+    /*background: #00b7ee;
+     padding: 10px 15px; */
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+    /* margin-bottom: 10px; */
+    z-index: 1;
+    width: 130px;
+    height: 120px;
+    top: 5px;
+    left: 5px;
+  }
+  .parentFileBox {
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    float: left;
+  }
+  .parentFileBox>.fileBoxUl {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding-bottom: 5px;
+      padding-left: 0;
+    margin: 0;
+  }
+  .parentFileBox>.fileBoxUl>li {
+    float: left;
+    border: 1px solid #999;
+    border-radius: 5px;
+    width: 130px;
+    height: 120px;
+    margin-top: 5px;
+    margin-left: 5px;
+    overflow: hidden;
+    position: relative;
+    /**background-color: #099;**/
+  }
+  .parentFileBox>.fileBoxUl>li>.viewThumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 120px;
+    overflow: hidden;
+  }
+  .parentFileBox>.fileBoxUl>li>.viewThumb>img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .parentFileBox>.fileBoxUl>li>.imagedel>a>.diyCancel, .parentFileBox>.fileBoxUl>li>.setfm>a>.diySuccess, .parentFileBox>.fileBoxUl>li>.videodel>a>.diyCancel, .parentFileBox>.fileBoxUl>li>.videodel>a>.diySuccess, .parentFileBox>.fileBoxUl>li>.musicdel>a>.diyCancel, .parentFileBox>.fileBoxUl>li>.musicdel>a>.diySuccess {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    right: 2px;
+    cursor: pointer;
+    display: none;
+  }
+  .parentFileBox>.fileBoxUl>li>.imagedel>a>.diyCancel {
+    background: url({FM_STATIC_MOBILE}stylebase/images/x_alt.png) no-repeat;
+    top: 2px;
+  }
+  .parentFileBox>.fileBoxUl>li>.videodel>a>.diyCancel {
+    background: url({FM_STATIC_MOBILE}stylebase/images/x_alt.png) no-repeat;
+    top: 2px;
+  }
+  .parentFileBox>.fileBoxUl>li>.musicdel>a>.diyCancel {
+    background: url({FM_STATIC_MOBILE}stylebase/images/x_alt.png) no-repeat;
+    top: 2px;
+  }
+  .parentFileBox>.fileBoxUl>li>.setfm>a>.diySuccess {
+    /**background: url({FM_STATIC_MOBILE}stylebase/images/check_alt.png) no-repeat;**/
+    cursor: default;
+    bottom: 0px;
+    background: rgba(0, 0, 0, 0.66);
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    /* line-height: 19px; */
+    /* padding: 19px; */
+    color: #fff;
+    border-radius: 3px;
+  }
+  .parentFileBox>.fileBoxUl>li>.setfm>a>.isfm {
+    background: url({FM_STATIC_MOBILE}stylebase/images/check_alt.png) no-repeat;
+  }
+  .parentFileBox>.fileBoxUl>li>.diyFileName {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    display: none;
+    background: url({FM_STATIC_MOBILE}stylebase/images/bgblack.png);
+  }
+  .parentFileBox>.fileBoxUl>li>.diyBar>.diyProgress {
+    position: absolute;
+    left: 0;
+    top: 42%;
+    height: 24px;
+    width: 100%;
+    background-color: #09F;
+    filter: alpha(opacity=70);
+    -moz-opacity: 0.7;
+    opacity: 0.7;
+    z-index: 97;
+    margin-left: -100%;
+  }
+  .parentFileBox>.fileBoxUl>li>.diyBar>.diyProgressText {
+    font-size: 14px;
+    text-align: center;
+    color: #FFF;
+    position: absolute;
+    z-index: 99;
+    top: 42%;
+  }
+
+
+  .smile_popo {
+      height: 30px;
+      background: url({FM_STATIC_MOBILE}stylebase/images/popo_2adefed.png) no-repeat 50% 0
+  }
+  .level {
+      background-image: url({FM_STATIC_MOBILE}stylebase/images/new_sglobal_icon.png);
+      background-repeat: no-repeat;
+      -webkit-background-size: 70px auto;
+      background-size: 70px auto;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      line-height: 16px;
+      text-align: center;
+      font-size: 10px;
+      color: #fff;
+      vertical-align: middle
+  }
+
+  .level_1,.level_2,.level_3 {
+      background-position: 0 -127px
+  }
+
+  .level_4,.level_5,.level_6,.level_7,.level_8,.level_9 {
+      background-position: 0 -155px
+  }
+
+  .level_10,.level_11,.level_12,.level_13,.level_14,.level_15 {
+      background-position: 0 -183px
+  }
+
+  .level_16,.level_17,.level_18 {
+      background-position: 0 -211px
+  }
+
+
+  .overlay_container {
+      position: fixed;
+      z-index: 100003;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.15);
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-flex-flow: column;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-transition-property: opacity;
+      -webkit-transition-duration: 100ms;
+      -webkit-backface-visibility: hidden
+  }
+
+  .overlay_container:after,.overlay_container:before {
+      content: '';
+      display: block;
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1
+  }
+
+  .overlay_container.unmasked {
+      background: transparent;
+      pointer-events: none
+  }
+
+  .overlay_container.beforeFadeIn {
+      opacity: 0
+  }
+
+  .overlay_container.afterFadeOut {
+      opacity: 0
+  }
+
+  .overlay_content_container {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizon;
+      -webkit-flex-flow: item;
+      -webkit-flex-direction: item;
+      -ms-flex-direction: item;
+      flex-direction: item
+  }
+
+  .overlay_content_container:after,.overlay_content_container:before {
+      content: '';
+      display: block;
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1
+  }
+
+  .overlay_content {
+      -webkit-transition-property: -webkit-transform;
+      -webkit-transition-duration: 150ms;
+      -webkit-transform-origin: 50% 50%;
+      pointer-events: auto
+  }
+
+  .toast {
+    width: 210px;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 20px;
+    background-color: rgba(0,0,0,.9);
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    z-index: 100000;
+  }
+  .overlay_container {
+      position: fixed;
+      z-index: 100003;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.15);
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-flex-flow: column;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-transition-property: opacity;
+      -webkit-transition-duration: 100ms;
+      -webkit-backface-visibility: hidden
+  }
+
+  .overlay_container:after,.overlay_container:before {
+      content: '';
+      display: block;
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1
+  }
+
+  .overlay_container.unmasked {
+      background: transparent;
+      pointer-events: none
+  }
+
+  .overlay_container.beforeFadeIn {
+      opacity: 0
+  }
+
+  .overlay_container.afterFadeOut {
+      opacity: 0
+  }
+
+  .overlay_content_container {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizon;
+      -webkit-flex-flow: item;
+      -webkit-flex-direction: item;
+      -ms-flex-direction: item;
+      flex-direction: item
+  }
+
+  .overlay_content_container:after,.overlay_content_container:before {
+      content: '';
+      display: block;
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1
+  }
+
+  .overlay_content {
+      -webkit-transition-property: -webkit-transform;
+      -webkit-transition-duration: 150ms;
+      -webkit-transform-origin: 50% 50%;
+      pointer-events: auto
+  }
+
+  .toast {
+    width: 210px;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 20px;
+    background-color: rgba(0,0,0,.9);
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    z-index: 100000;
+  }
+  .mingc {
+      display: inline-block;
+      padding: 4px 6px;
+      border-bottom: 1px solid #E2E2E2;
+      font-size: 16px;
+      line-height: 44px;
+      color: #808080;
+      font-weight: 100;
+      width: 95%;
+  }
+  .ptitle {
+    font-weight: 100;
+      color: #000;
+  }
+  .center {
+    padding: 0;
+    }
+</style>
+<div class="main">
+  <form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        基本信息
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">数据 ID</label>
+          <div class="col-sm-9 col-xs-12">
+            <input type="text" readonly class="form-control" value="{$item['id']}" />
+            <span class="help-block">请勿修改</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传用户OPENID</label>
+          <div class="col-sm-9 col-xs-12">
+            <input type="text" class="form-control" readonly value="{$item['from_user']}" />
+            <span class="help-block">请勿修改</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传用户昵称</label>
+          <div class="col-sm-9 col-xs-12">
+            <input type="text" class="form-control" readonly value="{$item['nickname']}" />
+            <span class="help-block">请勿修改</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传用户头像</label>
+          <div class="col-sm-9 col-xs-12">
+			<div class="input-group" style="margin-top:.5em;">
+				<img src="{$item['head']}" class="img-responsive img-thumbnail" width="150">
+			</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">审核状态</label>
+          <div class="col-sm-9 col-xs-12">
+			{if $item['status'] == 0}
+				<span class="label label-info">未审核</span>
+			{else}
+				<span class="label label-info">已审核</span>
+			{/if}
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传图片</label>
+          <div class="col-sm-9 col-xs-12">
+			<div class="input-group" style="margin-top:.5em;">
+				<img src="{$item['pic']}" class="img-responsive img-thumbnail" width="150">
+			</div>
+          </div>
+        </div>
+		
+		{if $upload['filed1name']}
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$upload['filed1name']}</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{$item['filed1val']}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+		{/if}
+		{if $upload['filed2name']}
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$upload['filed2name']}</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{$item['filed2val']}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+		{/if}
+		{if $upload['filed3name']}
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$upload['filed3name']}</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{$item['filed3val']}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+		{/if}
+		{if $upload['filed4name']}
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$upload['filed4name']}</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{$item['filed4val']}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+		{/if}
+		{if $upload['filed5name']}
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">{$upload['filed5name']}</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{$item['filed5val']}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+		{/if}
+		
+		
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
+          <div class="col-sm-9 col-xs-12">
+            <span class="label label-info">{php echo date('Y-m-d H:i:s',$item['time'])}</span>
+            <span class="help-block"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<div class="loading" style="display: none;"></div>
+<div class="overlay_container j_overlay_container unmasked beforeFadeIn" style="display: none;"><div class="overlay_content_container j_overlay_content_container"><div class="overlay_content"><div id="toast" class="toast"></div></div></div></div>
+<div id="bodyhidden" style="display: none;"></div>
+
+<script src="{FM_STATIC_PLUGIN}upload/distweb/dist/lrz.bundle.js"></script>
+<script type="text/javascript">
+  function fmloadding(id, text) {
+    $(id).show();
+    $(id).removeClass("beforeFadeIn");
+
+    setTimeout(function () {
+      $(id).hide();
+      $(id).addClass("beforeFadeIn");
+    },3000)
+    $('#toast').html(text);
+  }
+  function sendpic(){
+     $('#Modal1').modal('toggle');
+  }
+  function sendmusic(){
+     $('#Modal2').modal('toggle');
+  }
+  function sendvedio(){
+     $('#Modal3').modal('toggle');
+  }
+  function sendp(){
+     $('#Modalp').modal('toggle');
+  }
+  function showpic(imgurl){
+     $('#showpic').modal('toggle');
+     var picpre = document.getElementById("picpre");
+      picpre.src=imgurl;
+      picpre.style.display = 'block';
+      picpre.style.width = '120px';
+  }
+  function uppic(){
+     $('#uppic').modal('toggle');
+  }
+
+  function afteradd(addmid){
+    var html ='<div class="parentFileBox allbox' + addmid + '" id="parentFileBox' + addmid + '"  style="width: 30%;  margin-right: 3%;margin-top:3%;">  ';
+            html +='<a href="javascript:;" class="fmwebuploader-pick" id="webuploader' + addmid + '" onclick="javascript:$(\'#photo' + addmid + '\').click();" style="  width: 100%;height: 180px;"><img src="{FM_STATIC_MOBILE}public/images/addimages.png?v=3.1" width="30" style="width: 60%;position: absolute; z-index: 11;  text-align: center;  left: 15%;  top: 5%;"/></a>';
+            html +='<ul class="fileBoxUl" style="  width: 100%;height: 180px;">';
+      html +='      <li id="fileBox_WU_FILE_' + addmid + '" class="diyUploadHover" style="  width: 100%; height: 180px;margin-top: 0;margin-left: 0;">  ';
+      html +='        <div class="viewThumb"  style="  width: 100%; height: 180px;">';
+      html +='            <img src="" id="preview' + addmid + '"/>';
+      html +='        </div> ';
+      html +='        <div id="imagedel' + addmid + '" class="imagedel"><a href="javascript:;" onclick="imagedel(\'' + addmid + '\')"><div class="diyCancel" id="diyCancel' + addmid + '" width="100%;"></div></a></div>';
+      html +='        <div id="setfm' + addmid + '" class="setfm"><a href="javascript:;" id="setfm' + addmid + '" onclick="setfm(\'' + addmid + '\')"><div class="diySuccess" id="diySuccess' + addmid + '" width="100%;">设为封面</div></a></div> ';
+      html +='        <div class="diyFileName" id="diyFileName' + addmid + '">preview.png</div> ';
+      html +='        <div class="diyBar" id="diyBar' + addmid + '" style="display:none"> ';
+      html +='            <div class="diyProgress" id="diyProgress' + addmid + '"></div> ';
+      html +='            <div class="diyProgressText" id="diyProgressText' + addmid + '"></div> ';
+      html +='        </div>';
+      html +='      </li>';
+      html +='    </ul></div>';
+            html += '<div style="position: absolute; top: 0px; left: 0px; width: 126px; height: 36px; overflow: hidden; bottom: auto; right: auto;">';
+            html +='<input type="file" name="photo' + addmid + '" id="photo' + addmid + '" class="webuploader-element-invisible" style="display:none;" accept="image/*" capture="camera" onchange="changeone(\'photo' + addmid + '\', \'' + addmid + '\');" ></div>';
+        {if !empty($picarrs)}
+         $("#afteradd").parent().append( html );
+        {else}
+         $("#afteraddnew").parent().append( html );
+        {/if}
+    return false;
+
+    }
+
+
+    function vedioafter(mid){
+    var html ='<div class="parentFileBox allboxv" id="parentFileBoxv" style="width: 50%;"> ';
+      html +='      <a href="javascript:;" class="fmwebuploader-pick" id="webuploaderv" onclick="javascript:$(\'#vedio\').click();" style="width: 90%;height: 200px;"><img src="{FM_STATIC_MOBILE}public/images/addimages.png?v=3.1" width="30" style="width: 60%;position: absolute; z-index: 11;  text-align: center;  left: 20%;" /></a>';
+
+      html +='        <ul class="fileBoxUl">';
+      html +='          <li id="fileBox_WU_FILE_v" class="diyUploadHover" style="  width: 90%;height: 200px;"> ';
+      html +='            <div class="viewThumb" id="vediopreview" style="  width: 100%;height: 200px;"> ';
+      html +='                <video controls preload="auto" width="100%" height="200" id="previewv" poster="">';
+      html +='              <source src="" type=\'video/mp4\' />';
+      html +='              <p class="vjs-no-js">你的浏览器不支持该视频</a></p>';
+      html +='            </video>';
+      html +='            </div> ';
+      html +='            <div id="videodel" class="videodel"><a href="javascript:;" ><div class="diyCancel" id="diyCancelv" width="100%;"></div></a></div>';
+      html +='            <div class="diyFileName" id="diyFileNamev">preview.png</div> ';
+      html +='            <div class="diyBar" id="diyBarv" style="display:none"> ';
+      html +='                <div class="diyProgress" id="diyProgressv" style="top:0;height:200px;"></div> ';
+      html +='                <div class="diyProgressText" id="diyProgressTextv" style="font-size: 25px;"></div> ';
+      html +='            </div>';
+      html +='          </li>';
+      html +='        </ul> ';
+      html +='    </div>';
+      html +='    <div style="position: absolute; top: 0px; left: 0px; width: 126px; height: 36px; overflow: hidden; bottom: auto; right: auto;">';
+      html +='      <input type="file" name="vedio" id="vedio" class="webuploader-element-invisible" style="display:none;" accept="video/*" capture="camcorder" onchange="changeaudios(\'vedio\', \'v\')" >';
+      html +='    </div>';
+        $("#vedioafter").parent().append( html );
+    return false;
+
+    }
+     function musicafter(mid){
+    var html ='<div class="parentFileBox allboxm" id="parentFileBoxm" style="width: 50%;"> ';
+      html +='      <a href="javascript:;" class="fmwebuploader-pick" id="webuploaderm" onclick="javascript:$(\'#music\').click();" style="width: 90%;height: 200px;"><img src="{FM_STATIC_MOBILE}public/images/addimages.png?v=3.1" width="30" style="width: 60%;position: absolute; z-index: 11;  text-align: center;  left: 20%;" /></a>';
+
+      html +='        <ul class="fileBoxUl">';
+      html +='          <li id="fileBox_WU_FILE_m" class="diyUploadHover" style="  width: 90%;height: 200px;"> ';
+      html +='            <div class="viewThumb" id="musicpreview" style="  width: 100%;height: 200px;"> ';
+      html +='            </div> ';
+      html +='            <div id="musicdel" class="musicdel"><a href="javascript:;" ><div class="diyCancel" id="diyCancelm" width="100%;"></div></a></div>';
+      html +='            <div class="diyFileName" id="diyFileNamem">preview.png</div> ';
+      html +='            <div class="diyBar" id="diyBarm" style="display:none"> ';
+      html +='                <div class="diyProgress" id="diyProgressm" style="top:0;height:200px;"></div> ';
+      html +='                <div class="diyProgressText" id="diyProgressTextm" style="font-size: 25px;"></div> ';
+      html +='            </div>';
+      html +='          </li>';
+      html +='        </ul> ';
+      html +='    </div>';
+      html +='    <div style="position: absolute; top: 0px; left: 0px; width: 126px; height: 36px; overflow: hidden; bottom: auto; right: auto;">';
+      html +='      <input type="file" name="music" id="music" class="webuploader-element-invisible" style="display:none;" accept="audio/*" capture="camcorder" onchange="changeaudios(\'music\', \'m\')" >';
+      html +='    </div>';
+        $("#musicafter").parent().append( html );
+    return false;
+
+    }
+  function imagedel(mid) {
+    fmloadding('.overlay_container', '正在删除中');
+
+        var url  = "{php echo $this->createWebUrl('provevote', array('foo' => 'post','rid'=>$rid,'from_user'=>$from_user, 'delete' => 1))}&photoid="+mid;
+        $.ajax({
+            url:url,
+            type:"post",
+            dataType:"json",
+            success:function(result){
+               if(result.flag == '1'){
+
+                $(".allbox" + mid).remove();
+                fmloadding('.overlay_container', result.msg);
+                var tpxz = "{$reply['tpxz']}";
+          //if (result.photosarrnum < tpxz) {
+          //  afteradd(result.addlastmid);
+          //}
+              }else{
+                 fmloadding('.overlay_container', result.msg);
+              }
+            }
+        });
+    return false;
+  }
+  function videodel(mid) {
+    fmloadding('.overlay_container', '正在删除中');
+
+        var url  = "{php echo $this->createWebUrl('provevote', array('foo' => 'post','rid'=>$rid,'from_user'=>$from_user, 'deletev' => 1))}&vedio="+mid;
+        $.ajax({
+            url:url,
+            type:"post",
+            dataType:"json",
+            success:function(result){
+               if(result.flag == '1'){
+                  $(".allboxv").remove();
+                  vedioafter(result.mid);
+                fmloadding('.overlay_container', result.msg);
+              }else{
+                 fmloadding('.overlay_container', result.msg);
+              }
+            }
+        });
+    return false;
+  }
+
+  function musicdel(mid) {
+    fmloadding('.overlay_container', '正在删除中');
+
+        var url  = "{php echo $this->createWebUrl('provevote', array('foo' => 'post','rid'=>$rid,'from_user'=>$from_user, 'deletem' => 1))}&music="+mid;
+        $.ajax({
+            url:url,
+            type:"post",
+            dataType:"json",
+            success:function(result){
+               if(result.flag == '1'){
+                  $(".allboxm").remove();
+                  musicafter(result.mid);
+                fmloadding('.overlay_container', result.msg);
+              }else{
+                 fmloadding('.overlay_container', result.msg);
+              }
+            }
+        });
+    return false;
+  }
+  function setfm(mid) {
+    fmloadding('.overlay_container', '正在设置中');
+        var url  = "{php echo $this->createWebUrl('provevote', array('foo' => 'post','rid'=>$rid,'from_user'=>$from_user, 'setfm' => 1))}&photoid="+mid;
+        $.ajax({
+            url:url,
+            type:"post",
+            dataType:"json",
+            success:function(result){
+               if(result.flag == '1'){
+                  $("#diySuccess" + mid).addClass('isfm');
+                  $("#diySuccess" + mid).html('');
+          $("#diySuccess" + result.delmid).removeClass('isfm');
+                $("#diySuccess" + result.delmid).html('设为封面');
+                fmloadding('.overlay_container', result.msg);
+              }else{
+                 fmloadding('.overlay_container', result.msg);
+              }
+            }
+        });
+    return false;
+  }
+
+
+    function upload(filename, posturl, mid) {
+        var width = "{$reply['autolitpic']}";
+        var zl = "{php echo $reply['autozl']/100}";
+
+        lrz(filename.files[0], {
+              width: width,
+              quality: zl
+          })
+        .then(function (rst) {
+          //var MB = 1000*1000;
+          var imgsize = "{$_W['setting']['upload']['image']['limit']}";
+          var imgsizem = "{php echo $_W['setting']['upload']['image']['limit']*1024;}";
+          var imgmsize ="{php echo $_W['setting']['upload']['image']['limit']/1024;}";
+          var ytsize = rst.origin.size;
+          if (ytsize > imgsizem) {
+            var amsg = '图片大小不能超过 '+imgmsize+' MB';
+            fmloadding('.overlay_container', amsg);
+            return false;
+          }
+
+
+          setTimeout(function () {
+            document.getElementById('webuploader' + mid).style.display = 'none';
+            document.getElementById('diyBar' + mid).style.display = 'block';
+
+            // 发送到后端
+            var xhr = new XMLHttpRequest();
+            var data = {
+              base64: rst.base64,
+              size: rst.base64.length // 校验用，防止未完整接收
+            };
+
+
+
+            xhr.upload.addEventListener('progress', function(e, m){ uploadProgress(e,mid); }, false);
+            xhr.addEventListener("load",  function(e, m){ uploadComplete(e,mid); }, false);
+            xhr.addEventListener("error", function(e, m){ uploadFailed(e,mid); }, false);
+            xhr.addEventListener("abort", function(e, m){ uploadCanceled(e,mid); }, false);
+
+
+            xhr.open('POST', posturl);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                var result = JSON.parse(xhr.response);
+                //console.log(result);
+                //uppic();
+                if (result.success == true) {
+                  fmloadding('.overlay_container', result.msg);
+                  document.getElementById('imagedel' + mid).innerHTML = '<a href="javascript:;"  onclick="imagedel('+ result.lastmid +')"><div class="diyCancel" id="diyCancel'+ result.lastmid +'" ></div></a>';
+                  document.getElementById('setfm' + mid).innerHTML = '<a href="javascript:;"  onclick="setfm('+ result.lastmid +')"><div class="diySuccess" id="diySuccess'+ result.lastmid +'" >设为封面</div></a>';
+                  $("#parentFileBox" + mid).removeClass("allbox" + mid);
+                  $("#parentFileBox" + mid).addClass("allbox" + result.lastmid);
+                  document.getElementById('diyBar' + mid).style.display = 'none';
+                  document.getElementById('preview' + mid).style.display = 'block';
+                  document.getElementById('preview' + mid).src = result.imgurl;
+                  document.getElementById('diyCancel' + result.lastmid).style.display = 'block';
+                  document.getElementById('diySuccess' + result.lastmid).style.display = 'block';
+                  var tpxz = "{$reply['tpxz']}";
+                  if (result.photosarrnum < tpxz) {
+                    afteradd(result.addlastmid);
+                  }
+                  //return false;
+
+                } else {
+                  fmloadding('.overlay_container', result.msg);
+                  //alert(result.msg);
+                  if (result.flag == 3) {
+                    setTimeout(function () {
+                      window.location.href = result.linkurl;
+                    },1000)
+                  }
+                  return false;
+                }
+                return
+              }
+            };
+            xhr.send(JSON.stringify(data)); // 发送base64
+            //rst.base64 = null;
+            //xhr.Response.End();
+          }, 100);
+
+        })
+
+            .catch(function (err) {
+                // 万一出错了，这里可以捕捉到错误信息
+                // 而且以上的then都不会执行
+                console.log(err);
+                alert(err);
+            });
+        // 也可以传入图片路径：lrz('../demo.jpg', ...
+
+    }
+
+    function uploadProgress(evt,mid) {
+       if (evt.lengthComputable) {
+        //iBytesUploaded = evt.loaded;
+        //iBytesTotal = evt.total;
+        var iPercentComplete = Math.round(evt.loaded * 100 / evt.total);
+        //var iBytesTransfered = bytesToSize(iBytesUploaded);
+
+
+        document.getElementById('diyProgressText' + mid).innerHTML = iPercentComplete.toString() + '%' ;
+        document.getElementById('diyProgress' + mid).style.left = (iPercentComplete * 1).toString() + '%';
+        document.getElementById('diyProgressText' + mid).style.left = (iPercentComplete * 1 - 15).toString() + '%';
+
+
+        if (iPercentComplete == 100) {
+          document.getElementById('diyProgressText' + mid).innerHTML = '上传云端中...' ;
+          document.getElementById('diyProgressText' + mid).style.left = '30%';
+        }
+            }
+            else {
+        document.getElementById('diyProgressText' + mid).innerHTML = 'unable to compute';
+
+            }
+        }
+    function bytesToSize(bytes) {
+      var sizes = ['Bytes', 'KB', 'MB'];
+      if (bytes == 0) return 'n/a';
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+      return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+    };
+        function uploadComplete(evt,mid) {
+            /* This event is raised when the server send back a response */
+            //alert(evt.target.responseText);
+
+      var progressNumber = 'diyProgressText' + mid;
+
+      document.getElementById(progressNumber).innerHTML = '上传完成';
+      document.getElementById(progressNumber).style.left = '35%';
+        }
+
+        function uploadFailed(evt,mid) {
+      var progressNumber = 'diyProgressText' + mid;
+      document.getElementById(progressNumber).innerHTML = '上传时出错！';
+      document.getElementById(progressNumber).style.left = '31%';
+           // alert("There was an error attempting to upload the file.");
+        }
+
+        function uploadCanceled(evt,mid) {
+
+      var progressNumber = 'diyProgressText' + mid;
+           // alert("The upload has been canceled by the user or the bitemser dropped the connection.");
+      document.getElementById(progressNumber).innerHTML = '取消上传';
+      document.getElementById(progressNumber).style.left = '35%';
+        }
+
+  function changeone(photo, mid) {
+
+    var preview = 'preview' + mid,
+      pic = document.getElementById(preview),
+      file = document.getElementById(photo);
+
+    var ext=file.value.substring(file.value.lastIndexOf(".")+1).toLowerCase();
+    //alert(ext);
+     // gif在IE浏览器暂时无法显示
+     if(ext!='png'&&ext!='jpg'&&ext!='jpeg'){
+       fmloadding('.overlay_container', '图片的格式必须为png或者jpg或者jpeg格式！');
+       return;
+     }
+
+    var posturl = "{php echo $this->createWebUrl('upimages', array('from_user' => $from_user, 'upphotosone' => 'start','rid' => $rid))}&mid=" + mid;
+    //var mid = '0';
+    upload(file, posturl, mid);
+
+     var isIE = navigator.userAgent.match(/MSIE/)!= null,
+       isIE6 = navigator.userAgent.match(/MSIE 6.0/)!= null;
+
+     if(isIE) {
+      file.select();
+      var reallocalpath = document.selection.createRange().text;
+
+      // IE6浏览器设置img的src为本地路径可以直接显示图片
+       if (isIE6) {
+        pic.src = reallocalpath;
+       }else {
+        // 非IE6版本的IE由于安全问题直接设置img的src无法显示本地图片，但是可以通过滤镜来实现
+         pic.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='image',src=\"" + reallocalpath + "\")";
+         // 设置img的src为base64编码的透明图片 取消显示浏览器默认图片
+         pic.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+       }
+     }else {
+      html5Reader(file,mid);
+     }
+  }
+  function html5Reader(file, mid){
+     var file = file.files[0];
+     var reader = new FileReader();
+     reader.readAsDataURL(file);
+     reader.onload = function(e){
+      $('#uploadimg' + mid).hide();
+      var pic = document.getElementById('preview' + mid);
+      pic.src=this.result;
+      pic.style.display = 'block';
+     }
+   }
+
+   function audios(audio, mid) {
+      //var music = "#" + audio;
+        //空对象然后添加
+      var file = document.getElementById(audio).files[0];
+
+      var fd = new FormData();
+
+      //fd.append(audio, $(music).val());
+      fd.append("audiotype", audio);
+      fd.append("files", file);
+
+      setTimeout(function () {
+        document.getElementById('webuploader' + mid).style.display = 'none';
+        document.getElementById('diyBar' + mid).style.display = 'block';
+
+        //XMLHttpRequest 原生方式发送请求
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function(e, m){ uploadProgress(e,mid); }, false);
+        xhr.addEventListener("load",  function(e, m){ uploadComplete(e,mid); }, false);
+        xhr.addEventListener("error", function(e, m){ uploadFailed(e,mid); }, false);
+        xhr.addEventListener("abort", function(e, m){ uploadCanceled(e,mid); }, false);
+        xhr.open("POST" ,"{php echo $this->createWebUrl('upaudios', array('from_user' => $from_user, 'upaudios' => 'start', 'rid' => $rid))}" , true);
+        xhr.send(fd);
+        //xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onload = function(e) {
+            if (this.readyState === 4 && this.status  === 200) {
+              var result = JSON.parse(xhr.response);
+              console.log(result);
+              //return false;
+              if (result.success == true) {
+                fmloadding('.overlay_container', result.msg);
+                return
+              } else {
+                fmloadding('.overlay_container', result.msg);
+                  //alert(result.msg);
+                  if (result.flag == 3) {
+                    setTimeout(function () {
+                      window.location.href = result.linkurl;
+                    },1000)
+                  }
+                  return false;
+              }
+              return false;
+            }
+        };
+      });
+      return false;
+    }
+
+</script>
+
+{template 'web/_footer'}

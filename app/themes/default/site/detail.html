@@ -1,0 +1,24 @@
+{template 'common/header'}
+<body>
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>{$detail['categoryname']}</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="article">
+			<h1>{$detail['title']}</h1>
+			<div class="con"><a href="javascript:void(0);">{$detail['author']}</a><i>{$detail['time']}</i></div>
+			<!-- <div class="abstract">{$detail['description']}</div> -->
+			<div class="info">
+				{$detail['content']}
+			</div>
+		</div>
+		{template 'common/inner_guide'}
+	</div>
+	{template 'common/inner_footer'}
+	{template 'common/menu'}
+</body>
+</html>

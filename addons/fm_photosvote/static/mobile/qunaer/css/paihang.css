@@ -1,0 +1,31 @@
+﻿@charset "utf-8";
+/* PAIHANG CSS Document*/
+
+body{background:url(../images/bg.jpg) repeat;background-size:100% auto;background-position:50% 50%;}
+.con{padding:0 3%;}
+.top{overflow: hidden;font-size: 14px;line-height: 40px;padding: 5px 0px;background: #000;position: fixed;z-index: 9999;width: 100%;color: #fff;}
+.top div{padding: 0 5px;}
+.top span{color: #fff;}
+.top a{padding: 0 5px;color: #fff;}
+.top .topa{float: right;margin-top: 5px;background-size: 100% 100%;line-height: 30px;height: 30px;font-weight: bold;border-radius: 5px;color: #fff;width: 100px;}
+.nav > li > a:hover, .nav > li > a:focus{text-decoration: none;background-color:transparent;}
+.nav > li > a{padding: 0;}
+.pagination ul > li > a, .pagination ul > li > span{padding: 5px 5px;}
+.h{height:10px}
+.copyright{padding: 0 auto;margin: 0 auto;height: 40px;text-align: center;color: #E0E0E0;position: relative;bottom: auto;font-size: 12px;}
+.tongji{}
+.tongji ul{padding:3% 4%;background:#a2332c;border-radius: 10px;}
+.tongji ul:after{content:'';clear:both;display:block;}
+.tongji li{width: 32%;float: left;text-align: center;line-height: 22px;padding-top: 8px;background:#fff4d4;border-radius: 10px;}
+.tongji li:nth-child(2){margin:0 2%;}
+
+.copyright a{color: #E0E0E0;}
+/**{-webkit-box-sizing: initial;-moz-box-sizing: initial;box-sizing: initial;}*/
+.btns{width: auto;padding-right: 5px;}
+.txt{width: 68%;}
+.banner{max-width: 640px;margin: 0 auto;max-height: 100%;}
+.one1{text-align: center;margin: 0 auto;}
+.one2{text-align: center;margin: 0 auto;}
+.one3{text-align: center;margin: 0 auto;}
+.two{text-align: center;margin: 0 auto;}
+.usr_more{width: 95%;border: 0px solid #c4d4d0;line-height: 35px;text-align: center;font-size: 14px;margin-top: 0px;color: #FFFFFF;background: rgba(0, 0, 0, 0.4);}

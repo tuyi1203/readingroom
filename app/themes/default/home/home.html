@@ -1,0 +1,70 @@
+<!-- 
+<div class="home-container clearfix">
+	{data func="site_navs" item="row"}
+		{$row['html']}
+	{/data}
+	{if $_GPC['c'] == 'site' && $_GPC['a'] == 'site'}
+	<ul class="list list-unstyled">
+		{data func="site_article" cid=$cid return="true" assign="result"}
+			{loop $result['list'] $row}
+			<li>
+				<a href="{$row['linkurl']}">
+					<div class="title">{php echo cutstr($row['title'],10,1);}</div>
+					<div class="createtime">{php echo date('Y-m-d H:i:s', $row['createtime'])}</div>
+				</a>
+			</li>
+			{/loop}
+	</ul>
+	{/if}
+</div> -->
+
+{template 'common/header'}
+<body class="ind">
+	<div class="indPage">
+		<div class="logo"><img src="{$_W['siteroot']}app/resource/img/logo.png" /></div>
+		<div class="navBox">
+			<div class="firstNav">
+				<ul class="displayCenter">
+					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=1" class="displayCenter"><em class="displayCenter">用水信息</em></a></li>
+					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=2" class="displayCenter"><em class="displayCenter">客户服务</em></a></li>
+					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=3" class="displayCenter"><em class="displayCenter">水务资讯</em></a></li>
+				</ul>
+			</div>
+			<div class="secondNav">
+				<ul class="displayCenter">
+					<li id="search"><a href="javascript:void(0);" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-1.png)"><i>水</i><i>费</i><i>查</i><i>询</i></a></li>
+					<li><a href="{$_W['siteroot']}/app/index.php?i=3&c=site&a=site&do=detail&id=1" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-2.png)"><i>水</i><i>费</i><i>缴</i><i>纳</i></a></li>
+					<li><a href="{$_W['siteroot']}/app/index.php?i=3&c=site&a=site&cid=5" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-3.png)"><i>停</i><i>水</i><i>公</i><i>告</i></a></li>
+				</ul>
+			</div>
+		</div>
+		{template 'common/footer'}
+	</div>
+	<div class="tips"></div><!-- 提示框 -->
+<script>
+require(["jquery","script"], function($,script){
+	$('#search').click(function(){
+		$('.tips').html('制作中，敬请期待...').fadeIn().delay(1500).fadeOut();
+	});
+});
+</script>
+<style>
+.tips{
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	min-width: 200px;
+	max-width: 700px;
+	transform: translate(-50%,-50%);
+	z-index: 99999;
+	text-align: center;
+	padding: 15px;
+	border-radius: 5px;
+	color: #31708f;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+}
+</style>
+</body>
+</html>

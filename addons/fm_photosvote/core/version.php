@@ -1,0 +1,1 @@
+<?php if(!defined('IN_IA')) {exit('Access Denied');}if(!defined('FM_PHOTOSVOTE_VERSION')) {define('FM_PHOTOSVOTE_VERSION', '1.0');}

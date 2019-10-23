@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    require(['bootstrap']);
+    {if $_W['isfounder'] && !defined('IN_MESSAGE')}
+    function check_fm_photosvote_upgrade() {
+  
+        require(['util'], function (util) {
+            if (util.cookie.get('checkfmshopupgrade_sys')) {
+                return;
+            }
+            $.post('{php echo $this->createWebUrl("upgrade",array("op"=>"check"))}', function (ret) {
+          
+                ret = eval("(" + ret + ")");
+                
+                if (ret && ret.result == '1') { 
+                    if(ret.filecount>0){
+                        var html = '<div id="fm-photosvote-upgrade-tips" class="upgrade-tips" style="top:50px;left:0;position:fixed"><a href="{php echo $this->createWebUrl("upgrade")}">{php echo $this->module["title"]}检测到新版本 ' + ret.version;
+                        html+=',请尽快更新！</a><span class="tips-close" style="background:#ff6600;" onclick="check_fm_photosvote_upgrade_hide();"><i class="fa fa-times-circle"></i></span></div>';
+                        $('body').prepend(html);
+                   }
+                }
+            });
+        });
+    }
+
+    function check_fm_photosvote_upgrade_hide() {
+        require(['util'], function (util) {
+            util.cookie.set('checkfmshopupgrade_sys', 1, 3600);
+            $('#fm-photosvote-upgrade-tips').hide();
+        });
+    }
+    $(function () {
+        check_fm_photosvote_upgrade();
+    });
+    {/if}
+</script>
+
+{template 'common/footer'}
