@@ -19,22 +19,23 @@
 </div> -->
 
 {template 'common/header'}
+
 <body class="ind">
 	<div class="indPage">
 		<div class="logo"><img src="{$_W['siteroot']}app/resource/img/logo.png" /></div>
 		<div class="navBox">
 			<div class="firstNav">
 				<ul class="displayCenter">
-					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=1" class="displayCenter"><em class="displayCenter">用水信息</em></a></li>
-					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=2" class="displayCenter"><em class="displayCenter">客户服务</em></a></li>
-					<li><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&cid=3" class="displayCenter"><em class="displayCenter">水务资讯</em></a></li>
+					<li><a href="javascript:void(0);" class="displayCenter building"><em class="displayCenter">规划中板块</em></a></li>
+					<li><a href="javascript:void(0);" class="displayCenter building"><em class="displayCenter">规划中板块</em></a></li>
+					<li><a href="javascript:void(0);" class="displayCenter building"><em class="displayCenter">规划中板块</em></a></li>
 				</ul>
 			</div>
 			<div class="secondNav">
 				<ul class="displayCenter">
-					<li id="search"><a href="javascript:void(0);" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-1.png)"><i>水</i><i>费</i><i>查</i><i>询</i></a></li>
-					<li><a href="{$_W['siteroot']}/app/index.php?i=3&c=site&a=site&do=detail&id=1" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-2.png)"><i>水</i><i>费</i><i>缴</i><i>纳</i></a></li>
-					<li><a href="{$_W['siteroot']}/app/index.php?i=3&c=site&a=site&cid=5" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-3.png)"><i>停</i><i>水</i><i>公</i><i>告</i></a></li>
+					<li id="search"><a href="{$_W['siteroot']}app/index.php?i=3&c=site&a=site&do=reading_room_reserve" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-2.png)"><i>阅</i><i>览</i><i>室</i><i>预</i><i>约</i></a></li>
+					<li><a href="javascript:void(0);" class="building" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-2.png)"><i>会</i><i>议</i><i>室</i><i>预</i><i>约</i></a></li>
+					<li><a href="javascript:void(0);" class="building" style="background-image:url({$_W['siteroot']}app/resource/img/ico-nav-3.png)"><i>年</i><i>度</i><i>校</i><i>历</i></a></li>
 				</ul>
 			</div>
 		</div>
@@ -43,7 +44,7 @@
 	<div class="tips"></div><!-- 提示框 -->
 <script>
 require(["jquery","script"], function($,script){
-	$('#search').click(function(){
+	$('.building').click(function(){
 		$('.tips').html('制作中，敬请期待...').fadeIn().delay(1500).fadeOut();
 	});
 });

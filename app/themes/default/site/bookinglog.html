@@ -1,0 +1,229 @@
+{template 'common/header'}
+
+<body>
+  <style>
+    .tableInfo {
+      margin-bottom: 5%;
+    }
+
+    .tableInfo p {
+      margin-bottom: 5px;
+    }
+
+    .calendar {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .calendar a {
+      display: block;
+      height: 50px;
+      line-height: 50px;
+    }
+
+    .calendar td {
+      margin: 0px;
+      padding: 0px !important;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 888;
+      background-color: #000;
+    }
+  </style>
+  <header>
+    <div class="header">
+      <div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+      <h1>{$title}</h1>
+      <div class="r"><a href="javascript:void(0);" class="menuControl"
+          id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+    </div>
+  </header>
+  <div class="container">
+    <div class="article">
+      <h1>{$dateformated}</h1>
+      <div class="list-group">
+
+        {loop $booking_list $index $row}
+        <ul class="list-group"></ul>
+        <li
+          class="list-group-item {if $row['abletobook'] == '1'}list-group-item-success{else}list-group-item-warning{/if}"
+          {if $row['abletobook']=='1' } data-date="{$date}"" data-time-section=" {$row['time_section']}"
+          data-time-section-desc="{$row['time_section_desc']}" data-time-section-comment="{$row['comment']}" {/if}>
+          <span class="badge">{$row['book_type_name']}</span>
+          <span class="badge">{$row['name']}</span>
+          {$row['time_section_desc']} {$row['comment']}
+        </li>
+        </ul>
+        {/loop}
+      </div>
+      <div>
+        <p>
+          预约以后如果<b style="color:red;">需要取消</b>，请联系图书馆管理员。
+        </p>
+      </div>
+    </div>
+    <!-- {template 'common/inner_guide'} -->
+  </div>
+  {template 'common/inner_footer'}
+  {template 'common/menu'}
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" style="z-index:900;" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">预约阅览室</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <input type="hidden" id="time-section" name="time_section" />
+            <input type="hidden" id="date" name="date" value="{$date}" />
+            <div class="form-group">
+              <label class="col-xs-4 control-label">日期</label>
+              <div class="col-xs-8">
+                <p class="form-control-static" id="dateLabel">email@example.com</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-4 control-label">时间段</label>
+              <div class="col-xs-8">
+                <p class="form-control-static" id="sectionLabel">email@example.com</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="book_type" class="col-xs-4 control-label">图书类别</label>
+              <div class="col-xs-8">
+                <select name="book_type" class="form-control" id="book_type">
+                  {loop $book_type_list $index $row}
+                  <option value="{$index}">{$row}</option>
+                  {/loop}
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="closeModalBtn">关闭</button>
+          <button type="button" class="btn btn-primary" id="bookingBtn">预约</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-success" role="alert" style="z-index:999;position:fixed;">我是正确的消息，我会在显示5秒后消失</div>
+  <div class="alert alert-danger" role="alert" style="z-index:999;position:fixed;display:none;">我是错误的消息，我会在显示5秒后消失</div>
+  <div class="pageLoad displayCenter" id="_pageLoad">
+    <div class="box">
+      <p></p>
+      <div class="img">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <script>
+    require(["jquery", "bs", "script"], function ($, bs, script) {
+      $(document).ready(() => {
+        const fixedTop = $('.header').outerHeight();
+        const infoCss = {
+          'top' : fixedTop,
+          'width':'100%',
+        };
+        $('li').each((index, elem) => {
+          if ($(elem).attr('data-date') != undefined) {
+            console.log($(elem).attr('data-time-section-desc'));
+            $(elem).click(() => {
+              $('#dateLabel').html('{$date}');
+              $('#sectionLabel').html($(elem).attr('data-time-section-comment') + '  ' + $(elem).attr('data-time-section-desc'));
+              $('#time-section').val($(elem).attr('data-time-section'));
+              $('#myModal').modal('show');
+            });
+          }
+        });
+
+        $('#closeModalBtn').click(() => {
+          $('#myModal').modal('hide');
+          $('#time-section').val('');
+          $('#dateLabel').html('');
+          $('#sectionLabel').html();
+        });
+
+        $('#bookingBtn').bind('click', function () {
+          var options = {
+            method: 'POST',
+            url: "{php echo url('site/site/reading_room_booking_post');}",
+            data: {
+              time_section: $('#time-section').val(),
+              date: $('#date').val(),
+              book_type: $('#book_type').val(),
+            },
+            beforeSend: function () {
+              script.pageLoadShow('#_pageLoad', '提交中，请稍候...');
+            },
+            dataType: 'json'
+          };
+          $.ajax(options).done(function (response) {
+            console.log(response);
+            if (response.result == "success") {
+              // alert('感谢您的预约！');
+              $('#closeModalBtn').trigger("click");
+              window.setTimeout(function () {
+                $(".alert-success").text('感谢您的预约！');
+                $(".alert-success").show();
+                $('.alert-success').css(infoCss);
+                $(".alert-success").fadeTo(4000, 0).slideUp(1000, function () {
+                  $('.alert-success').remove();
+                  location.reload();
+                });
+              }, 1000);
+            }
+            else {
+              if ($.type(response.msg) == 'string') {
+                window.setTimeout(function () {
+                  $(".alert-danger").text(response.msg);
+                  $(".alert-danger").show();
+                  $('.alert-danger').css({'top':0,'opacity':1});
+                  $(".alert-danger").fadeTo(5000, 0).slideUp(2000, function () {
+                    // $('.alert-danger').hide();
+                  });
+                }, 1000);
+              }
+              else {
+                window.setTimeout(function () {
+                  $(".alert-danger").html(response.msg.join("\n")).show().fadeTo(500, 0).slideUp(500, function () {
+                    $(this).hide();
+                  });
+                }, 5000);
+
+                window.setTimeout(function () {
+                  $(".alert-danger").text(response.msg.join("\n"));
+                  $(".alert-danger").show();
+                  $('.alert-danger').css({'top':0,'opacity':1});
+                  $(".alert-danger").fadeTo(5000, 0).slideUp(2000, function () {
+                    // $('.alert-danger').hide();
+                  });
+                }, 1000);
+
+              }
+            }
+            script.pageLoadHide('#_pageLoad');
+          });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

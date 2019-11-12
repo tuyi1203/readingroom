@@ -1,0 +1,146 @@
+{template 'common/header'}
+
+<body>
+  <style>
+
+  </style>
+  <header>
+    <div class="header">
+      <!-- <div class="l"><a href="javascript:history.go(-1);" class="back"></a></div> -->
+      <h1>{$title}</h1>
+      <!-- <div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div> -->
+    </div>
+  </header>
+  <div class="container">
+    <div class="article">
+      <form action="./index.php" class="form-horizontal">
+        <input type="hidden" name="i" value="{$_GPC['i']}" />
+        <!-- <input type="hidden" name="a" value="bind" />
+        <input type="hidden" name="do" value="bind_do" /> -->
+        <div class="form-group">
+          <label for="name" class="col-xs-4 control-label">姓名</label>
+          <div class="col-xs-8">
+            <input type="text" name="name" id="name" class="form-control" id="name" placeholder="请输入真实姓名">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="mobile" class="col-xs-4 control-label">电话号码</label>
+          <div class="col-xs-8">
+            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="请输入电话号码">
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"> Remember me
+              </label>
+            </div>
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="col-xs-offset-4 col-xs-8">
+            <button type="submit" id="submit" class="btn btn-default">绑定微信</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- {template 'common/inner_guide'} -->
+  </div>
+  {template 'common/inner_footer'}
+  <div class="alert alert-success" role="alert" style="z-index:999;position:fixed;display:none;">我是正确的消息，我会在显示5秒后消失
+  </div>
+  <div class="alert alert-danger" role="alert" style="z-index:999;position:fixed;display:none;">我是错误的消息，我会在显示5秒后消失</div>
+  <div class="pageLoad displayCenter" id="_pageLoad">
+    <div class="box">
+      <p></p>
+      <div class="img">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <script>
+    require(["jquery", "script"], function ($, script) {
+      $(document).ready(() => {
+        const fixedTop = $('.header').outerHeight();
+        const infoCss = {
+          'top': fixedTop,
+          'width': '100%',
+        };
+
+        $('#submit').bind('click', function (e) {
+          e.preventDefault();
+          var options = {
+            method: 'POST',
+            url: "{php echo url('site/bind/bind_do');}",
+            data: {
+              i: $('#i').val(),
+              name: $('#name').val(),
+              mobile: $('#mobile').val(),
+              backurl:'{$backurl}',
+            },
+            beforeSend: function () {
+              script.pageLoadShow('#_pageLoad', '提交中，请稍候...');
+            },
+            dataType: 'json'
+          };
+          $.ajax(options).done(function (response) {
+            console.log(response);
+            if (response.result == "success") {
+              $('#closeModalBtn').trigger("click");
+              window.setTimeout(function () {
+                $(".alert-success").text('绑定成功！');
+                $(".alert-success").show();
+                $('.alert-success').css(infoCss);
+                $(".alert-success").fadeTo(4000, 0).slideUp(1000, function () {
+                  $('.alert-success').remove();
+                  location.href = response.jumpto;
+                });
+              }, 1000);
+            }
+            else {
+              if ($.type(response.msg) == 'string') {
+                window.setTimeout(function () {
+                  $(".alert-danger").text(response.msg);
+                  $(".alert-danger").show();
+                  $('.alert-danger').css({ 'top': 0, 'opacity': 1 });
+                  $('.alert-danger').css(infoCss);
+                  $(".alert-danger").fadeTo(5000, 0).slideUp(2000, function () {
+                    // $('.alert-danger').hide();
+                  });
+                }, 1000);
+              }
+              else {
+                // window.setTimeout(function () {
+                //   $(".alert-danger").html(response.msg.join("\n")).show().fadeTo(500, 0).slideUp(500, function () {
+                //     $(this).hide();
+                //   });
+                // }, 5000);
+
+                window.setTimeout(function () {
+                  $(".alert-danger").html(response.msg.join("<br>"));
+                  $(".alert-danger").show();
+                  $('.alert-danger').css({ 'top': 0, 'opacity': 1 });
+                  $('.alert-danger').css(infoCss);
+                  $(".alert-danger").fadeTo(5000, 0).slideUp(2000, function () {
+                    // $('.alert-danger').hide();
+                  });
+                }, 1000);
+
+              }
+            }
+            script.pageLoadHide('#_pageLoad');
+          });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

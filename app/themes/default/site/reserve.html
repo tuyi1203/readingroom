@@ -1,0 +1,93 @@
+{template 'common/header'}
+<body>
+  <style>
+  .tableInfo {
+    margin-bottom:5%;
+  }
+
+  .tableInfo p {
+    margin-bottom:5px;
+  }
+
+  .calendar {
+    margin-top:20px;
+    text-align:center;
+  }
+
+  .calendar a {
+    display:block;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .calendar td {
+    margin:0px;
+    padding:0px !important;
+  }
+
+  </style>
+	<header>
+		<div class="header">
+			<div class="l"><a href="javascript:history.go(-1);" class="back"></a></div>
+			<h1>{$title}</h1>
+			<div class="r"><a href="javascript:void(0);" class="menuControl" id="_menuLnk"><span><b></b><b></b><b></b></span></a></div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="article">
+      <div style="overflow: hidden;">
+        <h1 style="float:left;">{$thisMonth}</h1>
+        {if $showNextMonth}
+        <button type="button" style="float:right;" onclick="location.href='{php echo url('site/site/reading_room_reserve', array('nextmonth' => 1));}'" class="btn btn-default">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> 下月
+        </button>
+        {/if}
+        {if $showPreMonth}
+        <button type="button" style="float: right;" onclick="location.href='{php echo url('site/site/reading_room_reserve')}'" class="btn btn-default">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 上月
+        </button>
+        {/if}
+      </div>
+			<table class="table table-bordered calendar" style="">
+        <thead>
+          <tr class="info">
+            <td>一</td>
+            <td>二</td>
+            <td>三</td>
+            <td>四</td>
+            <td>五</td>
+            <td>六</td>
+            <td>日</td>
+          </tr>
+        </thead>
+        <tbody>
+          {loop $fullCalendar $index $row}
+            {if $row['start'] == '1'} <tr> {/if}
+              <td {if $row['week'] == 7 || $row['week'] == 6}class="danger"{/if} {if $row['fillday'] || $row['daypassed'] || !$row['abletobook']}class="active"{/if} {if $row['today'] == '1'} style="border:2px solid blueviolet;" {/if}>
+                {if $row['abletobook'] == '1'}<a href="{url 'site/site/reading_room_booking_log' array('date' => $row['date'])}">{$row['day']}</a>{else}<a href="javascript:void(0);">{$row['day']}</a>{/if}
+              </td>
+            {if $row['end'] == '1'} </tr> {/if}
+          {/loop}
+        </tbody>
+      </table>
+      <div class="tableInfo">
+          <p>
+            至少提前<b>三天</b>预约。
+          </p>
+          <p>
+            <b>灰色日期</b>不可点选。
+          </p>
+          <p>
+            <b style="color:red;"> 红色日期</b>代表当日预约不可预约。
+          </p>
+          <p>
+            <b style="color:blueviolet;"> 紫色框</b>为今天的日期。
+          </p>
+        </div>
+    </div>
+		<!-- {template 'common/inner_guide'} -->
+	</div>
+	{template 'common/inner_footer'}
+	{template 'common/menu'}
+</body>
+</html>

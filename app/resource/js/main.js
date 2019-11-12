@@ -6,7 +6,8 @@ requirejs.config({
     paths: {
         'jquery': 'jquery',
         $: "jquery",
-        script:'script'
+        script:'script',
+        bs:'bootstrap.min',
     },
     shim: {
         pagefull: {
@@ -16,6 +17,10 @@ requirejs.config({
         script: {
         	deps:['jquery'],
         	exports:'script'
+        },
+        bs: {
+            deps:['jquery'],
+            export:'bs',
         }
     }
 });

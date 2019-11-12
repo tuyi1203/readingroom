@@ -124,7 +124,7 @@ class validate{
     function isStrLength($val, $min, $max) 
     { 
         $theelement= trim($val); 
-        if(ereg("^[a-zA-Z0-9]{".$min.",".$max."}$",$val)) 
+        if(ereg("^[a-zA-Z0-9]{".$min.",".$max."}$",$theelement)) 
             return true; 
         return false; 
     } 
