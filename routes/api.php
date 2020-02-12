@@ -13,6 +13,35 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+$devAPPParams = [
+  'prefix' => 'v1/auth',
+//  'version' => 'v1',
+  'domain' => env('APP_DEV_DOMAIN'),
+  'namespace' => 'Api',
+];
+
+Route::group(
+//  [
+//  'prefix' => 'auth',
+//  'version' => 'v1',
+//  'domain' => env('APP_DEV_DOMAIN'),
+//],
+  $devAPPParams,
+  function () {
+    Route::group([
+      'namespace' => 'V1'
+    ], function () {
+      Route::post('login', 'AuthController@login');
+      Route::post('signup', 'AuthController@signup');
+
+      Route::group([
+        'middleware' => 'auth:api'
+      ], function () {
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+      });
+    });
+  });
