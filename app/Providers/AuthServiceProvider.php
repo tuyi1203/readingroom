@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-//        'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -28,5 +28,11 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
         //
+
+      // accessToken有效期
+//      Passport::tokensExpireIn(Carbon::now()->addDays(15));
+
+      // accessRefushToken有效期
+//      Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
     }
 }
