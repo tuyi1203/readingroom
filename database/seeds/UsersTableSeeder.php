@@ -12,7 +12,6 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
       // 初始化用户角色，将 1 号用户指派为『站长』
       $user = new User();
       $user->name = '涂涂';
