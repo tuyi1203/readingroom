@@ -7,35 +7,55 @@ use App\Models\Menu;
 
 class SeedMenusData extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-      Menu::create([
-        'name' => '用户管理',
-        'permission_id' => 2,
-        'url' => '/usermannager/list',
-        'sort' => 1
-      ]);
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Menu::create([
+      'id' => 1,
+      'name' => '站点管理',
+      'sort' => 0
+    ]);
+    Menu::create([
+      'id' => 2,
+      'name' => '人员及权限管理',
+      'parent_id' => 1,
+      'sort' => 1
+    ]);
+    Menu::create([
+      'id' => 3,
+      'name' => '人员管理',
+//      'permission_id' => 2,
+      'parent_id' => 2,
+      'url' => '/usermanager/user',
+      'sort' => 2
+    ]);
+    Menu::create([
+      'id' => 4,
+      'name' => '角色管理',
+//      'permission_id' => 3,
+      'parent_id' => 2,
+      'url' => '/usermanager/role',
+      'sort' => 2
+    ]);
 
-      Menu::create([
-        'name' => '内容管理',
-        'permission_id' => 1,
-        'url' => '/content/list',
-        'sort' => 2
-      ]);
-    }
+    Menu::create([
+      'name' => '预定管理',
+      'url' => '',
+      'sort' => 1
+    ]);
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-      DB::table('menus')->delete();
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    DB::table('menus')->delete();
+  }
 }

@@ -19,8 +19,8 @@ class CreateMenusTable extends Migration
       $table->bigIncrements('id');
       $table->string('name')->default('')->commit('菜单名称');
       $table->string('icon')->default('')->commit('菜单图标')->nullable();
-      $table->string('parent_id')->default('')->comment('父级菜单ID')->nullable();
-      $table->unsignedBigInteger('permission_id')->comment('权限ID');
+      $table->unsignedBigInteger('parent_id')->comment('父级菜单ID')->nullable();
+      $table->unsignedBigInteger('permission_id')->comment('权限ID')->nullable();
       $table->string('url')->default('')->comment('菜单链接')->nullable();
 //      $table->string('heightlight_url')->default('')->comment('菜单高亮');
       $table->tinyInteger('sort')->unsigned()->default(0)->comment('排序');
