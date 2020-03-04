@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Rules\Mobile;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use function _\find;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Menu;
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\APIBaseController;
+use App\Models\UserInfo;
 use Log;
+use Illuminate\Support\Facades\Cache;
+use Ramsey\Uuid\Uuid;
 
-class AuthController extends BaseController
+class AuthController extends APIBaseController
 {
   /**
    * Create user
@@ -55,80 +61,159 @@ class AuthController extends BaseController
    */
   public function login(Request $request)
   {
-    $request->validate([
+    $validator = Validator::make($request->all(), [
       'email' => 'required|string|email',
       'password' => 'required|string',
-      'remember_me' => 'boolean'
     ]);
+
+    if ($validator->fails()) {
+      $messages = [];
+      foreach ($validator->errors()->all() as $message) {
+        $messages[] = $message;
+      }
+      return $this->error(201, implode("\n", $messages));
+    }
+
+//    $request->validate([
+//      'email' => 'required|string|email',
+//      'password' => 'required|string',
+//      'remember_me' => 'boolean'
+//    ]);
 
     $credentials = request(['email', 'password']);
 
     if (!Auth::attempt($credentials)) {
-//      return response()->json([
-////        'message' => 'Unauthorized'
-////      ], 401);
-      return $this->error('401', 'Unauthorized');
+      return $this->error(401, 'Unauthorized');
     }
 
     $user = $request->user();
+    $userInfo = UserInfo::where('user_id', $user->id)->first();
+    return $this->saveLoginInfo($userInfo);
+  }
 
+  /**
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function bindLogin(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'senceid' => 'required|string',
+      'verifycode' => 'required|string',
+      'verifykey' => 'required|string',
+      'mobile' => ['required','string',new Mobile]
+    ]);
+
+    if ($validator->fails()) {
+      return $this->error(201, $validator->errors()->first());
+    }
+
+    $senceId = $request->senceid;
+    if (!Cache::has($senceId . 'wxloginopenid')) {//如果缓存中没有openid信息，则返回失败信息
+      return $this->error(401, 'no open id');
+    }
+
+    if (!Cache::has($request->verifykey)) {
+      return $this->error(401, '验证码已失效');
+    }
+
+    $verifyCodeInfo = Cache::get($request->verifykey);
+    if ($verifyCodeInfo['mobile'] !== $request->mobile
+      || !hash_equals($request->verifycode, $verifyCodeInfo['code'])) {
+      return $this->error(401, '验证码不正确');
+    }
+
+    //查看电话号码是否在用户表中存在
+    $user = User::where('mobile', $request->mobile)->first();
+    if (empty($user)) {
+      return $this->error(401, '没有您的用户信息，请联系系统管理员添加');
+    }
+
+    //保存用户信息，然后登陆
+    $openid = Cache::get($senceId . 'wxloginopenid');
+    $userInfo = UserInfo::Create([
+      'open_id' => $openid,
+      'user_id' => $user->id,
+      'mobile' => $user->mobile,
+      'fullname' => $user->name,
+      'guid' => (string) Str::uuid(),
+    ]);
+
+    Cache::forget($request->verifyKey);
+
+    return $this->saveLoginInfo($userInfo);
+  }
+
+  /**
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function QRLogin(Request $request)
+  {
+    //判断是否有场景值
+    if (!$senceid = $request->input('senceid')) {// 如果没有场景值，则返回登陆失败
+      return $this->error(401, 'no senceid');
+    }
+
+    //如果有场景值，则查看缓存中是否有场景值对应的openid
+    if (!$openid = Cache::get($senceid . 'wxloginopenid')) {//如果缓存中没有场景值对应的openid，则返回登陆失败
+      return $this->error(401, 'no open id');
+    }
+
+    //如果有场景值对应的openid，则查看用户信息表中是否有该openid对应的用户
+    $userInfo = UserInfo::where('open_id', $openid)->first();
+    if (empty($userInfo)) {// 如果没有该openid对应的用户，则返回需要绑定，前端弹出绑定页面，并清空轮询
+      return $this->success([
+        'needtobind' => true,
+      ]);
+    }
+
+    //如果有该openid对应的用户，则允许其登陆，并返回token、权限信息、用户信息、菜单信息等
+    return $this->saveLoginInfo($userInfo);
+
+  }
+
+  /**
+   * 保存登陆信息
+   * @param $userInfo
+   * @return JsonResponse
+   */
+  private function saveLoginInfo($userInfo)
+  {
+    $user = User::where('id', $userInfo->user_id)->first();
     // 取得用户所有权限
     $permissions = $user->getAllPermissions();
 
     // 取得用户所有菜单
     $allMenus = Menu::orderby('sort', 'desc')->get();
     $permissionMenus = $this->makeMenuData($permissions, $allMenus);
-//    $permissionMenus = $allMenus->reject(function ($menu) use ($permissions) {
-//      if (find($permissions, function ($permission) use ($menu) {
-//        return $menu->permission_id === $permission->id;
-//      })) {
-//        return $menu;
-//      }
-//      return find($permissions, function ($permission) use ($menu) {
-//        return $menu->permission_id === $permission->id;
-//      });
-//    });
-
-
-//    $permissionMenus = $allMenus->reject(function ($record) use ($permissions) {
-//      return $record->permission_id === 1;
-//    });
 
     $tokenResult = $user->createToken('Personal Access Token');
     $token = $tokenResult->token;
-
-    if ($request->remember_me)
-      $token->expires_at = Carbon::now()->addWeeks(1);
+    $token->expires_at = Carbon::now()->addDays(1);
+//    if ($request->remember_me) {
+//      $token->expires_at = Carbon::now()->addWeeks(1);
+//    }
 
     $token->save();
-
-//    return response()->json([
-//      'access_token' => $tokenResult->accessToken,
-//      'token_type' => 'Bearer',
-//      'permissions' => $permissions,
-//      'menus' => $permissionMenus,
-//      'expires_at' => Carbon::parse(
-//        $tokenResult->token->expires_at
-//      )->toDateTimeString()
-//    ]);
 
     return $this->success([
       'access_token' => $tokenResult->accessToken,
       'token_type' => 'Bearer',
       'permissions' => $permissions,
       'menus' => $permissionMenus,
-      'user' => $request->user(0),
+      'user' => $userInfo,
       'expires_at' => Carbon::parse(
         $tokenResult->token->expires_at
       )->toDateTimeString()
     ]);
   }
 
-
   /**
    * 组装菜单数据
    * @param $permissions 用户所有权限
    * @param $allMenus 全部菜单数据
+   * @return array
    */
   private function makeMenuData($permissions, $allMenus)
   {

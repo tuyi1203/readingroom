@@ -30,7 +30,7 @@ class SeedRolesAndPermissionsData extends Migration
     $founder = Role::create([
       'name' => 'Founder',
     ]);
-    $founder->givePermissionTo('manage_contents');
+    $founder->givePermissionTo('manage_contents');;
     $founder->givePermissionTo('manage_users');
     $founder->givePermissionTo('manage_roles');
     $founder->givePermissionTo('edit_settings');
