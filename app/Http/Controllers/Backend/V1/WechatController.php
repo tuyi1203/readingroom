@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Backend\V1;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\APIBaseController;
+use App\Http\Controllers\Backend\V1\APIBaseController;
 use Log;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Cache;
@@ -23,6 +23,7 @@ class WechatController extends APIBaseController
    */
   public function __construct()
   {
+//    $this->middleware('auth:backend');
     $this->weChatApp = app('wechat.official_account');
   }
 
@@ -38,7 +39,6 @@ class WechatController extends APIBaseController
         $method = str::camel('handle_' . $message['MsgType']);
         if (method_exists($this, $method)) {
           $this->openid = $message['FromUserName'];
-
           return call_user_func_array([$this, $method], [$message]);
         }
         Log::info('无此处理方法:' . $method);
@@ -73,6 +73,7 @@ class WechatController extends APIBaseController
    * 扫描带参二维码事件
    *
    * @param $event
+   * @return string|void
    */
   public function eventSCAN($event)
   {
@@ -86,6 +87,7 @@ class WechatController extends APIBaseController
    * 标记可登录用户
    *
    * @param $event
+   * @return string|void
    */
   public function markTheLogin($event)
   {

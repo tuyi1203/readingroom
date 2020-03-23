@@ -62,6 +62,11 @@ class Kernel extends HttpKernel
     'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+    'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+    'backend' => \App\Http\Middleware\Backend::class,
   ];
 
   /**

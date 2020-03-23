@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Backend;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,17 +18,17 @@ class UserInfo extends Model
     'user_id',
     'guid',
     'open_id',
-    'nickname',
+    'nick_name',
     'union_id',
     'mobile',
     'avatar',
     'gender',
     'address',
-    'fullname',
+    'full_name',
   ];
 
   public function user()
   {
-    return $this->belongsTo('App\Models\User');
+    return $this->belongsTo('App\Models\Backend\User');
   }
 }

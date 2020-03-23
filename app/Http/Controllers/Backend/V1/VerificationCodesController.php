@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Backend\V1;
 
 use Illuminate\Support\Str;
 use Overtrue\EasySms\EasySms;
-use App\Http\Controllers\APIBaseController;
+use App\Http\Controllers\Backend\V1\APIBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;

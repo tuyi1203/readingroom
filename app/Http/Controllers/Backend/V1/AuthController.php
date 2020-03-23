@@ -1,32 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Backend\V1;
 
+use \Hash;
 use App\Rules\Mobile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use function _\find;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Menu;
-use App\Http\Controllers\APIBaseController;
-use App\Models\UserInfo;
+use App\Models\Backend\User;
+use App\Models\Backend\Menu;
+use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\Models\Backend\UserInfo;
 use Log;
 use Illuminate\Support\Facades\Cache;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class AuthController extends APIBaseController
 {
   /**
    * Create user
    *
-   * @param  [string] name
-   * @param  [string] email
-   * @param  [string] password
-   * @param  [string] password_confirmation
-   * @return [string] message
+   * @param Request $request
+   * @return JsonResponse [string] message
    */
   public function signup(Request $request)
   {
@@ -44,9 +42,10 @@ class AuthController extends APIBaseController
 
     $user->save();
 
-    return response()->json([
-      'message' => 'Successfully created user!'
-    ], 201);
+//    return response()->json([
+//      'message' => 'Successfully created user!'
+//    ], 201);
+    return $this->success(null,'Successfully created user!');
   }
 
   /**
@@ -71,7 +70,7 @@ class AuthController extends APIBaseController
       foreach ($validator->errors()->all() as $message) {
         $messages[] = $message;
       }
-      return $this->error(201, implode("\n", $messages));
+      return $this->error(422, implode("\n", $messages));
     }
 
 //    $request->validate([
@@ -80,13 +79,23 @@ class AuthController extends APIBaseController
 //      'remember_me' => 'boolean'
 //    ]);
 
+    /*
+     * 当守卫从web改成api后，不能通过原有的Auth来验证，否则会报错，
+     * 此时需要自行验证。
+     */
+    /*
     $credentials = request(['email', 'password']);
 
     if (!Auth::attempt($credentials)) {
       return $this->error(401, 'Unauthorized');
     }
+    */
 
-    $user = $request->user();
+    $user = User::where('email', $request->email)->first();
+    if (!$user || !Hash::check($request->password, $user->password)) {
+      return $this->error(402,'用户名或密码错误');
+    }
+
     $userInfo = UserInfo::where('user_id', $user->id)->first();
     return $this->saveLoginInfo($userInfo);
   }
@@ -101,11 +110,11 @@ class AuthController extends APIBaseController
       'senceid' => 'required|string',
       'verifycode' => 'required|string',
       'verifykey' => 'required|string',
-      'mobile' => ['required','string',new Mobile]
+      'mobile' => ['required', 'string', new Mobile]
     ]);
 
     if ($validator->fails()) {
-      return $this->error(201, $validator->errors()->first());
+      return $this->validateError($validator->errors()->first());
     }
 
     $senceId = $request->senceid;
@@ -135,8 +144,8 @@ class AuthController extends APIBaseController
       'open_id' => $openid,
       'user_id' => $user->id,
       'mobile' => $user->mobile,
-      'fullname' => $user->name,
-      'guid' => (string) Str::uuid(),
+      'full_name' => $user->name,
+      'guid' => (string)Str::uuid(32)->getHex(),
     ]);
 
     Cache::forget($request->verifyKey);
@@ -281,5 +290,10 @@ class AuthController extends APIBaseController
   public function user(Request $request)
   {
     return response()->json($request->user());
+  }
+
+  protected function guard()//这个方法trait也有，但是如果我们用其他的guard,就要重写方法
+  {
+    return Auth::guard('backend');//你要使用的guard
   }
 }

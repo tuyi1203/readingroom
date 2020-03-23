@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Backend;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +12,7 @@ class User extends Authenticatable
 {
   use Notifiable, HasApiTokens, hasRoles;
   protected $table = 'users';
+  protected $guard_name = 'backend';
 
   /**
    * The attributes that are mass assignable.
@@ -19,7 +20,7 @@ class User extends Authenticatable
    * @var array
    */
   protected $fillable = [
-    'name', 'email', 'password',
+    'name', 'email', 'password', 'mobile',
   ];
 
   /**
@@ -47,4 +48,5 @@ class User extends Authenticatable
   {
     return $this->hasOne('App\Models\UserInfo');
   }
+
 }

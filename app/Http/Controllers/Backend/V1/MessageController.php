@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Backend\V1;
 
-use App\Http\Controllers\APIBaseController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Backend\V1\APIBaseController;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-Use Log;
+use Illuminate\Http\Request;
 
-class WechatXSJController extends APIBaseController
+class MessageController extends APIBaseController
 {
   protected $weChatApp;
   protected $openid;
+
   /**
    * Construct
    *
@@ -20,48 +19,6 @@ class WechatXSJController extends APIBaseController
   public function __construct()
   {
     $this->weChatApp = app('wechat.official_account');
-  }
-
-  /**
-   * @param Request $request
-   * @return mixed
-   */
-  public function serve(Request $request)
-  {
-    Log::info('request arrived.');
-    $this->weChatApp->server->push(function ($message) {
-      if ($message) {
-        $method = str::camel('handle_' . $message['MsgType']);
-        if (method_exists($this, $method)) {
-          $this->openid = $message['FromUserName'];
-
-          return call_user_func_array([$this, $method], [$message]);
-        }
-        Log::info('无此处理方法:' . $method);
-      }
-    });
-
-    return $this->weChatApp->server->serve();
-  }
-
-  /**
-   * 事件引导处理方法（事件有许多，拆分处理）
-   *
-   * @param $event
-   *
-   * @return mixed
-   */
-  protected function handleText($message)
-  {
-    Log::info('收到文字信息：', $message['content']);
-
-    $keyword = $message['content'];
-    if ($keyword == 'openid') {
-      return $this->openid;
-    }
-
-
-    Log::info('文字信息处理结束');
   }
 
   /**
@@ -109,16 +66,5 @@ class WechatXSJController extends APIBaseController
       ]);
     }
     return $this->success($sendRes);
-  }
-
-  /**
-   * 取得用户OPENID
-   * @param Request $request
-   */
-  public function getOpenId(Request $request)
-  {
-    return $this->success([
-      'ni'=>'ok',
-    ]);
   }
 }
