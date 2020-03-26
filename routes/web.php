@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::apiResource('/api/v1/roles', 'RoleController');//角色接口
 Route::get('/', function () {
     return view('welcome');
 });
+
+

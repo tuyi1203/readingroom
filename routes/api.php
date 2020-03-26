@@ -63,9 +63,15 @@ Route::group([
         'namespace' => 'Auth',
         'middleware' => ['auth:backend', 'throttle:120,1']//passport验证
       ], function () {
-//        Route::get('user', 'AuthController@user');
-        Route::apiResource('roles', 'RoleController');//角色接口
-        Route::get('permissions', 'PermissionController@index'); // 获取全部权限接口
+        //角色接口
+        Route::apiResource('roles', 'RoleController');
+
+        // 权限接口
+        Route::get('permissions/rid/{rid}', 'PermissionController@index'); // 获取角色权限接口
+        Route::apiResource('permissions', 'PermissionController');
+        Route::put('permissions/rid/{rid}', 'PermissionController@updateRolePermissions'); // 更新角色权限接口
+
+
       });
     });
   });

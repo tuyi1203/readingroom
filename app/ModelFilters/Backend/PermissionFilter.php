@@ -4,7 +4,7 @@ namespace App\ModelFilters\Backend;
 
 use EloquentFilter\ModelFilter;
 
-class RoleFilter extends ModelFilter
+class PermissionFilter extends ModelFilter
 {
   /**
    * Related Models that have ModelFilters as well as the method on the ModelFilter
@@ -14,19 +14,19 @@ class RoleFilter extends ModelFilter
    */
   public $relations = [];
 
-  public function nameZn($value)
-  {
-    return $this->whereLike('name_zn', $value);
-  }
-
-  public function name($value)
-  {
-    return $this->whereLike('name', $value);
-  }
-
   public function guardName($value)
   {
     return $this->where('guard_name', $value);
+  }
+
+  public function isHide($value)
+  {
+    return $this->where('is_hide', $value);
+  }
+
+  public function ids($ids)
+  {
+    return $this->whereIn('id', $ids);
   }
 
   public function order($value)
@@ -49,5 +49,6 @@ class RoleFilter extends ModelFilter
     if (!$this->input('order')) {
       $this->push('order', 'default');
     }
+    $this->push('isHide', 0);
   }
 }

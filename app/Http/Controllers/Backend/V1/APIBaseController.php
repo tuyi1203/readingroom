@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Backend\V1;
 
 use Closure;
-
+use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class APIBaseController extends Controller
 {
 
-  protected $user;//登陆用户
+  protected $user; //登陆用户
 
   public function __construct()
   {
@@ -30,27 +30,64 @@ class APIBaseController extends Controller
     $this->user->hasPermissionTo($permission);
   }
 
-  //成功返回
+  protected function response($data, $code = FoundationResponse::HTTP_OK)
+  {
+    return response()->json($data, $code);
+  }
+
+
+  /**
+   * 成功返回
+   * @param $data
+   * @param string $msg
+   */
   protected function success($data, $msg = "ok")
   {
+//    return $this->response($data);
+//    if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+//      return $this->response('22');
+//    }
+
     $this->parseNull($data);
+    $result = ['data' => $data];
+
+    //优化列表数据输出形式
+//    if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+    if (isset($data['data'])) {
+      $result = [
+        'current_page' => $data['current_page'],
+        'from' => $data['from'],
+        'to' => $data['to'],
+        'total' => $data['total'],
+        'last_page' => $data['last_page'],
+        'last_page_url' => $data['last_page_url'],
+        'next_page_url' => $data['next_page_url'],
+        'per_page' => $data['per_page'],
+        'prev_page_url' => $data['prev_page_url'],
+        'data' => $data['data'],
+      ];
+    }
     $result = [
       "code" => 0,
       "msg" => $msg,
-      "results" => ["data" => $data],
+      "results" => $result,
     ];
-    return response()->json($result, 200);
+
+    return $this->response($result);
+
   }
 
   //失败返回
   protected function error($code = 422, $msg = "fail", $data = "")
   {
+    $this->parseNull($data);
     $result = [
       "code" => $code,
       "msg" => $msg,
       "results" => ["data" => $data],
     ];
-    return response()->json($result, 200);
+
+    return $this->response($result);
   }
 
   /**
@@ -98,6 +135,7 @@ class APIBaseController extends Controller
   protected function getParams(Request $request)
   {
     $params = $request->all();
+
     $params['guard_name'] = $this->getGuardName($request);
     return $params;
   }
@@ -117,7 +155,7 @@ class APIBaseController extends Controller
    */
   protected function unauthorized($msg = 'Unauthorized.')
   {
-    return $this->error(401, $msg);
+    return $this->error(FoundationResponse::HTTP_UNAUTHORIZED, $msg);
   }
 
   /**
@@ -127,7 +165,7 @@ class APIBaseController extends Controller
    */
   protected function failed($msg = 'Operate failed!')
   {
-    return $this->error(510, $msg);
+    return $this->error(FoundationResponse::HTTP_INTERNAL_SERVER_ERROR, $msg);
   }
 
   /*
@@ -135,7 +173,7 @@ class APIBaseController extends Controller
    */
   protected function forbidden()
   {
-    return $this->error(403, '请求拒绝');
+    return $this->error(FoundationResponse::HTTP_FORBIDDEN, '请求拒绝');
   }
 
   //如果返回的数据中有 null 则那其值修改为空 （安卓和IOS 对null型的数据不友好，会报错）

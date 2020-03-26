@@ -30,11 +30,11 @@ class RoleController extends APIBaseController
       ->paginate($this->getPageSize($request), ['*'], 'page', $this->getCurrentPage($request));
 
     foreach ($roles as $index => $role) {
-      $permissions = $role->getAllPermissions()->toArray();
+      $permissions = $role->getAllPermissions();
       $roles[$index]['permissions'] = $permissions;
     }
 
-    return $this->success($roles);
+    return $this->success($roles->toArray());
   }
 
   /**
