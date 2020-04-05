@@ -29,6 +29,11 @@ class PermissionFilter extends ModelFilter
     return $this->whereIn('id', $ids);
   }
 
+  public function pid($pid)
+  {
+    return $this->where('pid', $pid);
+  }
+
   public function order($value)
   {
     switch ($value) {

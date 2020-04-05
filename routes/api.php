@@ -68,6 +68,7 @@ Route::group([
 
         // 权限接口
         Route::get('permissions/rid/{rid}', 'PermissionController@index'); // 获取角色权限接口
+        Route::get('permissions/pid/{pid}', 'PermissionController@index'); // 获取权限接口
         Route::apiResource('permissions', 'PermissionController');
         Route::put('permissions/rid/{rid}', 'PermissionController@updateRolePermissions'); // 更新角色权限接口
 

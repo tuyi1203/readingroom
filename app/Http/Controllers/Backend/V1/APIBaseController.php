@@ -130,13 +130,17 @@ class APIBaseController extends Controller
   /**
    * 取得参数
    * @param Request $request
+   * @param null $extParams
    * @return array
    */
-  protected function getParams(Request $request)
+  protected function getParams(Request $request, $extParams = null)
   {
     $params = $request->all();
 
     $params['guard_name'] = $this->getGuardName($request);
+    if ($extParams) {
+      $params = array_merge($params, $extParams);
+    }
     return $params;
   }
 

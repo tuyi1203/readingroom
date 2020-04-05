@@ -14,27 +14,50 @@ class PermissionController extends APIBaseController
   /**
    * 获取权限列表接口
    * @param Request $request
+   * @param null $id
    * @return JsonResponse
    */
-  public function index(Request $request, $rid = null)
+  public function index(Request $request, $id = null)
   {
     //权限检查
     $this->checkPermission('list_permissions');
 
     //如果传递了roleid参数，则取出所有该角色拥有的权限
-    if ($rid) {
-      $role = Role::where('id', $rid)->firstOrFail();
+
+    if ($request->route('rid') && $id) {
+      $role = Role::where('id', $id)->firstOrFail();
 
       $permissions = $role->getAllPermissions();
 
       return $this->success($permissions);
     }
 
-    $permissions = Permission::where('is_hide', 0)
-      ->where('guard_name', $this->getGuardName($request))
-      ->orderby('order_sort', 'desc')
-      ->orderby('id', 'asc')
-      ->get();
+    //如果传递了pid参数，则取出所有子权限
+    if ($request->route('pid') && $id) {
+
+      $permissions = Permission::filter($this->getParams($request, [
+        'pid' => $id,
+      ]), PermissionFilter::class)
+        ->paginate($this->getPageSize($request), [
+          'id',
+          'pid',
+          'name',
+          'name_cn'
+        ], 'page', $this->getCurrentPage($request))
+        ->toArray();
+
+      return $this->success($permissions);
+    }
+
+    $permissions = Permission::filter($this->getParams($request),
+      PermissionFilter::class)
+      ->paginate($this->getPageSize($request), [
+        'id',
+        'pid',
+        'name',
+        'name_cn'
+      ], 'page', $this->getCurrentPage($request))
+      ->toArray();
 
     //分层级组合权限列表
     /*
@@ -74,7 +97,7 @@ class PermissionController extends APIBaseController
 
     //获取权限的添加修改关系数组
     $permissionsNeedToHandle = $this->diffPermissions($request, $role);
-
+//    return $this->success($permissionsNeedToHandle);
     if (count($permissionsNeedToHandle)) {
       foreach ($permissionsNeedToHandle as $permission) {
         if ($permission['action'] == 'add') {
