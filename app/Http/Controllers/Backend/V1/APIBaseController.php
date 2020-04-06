@@ -40,13 +40,10 @@ class APIBaseController extends Controller
    * 成功返回
    * @param $data
    * @param string $msg
+   * @return JsonResponse
    */
   protected function success($data, $msg = "ok")
   {
-//    return $this->response($data);
-//    if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-//      return $this->response('22');
-//    }
 
     $this->parseNull($data);
     $result = ['data' => $data];

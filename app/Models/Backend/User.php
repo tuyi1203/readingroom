@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use EloquentFilter\Filterable;
+use App\Models\Backend\UserInfo;
 
 class User extends Authenticatable
 {
-  use Notifiable, HasApiTokens, hasRoles;
+  use Notifiable, HasApiTokens, hasRoles, Filterable;
   protected $table = 'users';
   protected $guard_name = 'backend';
 
@@ -46,7 +48,7 @@ class User extends Authenticatable
    */
   public function userInfo()
   {
-    return $this->hasOne('App\Models\UserInfo');
+    return $this->hasOne(UserInfo::class,'user_id','id');
   }
 
 }

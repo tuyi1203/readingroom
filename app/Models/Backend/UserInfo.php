@@ -3,9 +3,13 @@
 namespace App\Models\Backend;
 
 use Illuminate\Database\Eloquent\Model;
+use EloquentFilter\Filterable;
+
 
 class UserInfo extends Model
 {
+  use Filterable;
+
   protected $table = 'user_infos';
     //
 
@@ -27,8 +31,8 @@ class UserInfo extends Model
     'full_name',
   ];
 
-  public function user()
-  {
-    return $this->belongsTo('App\Models\Backend\User');
-  }
+//  public function user()
+//  {
+//    return $this->belongsTo('App\Models\Backend\User');
+//  }
 }
