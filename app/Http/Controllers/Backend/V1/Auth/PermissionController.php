@@ -69,16 +69,6 @@ class PermissionController extends APIBaseController
   }
 
   /**
-   * 保存修改角色权限
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function update(Request $request, $id = null)
-  {
-
-  }
-
-  /**
    * 更新角色拥有的权限列表
    * @param Request $request
    * @param null $rid

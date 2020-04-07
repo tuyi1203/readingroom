@@ -3,6 +3,7 @@
 namespace App\Models\Backend;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -44,11 +45,20 @@ class User extends Authenticatable
   ];
 
   /**
-   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   * @return HasOne
    */
   public function userInfo()
   {
-    return $this->hasOne(UserInfo::class,'user_id','id');
+    return $this->hasOne(UserInfo::class, 'user_id', 'id');
+  }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::deleting(function ($user) {
+      $user->userInfo()->delete();
+    });
   }
 
 }
