@@ -45,7 +45,7 @@ class AuthController extends APIBaseController
 //    return response()->json([
 //      'message' => 'Successfully created user!'
 //    ], 201);
-    return $this->success(null,'Successfully created user!');
+    return $this->success(null, 'Successfully created user!');
   }
 
   /**
@@ -91,9 +91,9 @@ class AuthController extends APIBaseController
     }
     */
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->where('is_active', 1)->first();
     if (!$user || !Hash::check($request->password, $user->password)) {
-      return $this->error(402,'用户名或密码错误');
+      return $this->error(402, '用户名或密码错误');
     }
 
     $userInfo = UserInfo::where('user_id', $user->id)->first();

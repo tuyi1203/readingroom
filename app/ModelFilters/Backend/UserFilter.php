@@ -29,6 +29,21 @@ class UserFilter extends ModelFilter
     return $this->related('userInfo', 'gender', '=', $gender);
   }
 
+  public function email($email)
+  {
+    return $this->whereLike('email', $email);
+  }
+
+  public function roles($rids)
+  {
+    if (!is_array($rids)) {
+      $rids = [$rids];
+    }
+    return $this->whereHas('roles', function ($query) use ($rids) {
+      $query->whereIn(config('permission.table_names.roles') . '.id', $rids);
+    });
+  }
+
   public function order($value)
   {
     switch ($value) {

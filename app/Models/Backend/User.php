@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use EloquentFilter\Filterable;
+use App\Models\Backend\ExtendRole as Role;
 use App\Models\Backend\UserInfo;
 
 class User extends Authenticatable
@@ -51,6 +52,7 @@ class User extends Authenticatable
   {
     return $this->hasOne(UserInfo::class, 'user_id', 'id');
   }
+
 
   protected static function boot()
   {
