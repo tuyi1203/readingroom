@@ -116,6 +116,7 @@ class UserController extends APIBaseController
     $user = User::where('id', $id)->firstOrFail();
     $user->name = $request->input('name');
     $user->email = $request->input('email');
+    $user->is_active = $request->input('is_active');
     if ($request->filled('password')) {
       $user->password = bcrypt($request->input('password'));
     }
