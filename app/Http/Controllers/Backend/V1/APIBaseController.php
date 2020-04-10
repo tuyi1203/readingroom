@@ -27,7 +27,9 @@ class APIBaseController extends Controller
    */
   protected function checkPermission($permission)
   {
-    $this->user->hasPermissionTo($permission);
+    if (!$this->user->hasPermissionTo($permission)) {
+      throw new \Spatie\Permission\Exceptions\UnauthorizedException(403);
+    }
   }
 
   protected function response($data, $code = FoundationResponse::HTTP_OK)
