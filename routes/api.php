@@ -72,8 +72,19 @@ Route::group([
         Route::apiResource('permissions', 'PermissionController'); //获取所有权限接口
         Route::put('permissions/rid/{rid}', 'PermissionController@updateRolePermissions'); // 更新角色权限接口
 
+
         //用户管理接口
         Route::apiResource('users', 'UserController');
+
+
+        // 职称申报系统接口
+        Route::get('progress/baseinfo/detail','ProgressBaseInfoController@getBaseInfo'); // 获得用户自己申报基本信息接口
+        Route::post('progress/baseinfo/edit','ProgressBaseInfoController@edit'); // 修改用户自己的申报基本信息接口
+
+
+        Route::apiResource('progress/baseinfo','ProgressBaseInfoController'); // 教师申报基本信息接口
+        Route::get('progress/dict','ProgressDictController@index'); // 数据字典取得接口
+
       });
     });
   });
