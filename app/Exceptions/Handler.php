@@ -81,6 +81,14 @@ class Handler extends ExceptionHandler
       return response()->json($result, 200);
     }
 
+    if ($exception instanceof  \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+      $result = [
+        "code" => 404,
+        "msg" => 'Not found API.',
+      ];
+      return response()->json($result, 200);
+    }
+
     return parent::render($request, $exception);
   }
 }
