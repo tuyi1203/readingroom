@@ -35,7 +35,7 @@ class ProgressBaseInfoController extends APIBaseController
     $this->checkPermission('detail_baseinfo');
     $baseInfo = ProgressBaseinfo::where('user_id', $this->user->id)->first();
     if (is_null($baseInfo)) {
-      return $this->success([]);
+      return $this->success(null);
     }
     return $this->success($baseInfo);
   }
@@ -50,7 +50,8 @@ class ProgressBaseInfoController extends APIBaseController
     $this->checkPermission('add_or_edit_baseinfo');
 
     $validator = Validator::make($request->all(), [
-      'name' => 'required|string|unique:users',
+//      'name' => 'required|string|unique:users',
+      'name' => 'required|string',
       'old_name' => 'required|string',
       'min_zu' => 'required',
       'gender' => 'required',
@@ -62,12 +63,12 @@ class ProgressBaseInfoController extends APIBaseController
       'had_position' => 'required',
       'apply_position' => 'required',
       'review_team_name' => 'required',
-      'graduate_school' => 'required',
-      'graduate_time' => 'required',
-      'education' => 'required',
-      'education_no' => 'required',
-      'degree_no' => 'required',
-      'subject' => 'required',
+//      'graduate_school' => 'required',
+//      'graduate_time' => 'required',
+//      'education' => 'required',
+//      'education_no' => 'required',
+//      'degree_no' => 'required',
+//      'subject' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -89,12 +90,12 @@ class ProgressBaseInfoController extends APIBaseController
       'had_position' => $request->input('had_position'),
       'apply_position' => $request->input('apply_position'),
       'review_team_name' => $request->input('review_team_name'),
-      'graduate_school' => $request->input('graduate_school'),
-      'graduate_time' => $request->input('graduate_time'),
-      'education' => $request->input('education'),
-      'education_no' => $request->input('education_no'),
-      'degree_no' => $request->input('degree_no'),
-      'subject' => $request->input('subject'),
+//      'graduate_school' => $request->input('graduate_school'),
+//      'graduate_time' => $request->input('graduate_time'),
+//      'education' => $request->input('education'),
+//      'education_no' => $request->input('education_no'),
+//      'degree_no' => $request->input('degree_no'),
+//      'subject' => $request->input('subject'),
     ]);
 
     if (!$baseInfo) {
