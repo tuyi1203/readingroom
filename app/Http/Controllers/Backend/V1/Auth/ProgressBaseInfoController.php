@@ -63,12 +63,6 @@ class ProgressBaseInfoController extends APIBaseController
       'had_position' => 'required',
       'apply_position' => 'required',
       'review_team_name' => 'required',
-//      'graduate_school' => 'required',
-//      'graduate_time' => 'required',
-//      'education' => 'required',
-//      'education_no' => 'required',
-//      'degree_no' => 'required',
-//      'subject' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -90,12 +84,6 @@ class ProgressBaseInfoController extends APIBaseController
       'had_position' => $request->input('had_position'),
       'apply_position' => $request->input('apply_position'),
       'review_team_name' => $request->input('review_team_name'),
-//      'graduate_school' => $request->input('graduate_school'),
-//      'graduate_time' => $request->input('graduate_time'),
-//      'education' => $request->input('education'),
-//      'education_no' => $request->input('education_no'),
-//      'degree_no' => $request->input('degree_no'),
-//      'subject' => $request->input('subject'),
     ]);
 
     if (!$baseInfo) {
