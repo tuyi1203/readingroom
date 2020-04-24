@@ -82,7 +82,10 @@ Route::group([
         Route::apiResource('progress/baseinfo', 'ProgressBaseInfoController'); // 教师申报基本信息接口
         Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
 
-        Route::apiResource('files', 'FileController');
+        Route::apiResource('files', 'FileController'); // 文件操作接口
+
+        Route::post('progress/morals/edit','ProgressMoralController@edit'); //师德师风接口
+        Route::get('progress/morals/detail','ProgressMoralController@detail'); //师德师风接口
 
       });
     });
