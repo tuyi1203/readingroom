@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
-use App\Models\Backend\ExtendRole as Role;
+use Defuse\Crypto\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,9 +20,32 @@ class FileController extends APIBaseController
    */
   public function index(Request $request)
   {
-    $list = FileInfo::where('bize_type', $request->bize_type)->where('bize_id', $request->bize_id)
-      ->orderby('id', 'asc')->get()->toArray();
-    return $this->success($list);
+    $list = [];
+    if (!$request->has('bize_id')) {
+      $list = FileInfo::where('bize_type', $request->bize_type)
+        ->where('bize_id', null)
+        ->where('user_id', $this->user->id)
+        ->where('del_flg', 0)
+        ->orderby('id', 'asc')
+        ->get();
+    } else {
+      $list = FileInfo::where('bize_type', $request->bize_type)
+        ->where('bize_id', $request->bize_id)
+        ->where('del_flg', 0)
+        ->orderby('id', 'asc')
+        ->get();
+    }
+
+    return $this->success($list->map(function ($item) {
+      return [
+        "id" => $item->id,
+        "bize_type" => $item->bize_type,
+        "bize_id" => $item->bize_id,
+        "file_url" => env('APP_URL') . $item->relative_path . $item->file_path . '/' . $item->new_name,
+        'created_at' => $item->created_at,
+        "original_name" => $item->original_name,
+      ];
+    }));
   }
 
   /**
@@ -46,6 +69,36 @@ class FileController extends APIBaseController
   }
 
   /**
+   * 下载文件
+   * @param Request $request
+   * @param $id
+   * @return
+   */
+  public function download(Request $request, $id)
+  {
+    $file = FileInfo::where('id', $id)
+      ->where('user_id', $this->user->id)
+      ->where('del_flg', 0)
+      ->firstOrFail();
+
+    $headers = [
+      'Content-Type' => $file->file_type,
+    ];
+
+//    return response()->stream(function () use ($file) {
+//      echo file_get_contents(storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name);
+//    }, 200, $headers);
+
+    return response()
+      ->download(storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name,
+        $file->original_name, $headers
+      );
+
+//    return Storage::disk('upload')
+//      ->download($file->file_path . '/' . $file->new_name, $file->original_name, $headers);
+  }
+
+  /**
    * 文件上传接口
    * @param Request $request
    * @return JsonResponse
@@ -60,9 +113,9 @@ class FileController extends APIBaseController
       return $this->validateError($validator->errors()->first());
     }
 
-    $file = $request->file('avatar');
+    $file = $request->file('file');
 
-    if (!$request->hasFile('avatar')) {
+    if (!$request->hasFile('file')) {
       return $this->failed('请选择上传的文件');
     }
 
@@ -96,15 +149,21 @@ class FileController extends APIBaseController
 
     $fileInfo = FileInfo::create([
       'bize_type' => $request->input('bize_type'),
+      'bize_id' => $request->has('bize_id') ? $request->input('bize_id') : null,
       'original_name' => $originalName,
       'new_name' => $newFileName,
       'file_type' => $fileMimeType,
       'file_size' => $fileSize,
       'file_path' => $newPath,
       'relative_path' => $fileConf->resource_realm,
+      'user_id' => $this->user->id,
+      'real_path' => $newPath . '/' . $newFileName,
       'del_flg' => 0,
     ]);
 
-    return $this->success($fileInfo->id);
+    return $this->success([
+      'fileId' => $fileInfo->id,
+      'created_at' => $fileInfo->created_at,
+    ]);
   }
 }

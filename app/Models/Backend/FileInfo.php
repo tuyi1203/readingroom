@@ -17,5 +17,7 @@ class FileInfo extends Model
     'file_path',
     'relative_path',
     'del_flg',
+    'real_path',
+    'user_id'
   ];
 }

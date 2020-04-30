@@ -21,52 +21,53 @@ class ProgressMoralController extends APIBaseController
   public function detail(Request $request)
   {
     $this->checkPermission('detail_moral');
-    $moralInfo = Moral::where('user_id', $this->user->id)->where('category', $request->input('category'))->first()->toArray();
-    if (!$moralInfo) {
+    $detail = Moral::where('user_id', $this->user->id)->where('category', $request->input('category'))->first()->toArray();
+    if (!$detail) {
       return $this->validateError('No record.');
     }
 
+    $moralInfo = [];
     switch ($request->input('category')) {
       case 'summary':
         $moralInfo = [
-          'id' => $moralInfo['id'],
-          'category' => $moralInfo['category'],
-          'user_id' => $moralInfo['user_id'],
-          'summary' => $moralInfo['summary'],
+          'id' => $detail['id'],
+          'category' => $detail['category'],
+          'user_id' => $detail['user_id'],
+          'summary' => $detail['summary'],
         ];
         break;
       case 'kaohe':
         $moralInfo = [
-          'id' => $moralInfo['id'],
-          'category' => $moralInfo['category'],
-          'user_id' => $moralInfo['user_id'],
-          'kaohe' => $moralInfo['kaohe'],
-          'niandu1' => $moralInfo['niandu1'],
-          'niandu1_kaohe' => $moralInfo['niandu1_kaohe'],
-          'niandu2' => $moralInfo['niandu2'],
-          'niandu2_kaohe' => $moralInfo['niandu2_kaohe'],
-          'niandu3' => $moralInfo['niandu3'],
-          'niandu3_kaohe' => $moralInfo['niandu3_kaohe'],
-          'niandu4' => $moralInfo['niandu4'],
-          'niandu4_kaohe' => $moralInfo['niandu4_kaohe'],
-          'niandu5' => $moralInfo['niandu5'],
-          'niandu5_kaohe' => $moralInfo['niandu5_kaohe'],
+          'id' => $detail['id'],
+          'category' => $detail['category'],
+          'user_id' => $detail['user_id'],
+          'kaohe' => $detail['kaohe'],
+          'niandu1' => $detail['niandu1'],
+          'niandu1_kaohe' => $detail['niandu1_kaohe'],
+          'niandu2' => $detail['niandu2'],
+          'niandu2_kaohe' => $detail['niandu2_kaohe'],
+          'niandu3' => $detail['niandu3'],
+          'niandu3_kaohe' => $detail['niandu3_kaohe'],
+          'niandu4' => $detail['niandu4'],
+          'niandu4_kaohe' => $detail['niandu4_kaohe'],
+          'niandu5' => $detail['niandu5'],
+          'niandu5_kaohe' => $detail['niandu5_kaohe'],
         ];
         break;
       case 'warning':
         $moralInfo = [
-          'id' => $moralInfo['id'],
-          'category' => $moralInfo['category'],
-          'user_id' => $moralInfo['user_id'],
-          'warning' => $moralInfo['warning'],
+          'id' => $detail['id'],
+          'category' => $detail['category'],
+          'user_id' => $detail['user_id'],
+          'warning' => $detail['warning'],
         ];
         break;
       case 'punish':
         $moralInfo = [
-          'id' => $moralInfo['id'],
-          'category' => $moralInfo['category'],
-          'user_id' => $moralInfo['user_id'],
-          'punish' => $moralInfo['punish'],
+          'id' => $detail['id'],
+          'category' => $detail['category'],
+          'user_id' => $detail['user_id'],
+          'punish' => $detail['punish'],
         ];
         break;
     }

@@ -75,6 +75,10 @@ Route::group([
         //用户管理接口
         Route::apiResource('users', 'UserController');
 
+        Route::get('files/download/{id}','FileController@download'); // 文件下载接口
+        Route::apiResource('files', 'FileController'); // 文件操作接口
+
+
         // 职称申报系统接口
         Route::get('progress/baseinfo/detail', 'ProgressBaseInfoController@getBaseInfo'); // 获得用户自己申报基本信息接口
         Route::post('progress/baseinfo/edit', 'ProgressBaseInfoController@edit'); // 修改用户自己的申报基本信息接口
@@ -82,10 +86,9 @@ Route::group([
         Route::apiResource('progress/baseinfo', 'ProgressBaseInfoController'); // 教师申报基本信息接口
         Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
 
-        Route::apiResource('files', 'FileController'); // 文件操作接口
-
         Route::post('progress/morals/edit','ProgressMoralController@edit'); //师德师风接口
         Route::get('progress/morals/detail','ProgressMoralController@detail'); //师德师风接口
+
 
       });
     });
