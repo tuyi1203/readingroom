@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
-use Defuse\Crypto\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -85,17 +84,19 @@ class FileController extends APIBaseController
       'Content-Type' => $file->file_type,
     ];
 
-//    return response()->stream(function () use ($file) {
-//      echo file_get_contents(storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name);
-//    }, 200, $headers);
+    //    return response()->stream(function () use ($file) {
+    //      echo file_get_contents(storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name);
+    //    }, 200, $headers);
 
     return response()
-      ->download(storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name,
-        $file->original_name, $headers
+      ->download(
+        storage_path('app/secure_upload') . $file->file_path . '/' . $file->new_name,
+        $file->original_name,
+        $headers
       );
 
-//    return Storage::disk('upload')
-//      ->download($file->file_path . '/' . $file->new_name, $file->original_name, $headers);
+    //    return Storage::disk('upload')
+    //      ->download($file->file_path . '/' . $file->new_name, $file->original_name, $headers);
   }
 
   /**
@@ -137,7 +138,7 @@ class FileController extends APIBaseController
 
     $ext = $file->getClientOriginalExtension();     // 扩展名
     $realPath = $file->getRealPath();   //临时文件的绝对路径
-    $newFileName = (string)Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
+    $newFileName = (string) Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
     // 使用我们新建的uploads本地存储空间（目录）
     $newPath = $fileConf->path . date("Y_m_d_H");
     $bool = Storage::disk('upload')->put($newPath . '/' . $newFileName, file_get_contents($realPath));
@@ -149,7 +150,7 @@ class FileController extends APIBaseController
 
     $fileInfo = FileInfo::create([
       'bize_type' => $request->input('bize_type'),
-      'bize_id' => $request->has('bize_id') ? $request->input('bize_id') : null,
+      'bize_id' => ($request->has('bize_id') && $request->input('bize_id')) ? $request->input('bize_id') : null,
       'original_name' => $originalName,
       'new_name' => $newFileName,
       'file_type' => $fileMimeType,
