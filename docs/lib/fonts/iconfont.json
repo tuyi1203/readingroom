@@ -1,0 +1,65 @@
+{
+  "id": "1604122",
+  "name": "嘉宏城建集团",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "内江嘉宏城建集团",
+  "glyphs": [
+    {
+      "icon_id": "3282848",
+      "name": "资产",
+      "font_class": "zichan",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "6791246",
+      "name": "房地产",
+      "font_class": "fangdichan_fangdichan",
+      "unicode": "e726",
+      "unicode_decimal": 59174
+    },
+    {
+      "icon_id": "11372706",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e8b9",
+      "unicode_decimal": 59577
+    },
+    {
+      "icon_id": "11487977",
+      "name": "arrow-right",
+      "font_class": "arrow-right",
+      "unicode": "e743",
+      "unicode_decimal": 59203
+    },
+    {
+      "icon_id": "11487978",
+      "name": "arrow-lift",
+      "font_class": "arrow-lift",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "11487982",
+      "name": "arrow-up",
+      "font_class": "arrow-up",
+      "unicode": "e745",
+      "unicode_decimal": 59205
+    },
+    {
+      "icon_id": "11901998",
+      "name": "首 页",
+      "font_class": "shouye",
+      "unicode": "e6c4",
+      "unicode_decimal": 59076
+    },
+    {
+      "icon_id": "12011691",
+      "name": "arrow-down",
+      "font_class": "arrow-down",
+      "unicode": "e7b2",
+      "unicode_decimal": 59314
+    }
+  ]
+}

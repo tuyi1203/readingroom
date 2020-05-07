@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<link rel="shortcut icon" href="favicon.ico" />
+		<script type="text/javascript">
+			function IsPC() {
+				var userAgentInfo = navigator.userAgent;
+				var Agents = ["Android", "iPhone",
+					"SymbianOS", "Windows Phone",
+					"iPad", "iPod"];
+				var windowFlag = true;
+				for (var v = 0; v < Agents.length; v++) {
+					if (userAgentInfo.indexOf(Agents[v]) > 0) {
+						windowFlag = false;
+						break;
+					}
+				}
+				return windowFlag;
+			}
+
+			var windowFlag = IsPC();//true为PC端，false为手机端
+			if (windowFlag) {
+				//alert('PC端');
+				var t = '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />';
+				t += '<meta name="renderer" content="webkit">';
+				t += '<meta name="viewport" content="width=device-width, initial-scale=1">';
+				t += '<link rel="stylesheet" href="assets/css/style.css" type="text/css" />';
+				t += '<!–[if lt IE9]>';
+				t += '<script src="lib/js/html5.js"><\/script> ';
+				t += '<![endif]–>';
+				document.write(t);
+			} else {
+				//alert('移动端');
+				var remJs = 'lib/js/rem.js';
+				document.write('<script src="' + remJs + '"><\/script>');
+				var t = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">';
+				t += '<meta name="format-detection" content="telephone=no, address=no">';
+				t += '<meta name="apple-mobile-web-app-capable" content="yes" /> <!-- apple devices fullscreen -->';
+				t += '<meta name="apple-touch-fullscreen" content="yes"/>';
+				t += '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />';
+				t += '<meta http-equiv="pragma" content="no-cache">';
+				t += '<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">';
+				t += '<meta http-equiv="expires" content="0">';
+				t += '<link rel="stylesheet" href="assets/css/m-style.css" type="text/css" />';
+				document.write(t);
+			}
+		</script>
+		<style>
+			/*引入根目录下fonts里的字体文件*/
+			@font-face {
+				font-family: 'icon';
+				src: url('lib/fonts/iconfont.eot');
+				src: url('lib/fonts/iconfont.woff') format('woff'),
+					url('lib/fonts/iconfont.ttf') format('truetype'),
+					url('lib/fonts/iconfont.svg') format('svg');
+			}
+		</style>
+		<script>
+			var require = {
+				urlArgs: "yudun=" + (new Date()).getTime()
+			},
+				sourceUrl = 'lib/';
+		</script>
+		<script src="lib/js/require.js"></script>
+		<script src="lib/js/main.js"></script>
+	</head>
+
+	<body>
+		<div class="pageloader" id="_pageLoader">
+			<div id="_loader" class="loader"></div>
+		</div>
+
+		<section class="bn">
+			<div class="swiper-container bannerSlide" id="_bannerSlide">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<div class="box">
+							<a href="javascript:void(0);" target="_blank">
+								<img class="lazy" data-original="assets/img/bn-1.jpg" src="assets/img/bn-1.jpg" />
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-button-prev"><i class="icon">&#xe744;</i></div>
+				<div class="swiper-button-next"><i class="icon">&#xe743;</i></div>
+			</div>
+		</section>
+		<section class="main">
+			<div class="wContent">
+				<div class="fastnav">
+					<a href="javascript:void(0);" class="boxCenter">
+						<dl>
+							<dt class="icon">&#xe726;</dt>
+							<dd>帮助孩子们建立图书阅览室</dd>
+						</dl>
+					</a>
+					<a href="javascript:void(0);" class="boxCenter">
+						<dl>
+							<dt class="icon">&#xe621;</dt>
+							<dd>或者你也想联系我们提供资金的支持</dd>
+						</dl>
+					</a>
+				</div>
+
+				<div class="modular project">
+					<div class="mHead">
+						<h3>他们也想有个图书阅览室</h3>
+						<p>The children need readingrooms</p>
+					</div>
+					<div class="mContent">
+						<div class="swiper-container proSlide" id="_proSlide">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="box">
+										<a href="javascript:void(0);" target="_blank">
+											<div class="pic"><img class="lazy" data-original="assets/img/pic-news.jpg"
+													src="assets/img/pic-news.jpg" />
+											</div>
+											<div class="txt">虽然这是一所不同的学校</div>
+										</a>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="box">
+										<a href="javascript:void(0);" target="_blank">
+											<div class="pic"><img class="lazy" data-original="assets/img/pic-group.jpg"
+													src="assets/img/pic-group.jpg" />
+											</div>
+											<div class="txt">教室里也可以充满欢声笑语</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="left">
+							<div class="part notice">
+								<div class="hd">
+									<h5>如何加入我们？</h5>
+								</div>
+								<div class="bd">
+									<div class="list">
+										<ul>
+											<li>
+												<a href="javascript:void(0);">
+													<p>[Step.1]将请求发送邮件到343745799@qq.com</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>[Step.2]在邮件中描述你的基本信息</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>[Step.3]在github上fork我们的项目</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>[Step.4]等待我们将您添加成项目协助者</p>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="right">
+							<div class="part notice">
+								<div class="hd">
+									<h5>这是个什么项目</h5>
+								</div>
+								<div class="bd">
+									<div class="list">
+										<ul>
+											<li>
+												<a href="javascript:void(0);">
+													<p>这是一个贫困山区的小朋友进行阅览室订阅的项目</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>也许我们不能为他们盖教室，但是我们可以在那之后做点事情</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>为他们建立一个方便的图书阅览室</p>
+													<i></i>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0);">
+													<p>协助这里的老师们管理他们的阅览室</p>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+		<script>
+			requirejs.config({
+				paths: {
+					script: '../assets/js/script'
+				},
+				shim: {
+					script: {
+						deps: ['jquery'],
+						exports: 'script'
+					}
+				}
+			});
+
+			var imagesLst = [
+				'assets/img/logo.png'
+			]
+
+			if (windowFlag) {
+				require(["jquery", "swiper", "script"], function ($, Swiper, script) {
+					script.loader('#_loader');//loader调用
+					script.preload('#_loader', '#_pageLoader', imagesLst);//loader调用
+					script.dropList('nav li', 'mouseenter', 'mouseleave');
+					var bannerSlide = new Swiper('#_bannerSlide', {//banner滚动调用
+						pagination: {
+							el: '#_bnPage',
+							clickable: true,
+						},
+						loop: true,
+						simulateTouch: false,
+						slidesPerView: 1,
+						navigation: {
+							nextEl: '.swiper-button-next',
+							prevEl: '.swiper-button-prev',
+						},
+						autoplay: {
+							delay: 5000,
+							stopOnLastSlide: false,
+							disableOnInteraction: true,
+							disableOnInteraction: false,
+						}
+					});
+
+
+					var proSlide = new Swiper('#_proSlide', {//banner滚动调用
+						loop: true,
+						simulateTouch: false,
+						spaceBetween: 20,
+						slidesPerView: 2,
+						autoplay: {
+							delay: 5000,
+							// stopOnLastSlide: false,
+							// disableOnInteraction: true,
+							// disableOnInteraction: false,
+						}
+					});
+
+				});
+			} else {
+				//mobile
+				require(["jquery", "swiper", "script", "lazyload"], function ($, Swiper, script, lazyload) {
+					script.loader('#_loader');//loader调用
+					script.preload('#_loader', '#_pageLoader', imagesLst);//loader调用
+					document.write('<p>对不起，暂不支持移动端</p>');
+				});
+			}
+
+		</script>
+	</body>
+
+</html>
