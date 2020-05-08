@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\Models\Backend\FileInfo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\Moral;
@@ -21,12 +22,14 @@ class ProgressMoralController extends APIBaseController
   public function detail(Request $request)
   {
     $this->checkPermission('detail_moral');
-    $detail = Moral::where('user_id', $this->user->id)->where('category', $request->input('category'))->first()->toArray();
+    $detail = Moral::where('user_id', $this->user->id)->where('category', $request->input('category'))->first();
+
     if (!$detail) {
-      return $this->validateError('No record.');
+      return $this->success([]);
     }
 
-    $moralInfo = [];
+    $moralInfo = $detail->toArray();
+
     switch ($request->input('category')) {
       case 'summary':
         $moralInfo = [
@@ -169,6 +172,17 @@ class ProgressMoralController extends APIBaseController
     if (!$moralInfo) {
       return $this->failed('Update failed.');
     }
+
+    //更新上传的附件
+    $fileInfos = FileInfo::where('bize_type', 'moral/' . $category)
+      ->where('bize_id', null)
+      ->where('user_id', $this->user->id)
+      ->get();
+
+    $fileInfos->map(function ($fileInfo) use ($moralInfo) {
+      $fileInfo->bize_id = $moralInfo->id;
+      $fileInfo->save();
+    });
 
     return $this->success($moralInfo);
   }
