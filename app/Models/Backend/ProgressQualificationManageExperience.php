@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgressQualificationManageExperience extends Model
 {
-  protected $tablename = 'progress_qualification_manage_experience';
+  protected $table = 'progress_qualification_manage_experience';
   protected $fillable = [
+    'user_id',
     'start_year',
     'start_month',
     'end_year',
