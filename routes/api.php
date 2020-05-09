@@ -17,12 +17,13 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
-Route::group([
-  'prefix' => 'v1',
-  'domain' => env('APP_DEV_DOMAIN'),
-  'namespace' => 'Backend',
-  'middleware' => 'backend',
-],
+Route::group(
+  [
+    'prefix' => 'v1',
+    'domain' => env('APP_DEV_DOMAIN'),
+    'namespace' => 'Backend',
+    'middleware' => 'backend',
+  ],
   function () {
     Route::group([
       'namespace' => 'V1',
@@ -30,8 +31,8 @@ Route::group([
     ], function () {
 
       Route::prefix('wechat')->group(function () {
-        Route::get('getloginqrcode', 'WechatController@loginQRCode');// 获取微信登陆用二维码
-        Route::any('/', 'WechatController@serve');// 本地服务器与微信服务器通信接口
+        Route::get('getloginqrcode', 'WechatController@loginQRCode'); // 获取微信登陆用二维码
+        Route::any('/', 'WechatController@serve'); // 本地服务器与微信服务器通信接口
       });
 
       /* --BEGIN-- 新世纪用接口 */
@@ -49,11 +50,11 @@ Route::group([
       /*
        * 不需要认证的路由 -- Start
        */
-      Route::post('login', 'AuthController@login');// 首页登陆接口
-      Route::Post('qrlogin', 'AuthController@QRLogin');// 微信扫码登陆接口
-      Route::Post('bindlogin', 'AuthController@bindLogin');// 绑定手机号登陆接口
+      Route::post('login', 'AuthController@login'); // 首页登陆接口
+      Route::Post('qrlogin', 'AuthController@QRLogin'); // 微信扫码登陆接口
+      Route::Post('bindlogin', 'AuthController@bindLogin'); // 绑定手机号登陆接口
       Route::post('signup', 'AuthController@signup'); // 注册（暂时不需要）接口
-      Route::post('getverifycode', 'VerificationCodesController@store');// 发送短信验证码接口
+      Route::post('getverifycode', 'VerificationCodesController@store'); // 发送短信验证码接口
       Route::get('logout', 'AuthController@logout');
 
       /*
@@ -61,7 +62,7 @@ Route::group([
        */
       Route::group([
         'namespace' => 'Auth',
-        'middleware' => ['auth:backend', 'throttle:120,1']//passport验证
+        'middleware' => ['auth:backend', 'throttle:120,1'] //passport验证
       ], function () {
         //角色接口
         Route::apiResource('roles', 'RoleController');
@@ -75,7 +76,7 @@ Route::group([
         //用户管理接口
         Route::apiResource('users', 'UserController');
 
-        Route::get('files/download/{id}','FileController@download'); // 文件下载接口
+        Route::get('files/download/{id}', 'FileController@download'); // 文件下载接口
         Route::apiResource('files', 'FileController'); // 文件操作接口
 
 
@@ -86,10 +87,15 @@ Route::group([
         Route::apiResource('progress/baseinfo', 'ProgressBaseInfoController'); // 教师申报基本信息接口
         Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
 
-        Route::post('progress/morals/edit','ProgressMoralController@edit'); //师德师风接口
-        Route::get('progress/morals/detail','ProgressMoralController@detail'); //师德师风接口
+        Route::post('progress/morals/edit', 'ProgressMoralController@edit'); //师德师风接口
+        Route::get('progress/morals/detail', 'ProgressMoralController@detail'); //师德师风接口
+
+        Route::post('progress/qualification/educate/edit', 'ProgressQualificationEducationController@edit'); //基本资格教育经历接口
+        Route::get('progress/qualification/educate/detail', 'ProgressQualificationEducationController@detail'); //基本资格教育经历详情接口
+        // Route::delete('progress/qualification/educate/{id}', 'ProgressQualificationEducationController@destroy'); //学历教育经历删除接口
 
 
       });
     });
-  });
+  }
+);

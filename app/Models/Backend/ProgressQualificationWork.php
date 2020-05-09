@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgressQualificationWork extends Model
 {
-  protected $tablename = 'progress_qualification_work';
+  protected $table = 'progress_qualification_work';
   protected $fillable = [
     'work_time',
     'teach_years',
