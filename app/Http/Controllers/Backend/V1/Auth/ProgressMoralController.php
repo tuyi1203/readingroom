@@ -6,7 +6,7 @@ use App\Http\Controllers\Backend\V1\APIBaseController;
 use App\Models\Backend\FileInfo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\Moral;
+use App\Models\Backend\ProgressMoral as Moral;
 
 class ProgressMoralController extends APIBaseController
 {

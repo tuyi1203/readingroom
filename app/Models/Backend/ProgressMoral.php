@@ -4,7 +4,7 @@ namespace App\Models\Backend;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Moral extends Model
+class ProgressMoral extends Model
 {
   protected $table = 'progress_morals';
   protected $fillable = [
