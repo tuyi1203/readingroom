@@ -14,6 +14,7 @@ class ProgressQualificationEducateExperience extends Model
     'end_year',
     'end_month',
     'education',
+    'school_name',
     'prove_person',
     'order_sort',
   ];

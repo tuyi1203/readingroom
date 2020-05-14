@@ -40,11 +40,12 @@ class ProgressQualificationEducationController extends APIBaseController
     $educateInfo = Educate::where('user_id', $this->user->id)->firstOrFail();
     $educateInfo->fill([
       'graduate_school' => $request->input('graduate_school'),
-      'graduate_time' => $request->input('gradute_time'),
+      'graduate_time' => $request->input('graduate_time'),
       'education' => $request->input('education'),
       'education_no' => $request->input('education_no'),
       'degree_no' => $request->input('degree_no'),
       'subject' => $request->input('subject'),
+      'school_name' => $request->input('school_name'),
     ])->save();
 
     //删除原始数据
@@ -52,17 +53,20 @@ class ProgressQualificationEducationController extends APIBaseController
     $experienceForDel->delete();
 
     //添加新数据
-    foreach ($request->input('experiences') as $experience) {
-      EducateExperience::create([
-        'user_id' => $this->user->id,
-        "start_year" => $experience['start_year'],
-        "start_month" => $experience['start_month'],
-        "end_year" => $experience['end_year'],
-        "end_month" => $experience['end_month'],
-        "education" => $experience['education'],
-        "prove_person" => $experience['prove_person'],
-        "order_sort" => $experience['order_sort'],
-      ]);
+    if ($request->has('experiences')) {
+      foreach ($request->input('experiences') as $experience) {
+        EducateExperience::create([
+          'user_id' => $this->user->id,
+          "start_year" => $experience['start_year'],
+          "start_month" => $experience['start_month'],
+          "end_year" => $experience['end_year'],
+          "end_month" => $experience['end_month'],
+          "school_name" => $experience['school_name'],
+          "education" => $experience['education'],
+          "prove_person" => $experience['prove_person'],
+          "order_sort" => $experience['order_sort'],
+        ]);
+      }
     }
 
     $educateInfo = Educate::where('user_id', $this->user->id)->firstOrFail();
