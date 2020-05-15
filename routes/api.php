@@ -92,9 +92,16 @@ Route::group(
 
         Route::post('progress/qualification/educate/edit', 'ProgressQualificationEducationController@edit'); //基本资格教育经历接口
         Route::get('progress/qualification/educate/detail', 'ProgressQualificationEducationController@detail'); //基本资格教育经历详情接口
-        // Route::delete('progress/qualification/educate/{id}', 'ProgressQualificationEducationController@destroy'); //学历教育经历删除接口
 
+        Route::post('progress/qualification/work/edit', 'ProgressQualificationWorkController@edit'); //基本资格工作信息接口
+        Route::get('progress/qualification/work/detail', 'ProgressQualificationWorkController@detail'); //基本资格工作信息详情接口
 
+        
+        Route::post('progress/qualification/work/experience/edit', 'ProgressQualificationWorkExperienceController@edit'); //基本资格工作经历信息接口
+        Route::get('progress/qualification/work/experience/detail', 'ProgressQualificationWorkExperienceController@detail'); //基本资格工作经历信息详情接口
+        
+        Route::post('progress/qualification/manage/experience/edit', 'ProgressQualificationManageExperienceController@edit'); //基本资格管理经历信息接口
+        Route::get('progress/qualification/manage/experience/detail', 'ProgressQualificationManageExperienceController@detail'); //基本资格管理经历信息详情接口
       });
     });
   }

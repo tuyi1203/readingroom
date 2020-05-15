@@ -8,6 +8,7 @@ class ProgressQualificationWork extends Model
 {
   protected $table = 'progress_qualification_work';
   protected $fillable = [
+    'user_id',
     'work_time',
     'teach_years',
     'teach5years',
