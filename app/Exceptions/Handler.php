@@ -58,10 +58,21 @@ class Handler extends ExceptionHandler
     if ($exception instanceof \Spatie\Permission\Exceptions\PermissionDoesNotExist) {
       $result = [
         "code" => 403,
-        "msg" => 'Unauthorized.',
+        "msg" => 'Permission does not exists.',
       ];
       return response()->json($result, 200);
     }
+
+    //传递的参数有问题
+    /*
+    if ($exception instanceof \ErrorException) {
+      $result = [
+        "code" => 500,
+        "msg" => 'Error occurs.',
+      ];
+      return response()->json($result, 200);
+    }
+    */
 
     //没有操作权限异常
     if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
