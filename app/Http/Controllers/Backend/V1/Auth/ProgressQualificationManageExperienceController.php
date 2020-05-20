@@ -21,7 +21,7 @@ class ProgressQualificationManageExperienceController extends APIBaseController
     $experiences = Experience::where('user_id', $this->user->id)->orderby('order_sort', 'asc')->get();
     $detailInfo = [
       'manage_years' => $educateDetail->manage_years,
-      'experiences' => $experiences->toArray(),
+      'experience' => $experiences->toArray(),
     ];
 
     return $this->success($detailInfo);

@@ -13,6 +13,7 @@ class ProgressQualificationWork extends Model
     'teach_years',
     'teach5years',
     'apply_up',
+    'title',
     'apply_course',
     'school_manager_title',
     'qualification_time',
