@@ -48,6 +48,33 @@ class FileController extends APIBaseController
   }
 
   /**
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function getList(Request $request)
+  {
+    $list = [];
+    $ids = $request->input('ids');
+    if (count($ids) > 0) {
+      $list = FileInfo::whereIn('id', $ids)
+        ->where('del_flg', 0)
+        ->orderby('id', 'asc')
+        ->get();
+    }
+
+    return $this->success($list->map(function ($item) {
+      return [
+        "id" => $item->id,
+        "bize_type" => $item->bize_type,
+        "bize_id" => $item->bize_id,
+        "file_url" => env('APP_URL') . $item->relative_path . $item->file_path . '/' . $item->new_name,
+        'created_at' => $item->created_at,
+        "original_name" => $item->original_name,
+      ];
+    }));
+  }
+
+  /**
    * 删除文件
    * @param Request $request
    * @param $id

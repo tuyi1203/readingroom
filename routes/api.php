@@ -27,7 +27,7 @@ Route::group(
   function () {
     Route::group([
       'namespace' => 'V1',
-      'middleware' => 'throttle:60,1'
+      'middleware' => 'throttle:120,1'
     ], function () {
 
       Route::prefix('wechat')->group(function () {
@@ -76,9 +76,9 @@ Route::group(
         //用户管理接口
         Route::apiResource('users', 'UserController');
 
+        Route::get('files/ids', 'FileController@getList'); // 获取文件列表接口
         Route::get('files/download/{id}', 'FileController@download'); // 文件下载接口
         Route::apiResource('files', 'FileController'); // 文件操作接口
-
 
         // 职称申报系统接口
         Route::get('progress/baseinfo/detail', 'ProgressBaseInfoController@getBaseInfo'); // 获得用户自己申报基本信息接口
@@ -92,16 +92,19 @@ Route::group(
 
         Route::post('progress/qualification/educate/edit', 'ProgressQualificationEducationController@edit'); //基本资格教育经历接口
         Route::get('progress/qualification/educate/detail', 'ProgressQualificationEducationController@detail'); //基本资格教育经历详情接口
-
         Route::post('progress/qualification/work/edit', 'ProgressQualificationWorkController@edit'); //基本资格工作信息接口
         Route::get('progress/qualification/work/detail', 'ProgressQualificationWorkController@detail'); //基本资格工作信息详情接口
-
-        
         Route::post('progress/qualification/work/experience/edit', 'ProgressQualificationWorkExperienceController@edit'); //基本资格工作经历信息接口
         Route::get('progress/qualification/work/experience/detail', 'ProgressQualificationWorkExperienceController@detail'); //基本资格工作经历信息详情接口
-        
         Route::post('progress/qualification/manage/experience/edit', 'ProgressQualificationManageExperienceController@edit'); //基本资格管理经历信息接口
         Route::get('progress/qualification/manage/experience/detail', 'ProgressQualificationManageExperienceController@detail'); //基本资格管理经历信息详情接口
+
+        Route::get('progress/research/achievement/{id}', 'ProgressResearchAchievementController@show'); // 科研成果详情接口（教师自身）
+        Route::put('progress/research/achievement/{id}', 'ProgressResearchAchievementController@update'); // 修改科研成果（教师自身）
+        Route::get('progress/research/achievement', 'ProgressResearchAchievementController@index'); // 科研成果列表接口（教师自身）
+        Route::post('progress/research/achievement', 'ProgressResearchAchievementController@store'); // 增加科研成果接口（教师自身）
+        Route::delete('progress/research/achievement/{id}', 'ProgressResearchAchievementController@destroy'); // 删除科研成果（教师自身）
+        Route::delete('progress/research/achievement/del', 'ProgressResearchAchievementController@destroy'); // 删除科研成果（教师自身）
       });
     });
   }
