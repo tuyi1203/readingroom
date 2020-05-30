@@ -54,12 +54,14 @@ class FileController extends APIBaseController
   public function getList(Request $request)
   {
     $list = [];
-    $ids = $request->input('ids');
-    if (count($ids) > 0) {
-      $list = FileInfo::whereIn('id', $ids)
-        ->where('del_flg', 0)
-        ->orderby('id', 'asc')
-        ->get();
+    if ($request->has('ids')) {
+      $ids = $request->input('ids');
+      if (count($ids) > 0) {
+        $list = FileInfo::whereIn('id', $ids)
+          ->where('del_flg', 0)
+          ->orderby('id', 'asc')
+          ->get();
+      }
     }
 
     return $this->success($list->map(function ($item) {
