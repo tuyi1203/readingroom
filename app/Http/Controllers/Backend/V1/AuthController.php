@@ -194,7 +194,7 @@ class AuthController extends APIBaseController
     $permissions = $user->getAllPermissions();
 
     // 取得用户所有菜单
-    $allMenus = Menu::orderby('sort', 'desc')->get();
+    $allMenus = Menu::orderby('sort', 'asc')->get();
     $permissionMenus = $this->makeMenuData($permissions, $allMenus);
 
     $tokenResult = $user->createToken('Personal Access Token');
