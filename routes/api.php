@@ -105,6 +105,13 @@ Route::group(
         Route::post('progress/research/achievement', 'ProgressResearchAchievementController@store'); // 增加科研成果接口（教师自身）
         Route::delete('progress/research/achievement/{id}', 'ProgressResearchAchievementController@destroy'); // 删除科研成果（教师自身）
         Route::delete('progress/research/achievement/del', 'ProgressResearchAchievementController@destroy'); // 删除科研成果（教师自身）
+
+        Route::get('progress/teach/achievement/{id}', 'ProgressTeachAchievementController@show'); // 科研成果详情接口（教师自身）
+        Route::put('progress/teach/achievement/{id}', 'ProgressTeachAchievementController@update'); // 修改科研成果（教师自身）
+        Route::get('progress/teach/achievement', 'ProgressTeachAchievementController@index'); // 科研成果列表接口（教师自身）
+        Route::post('progress/teach/achievement', 'ProgressTeachAchievementController@store'); // 增加科研成果接口（教师自身）
+        Route::delete('progress/teach/achievement/{id}', 'ProgressTeachAchievementController@destroy'); // 删除科研成果（教师自身）
+        Route::delete('progress/teach/achievement/del', 'ProgressTeachAchievementController@destroy'); // 删除科研成果（教师自身）
       });
     });
   }
