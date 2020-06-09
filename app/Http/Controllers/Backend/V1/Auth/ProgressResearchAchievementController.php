@@ -19,11 +19,11 @@ class ProgressResearchAchievementController extends APIBaseController
   {
     $this->checkPermission('list_research_achievement');
 
-    if (!$request->has('achievement_type')) {
+    if (!$request->has('type')) {
       throw new \ErrorException('No params');
     }
 
-    $columns = $this->getColumns4Show($request->input('achievement_type'));
+    $columns = $this->getColumns4Show($request->input('type'));
 
     $achievements = Achievement::filter($this->getParams($request), AchievementFilter::class)
       ->paginate(
@@ -147,14 +147,15 @@ class ProgressResearchAchievementController extends APIBaseController
     $validator = Validator::make($request->all(), [
       'course' => 'required|integer',
       'award' => 'required|integer',
-      'achievement_type' => 'required|integer',
+      'type' => 'required|integer',
+      'achievement_type' => 'required|string',
     ]);
 
     if ($validator->fails()) {
       return $this->validateError($validator->errors()->first());
     }
 
-    $result = Achievement::create($this->setColunms($request->input('achievement_type'), $request));
+    $result = Achievement::create($this->setColunms($request->input('type'), $request));
     if (!$result) {
       return $this->failed('Create new achievement error.');
     }
@@ -188,11 +189,11 @@ class ProgressResearchAchievementController extends APIBaseController
       'user_id' => $this->user->id,
       'course' => $request->input('course'),
       'award' => $request->input('award'),
+      'achievement_type' => $request->input('achievement_type'),
     ];
 
-
-    if ($request->has('achievement_type')) { // 新增的时候
-      $columns['achievement_type'] = $request->input('achievement_type');
+    if ($request->has('type')) { // 新增的时候
+      $columns['type'] = $request->input('type');
     }
 
     switch ($achievementType) {
@@ -282,6 +283,7 @@ class ProgressResearchAchievementController extends APIBaseController
       case 2:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'course',
           'award',
@@ -311,6 +313,7 @@ class ProgressResearchAchievementController extends APIBaseController
       case 3:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'course',
           'award',
@@ -337,6 +340,7 @@ class ProgressResearchAchievementController extends APIBaseController
       case 4:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'course',
           'award',
@@ -359,6 +363,7 @@ class ProgressResearchAchievementController extends APIBaseController
       default:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'course',
           'award',

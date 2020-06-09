@@ -8,10 +8,11 @@ use EloquentFilter\Filterable;
 class ProgressResearchAchievement extends Model
 {
   use Filterable;
-  
+
   protected $table = 'progress_research_achievement';
   protected $fillable = [
     'user_id',
+    'type',
     'achievement_type',
     'course',
     'award',
