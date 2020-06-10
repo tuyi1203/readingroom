@@ -19,11 +19,11 @@ class ProgressTeachAchievementController extends APIBaseController
   {
     $this->checkPermission('list_teach_achievement');
 
-    if (!$request->has('achievement_type')) {
+    if (!$request->has('type')) {
       throw new \ErrorException('No params');
     }
 
-    $columns = $this->getColumns4Show($request->input('achievement_type'));
+    $columns = $this->getColumns4Show($request->input('type'));
 
     $achievements = Achievement::filter($this->getParams($request), AchievementFilter::class)
       ->paginate(
@@ -101,26 +101,11 @@ class ProgressTeachAchievementController extends APIBaseController
     $this->checkPermission('edit_teach_achievement');
 
     $detail = Achievement::where('user_id', $this->user->id)->where('id', $id)->first();
-    $columns = $this->setColunms($detail->achievement_type, $request);
+    $columns = $this->setColunms($detail->type, $request);
     $detail->fill($columns)->save();
-    $columns4Show = $this->getColumns4Show($detail->achievement_type);
+    $columns4Show = $this->getColumns4Show($detail->type);
     $detail = Achievement::where('user_id', $this->user->id)->where('id', $id)->first($columns4Show);
-    //删除不需要的上传文件
-    $this->delUploadedCachedFiles($detail);
     return $this->success($detail);
-  }
-
-  /*
-  * 删除多余的上传文件
-  */
-  private function delUploadedCachedFiles($achievementRecord)
-  {
-    if (!$achievementRecord->award) {
-      $awardFiles = FileInfo::where('bize_type', 'teach/award')->where('bize_id', $achievementRecord->id)->get();
-      if (!$awardFiles->isEmpty()) {
-        $awardFiles->delete();
-      }
-    }
   }
 
   /*
@@ -131,14 +116,15 @@ class ProgressTeachAchievementController extends APIBaseController
     $this->checkPermission('add_teach_achievement');
 
     $validator = Validator::make($request->all(), [
-      'achievement_type' => 'required|integer',
+      'type' => 'required|integer',
+      'achievement_type' => 'required|string',
     ]);
 
     if ($validator->fails()) {
       return $this->validateError($validator->errors()->first());
     }
 
-    $result = Achievement::create($this->setColunms($request->input('achievement_type'), $request));
+    $result = Achievement::create($this->setColunms($request->input('type'), $request));
     if (!$result) {
       return $this->failed('Create new achievement error.');
     }
@@ -149,7 +135,6 @@ class ProgressTeachAchievementController extends APIBaseController
         'bize_type',
         [
           'teach/achievement',
-          'teach/award'
         ]
       )->whereIn('id', $request->input('fileids'))
         ->where('user_id', $this->user->id)
@@ -157,26 +142,24 @@ class ProgressTeachAchievementController extends APIBaseController
         ->update(['bize_id' => $result->id]);
     }
 
-    //删除不需要的上传文件
-    $this->delUploadedCachedFiles($result);
-
     return $this->success($result->id);
   }
 
   /*
   * 设置需要填充的字段
   */
-  private function setColunms($achievementType, Request $request)
+  private function setColunms($type, Request $request)
   {
     $columns = [
       'user_id' => $this->user->id,
+      'achievement_type' => $request->input('achievement_type'),
     ];
 
-    if ($request->has('achievement_type')) { // 新增的时候
-      $columns['achievement_type'] = $request->input('achievement_type');
+    if ($request->has('type')) { // 新增的时候
+      $columns['type'] = $request->input('type');
     }
 
-    switch ($achievementType) {
+    switch ($type) {
       case 2:
         $columns = Arr::collapse([$columns, [
           'manage_exp_communicate_date' => $request->input('manage_exp_communicate_date'),
@@ -188,6 +171,7 @@ class ProgressTeachAchievementController extends APIBaseController
       case 3:
         $columns = Arr::collapse([$columns, [
           'teacher_guide_date_start' => $request->input('teacher_guide_date_start'),
+          'teacher_guide_date_end' => $request->input('teacher_guide_date_end'),
           'teacher_guide_date_end' => $request->input('teacher_guide_date_end'),
           'teacher_guide_name' => $request->input('teacher_guide_name'),
           'teacher_guide_content' => $request->input('teacher_guide_content'),
@@ -223,6 +207,7 @@ class ProgressTeachAchievementController extends APIBaseController
       case 2:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'manage_exp_communicate_date',
           'manage_exp_communicate_content',
@@ -233,6 +218,7 @@ class ProgressTeachAchievementController extends APIBaseController
       case 3:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'teacher_guide_date_start',
           'teacher_guide_date_end',
@@ -245,6 +231,7 @@ class ProgressTeachAchievementController extends APIBaseController
       default:
         $columns = [
           'id',
+          'type',
           'achievement_type',
           'award_date',
           'award_main',

@@ -12,6 +12,7 @@ class ProgressTeachAchievement extends Model
 
   protected $fillable = [
     'user_id',
+    'type',
     'achievement_type',
     'award_date',
     'award_main',

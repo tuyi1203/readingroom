@@ -14,9 +14,49 @@ class ProgressTeachAchievementFilter extends ModelFilter
    */
   public $relations = [];
 
-  public function achievementType($value)
+  public function type($value)
   {
-    return $this->where('achievement_type', $value);
+    return $this->where('type', $value);
+  }
+
+  public function awardDateFrom($value)
+  {
+    return $this->where('award_date', '>=', $value);
+  }
+
+  public function awardDateTo($value)
+  {
+    return $this->where('award_date', '<=', $value);
+  }
+
+  public function manageExpCommunicateFrom($value)
+  {
+    return $this->where('manage_exp_communicate_date', '>=', $value);
+  }
+
+  public function manageExpCommunicateTo($value)
+  {
+    return $this->where('manage_exp_communicate_date', '<=', $value);
+  }
+
+  public function manageExpCommunicateContent($value)
+  {
+    return $this->whereLike('manage_exp_communicate_content', $value);
+  }
+
+  public function awardMain($value)
+  {
+    return $this->whereLike('award_main', $value);
+  }
+
+  public function teacherGuideName($value)
+  {
+    return $this->whereLike('teacher_guide_name', $value);
+  }
+
+  public function teacherGuideContent($value)
+  {
+    return $this->whereLike('teacher_guide_content', $value);
   }
 
   public function order($value)

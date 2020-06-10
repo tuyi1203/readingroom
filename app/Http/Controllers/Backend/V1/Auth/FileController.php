@@ -54,14 +54,16 @@ class FileController extends APIBaseController
   public function getList(Request $request)
   {
     $list = [];
-    if ($request->has('ids')) {
-      $ids = $request->input('ids');
-      if (count($ids) > 0) {
-        $list = FileInfo::whereIn('id', $ids)
-          ->where('del_flg', 0)
-          ->orderby('id', 'asc')
-          ->get();
-      }
+    if (!$request->has('ids')) {
+      return $this->success($list);
+    }
+
+    $ids = $request->input('ids');
+    if (count($ids) > 0) {
+      $list = FileInfo::whereIn('id', $ids)
+        ->where('del_flg', 0)
+        ->orderby('id', 'asc')
+        ->get();
     }
 
     return $this->success($list->map(function ($item) {
@@ -167,7 +169,7 @@ class FileController extends APIBaseController
 
     $ext = $file->getClientOriginalExtension();     // 扩展名
     $realPath = $file->getRealPath();   //临时文件的绝对路径
-    $newFileName = (string) Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
+    $newFileName = (string)Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
     // 使用我们新建的uploads本地存储空间（目录）
     $newPath = $fileConf->path . date("Y_m_d_H");
     $bool = Storage::disk('upload')->put($newPath . '/' . $newFileName, file_get_contents($realPath));

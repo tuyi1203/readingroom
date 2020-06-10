@@ -19,6 +19,11 @@ class ProgressResearchAchievementFilter extends ModelFilter
     return $this->where('achievement_type', $value);
   }
 
+  public function type($value)
+  {
+    return $this->where('type', $value);
+  }
+
   public function paperTitle($value)
   {
     return $this->whereLike('paper_title', $value);
