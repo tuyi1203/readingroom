@@ -111,7 +111,16 @@ Route::group(
         Route::get('progress/teach/achievement', 'ProgressTeachAchievementController@index'); // 科研成果列表接口（教师自身）
         Route::post('progress/teach/achievement', 'ProgressTeachAchievementController@store'); // 增加科研成果接口（教师自身）
         Route::delete('progress/teach/achievement/{id}', 'ProgressTeachAchievementController@destroy'); // 删除科研成果（教师自身）
-        Route::delete('progress/teach/achievement/del', 'ProgressTeachAchievementController@destroy'); // 删除科研成果（教师自身）
+//        Route::delete('progress/teach/achievement/del', 'ProgressTeachAchievementController@destroy'); // 删除科研成果（教师自身）
+
+        Route::get('progress/educate/detail', 'ProgressEducateAchievementController@getBaseInfo'); // 获得用户自己教学成果基本信息接口
+        Route::post('progress/educate/edit', 'ProgressEducateAchievementController@edit'); // 修改用户自己的教学成果基本信息接口
+        Route::get('progress/educate/achievement/{id}', 'ProgressEducateAchievementController@show'); // 教学成果详情接口（教师自身）
+        Route::put('progress/educate/achievement/{id}', 'ProgressEducateAchievementController@update'); // 修改教学成果（教师自身）
+        Route::get('progress/educate/achievement', 'ProgressEducateAchievementController@index'); // 教学成果列表接口（教师自身）
+        Route::post('progress/educate/achievement', 'ProgressEducateAchievementController@store'); // 增加教学成果接口（教师自身）
+        Route::delete('progress/educate/achievement/{id}', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
+//        Route::delete('progress/educate/achievement/del', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
       });
     });
   }

@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -45,7 +46,7 @@ class Handler extends ExceptionHandler
    *
    * @param \Illuminate\Http\Request $request
    * @param \Exception $exception
-   * @return \Symfony\Component\HttpFoundation\Response
+   * @return Response
    *
    * @throws \Exception
    */
