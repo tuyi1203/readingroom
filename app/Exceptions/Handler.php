@@ -85,7 +85,7 @@ class Handler extends ExceptionHandler
     }
 
     //找不到数据记录异常
-    /*
+
     if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
       $result = [
         "code" => 510,
@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler
       ];
       return response()->json($result, 200);
     }
-    */
+
 
     if ($exception instanceof  \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
       $result = [

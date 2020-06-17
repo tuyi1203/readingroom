@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
-use App\Http\Controllers\Controller;
 use App\ModelFilters\Backend\ProgressEducateAchievementFilter as AchievementFilter;
 use App\Models\Backend\FileInfo;
 use App\Models\Backend\ProgressEducateAchievement as Achievement;
@@ -23,7 +22,14 @@ class ProgressEducateAchievementController extends APIBaseController
   public function getBaseInfo(Request $request)
   {
     $this->checkPermission('detail_educate_baseinfo');
-    $baseInfo = BaseInfo::where('user_id', $this->user->id)->first();
+    $baseInfo = BaseInfo::where('user_id', $this->user->id)->first([
+      'id',
+      'effect',
+      "observe",
+      "communicate",
+      "guide",
+      "elective",
+    ]);
     if (is_null($baseInfo)) {
       return $this->success(null);
     }
@@ -60,6 +66,15 @@ class ProgressEducateAchievementController extends APIBaseController
     if (!$baseInfo) {
       return $this->failed('Update failed.');
     }
+
+    //更新附件信息
+    if ($request->filled('fileids')) {
+      FileInfo::whereIn('id',$request->input('fileids'))
+        ->update([
+          'bize_id' => $baseInfo->id,
+        ]);
+    }
+
     return $this->success($baseInfo, 'Update succeed.');
   }
 
