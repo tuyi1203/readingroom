@@ -29,6 +29,36 @@ class ProgressEducateAchievementFilter extends ModelFilter
     return $this->where('award_date', '<=', $value);
   }
 
+  public function awardTitle($value)
+  {
+    return $this->whereLike('award_title', $value);
+  }
+
+  public function awardAuthoriryOrganization($value)
+  {
+    return $this->whereLike('award_authoriry_organization', $value);
+  }
+
+  public function lectureDateFrom($value)
+  {
+    return $this->where('lecture_date', '>=', $value);
+  }
+
+  public function lectureDateTo($value)
+  {
+    return $this->where('lecture_date', '<=', $value);
+  }
+
+  public function lectureContent($value)
+  {
+    return $this->whereLike('lecture_content', $value);
+  }
+
+  public function lectureOrganization($value)
+  {
+    return $this->whereLike('lecture_organization', $value);
+  }
+
   public function order($value)
   {
     switch ($value) {
