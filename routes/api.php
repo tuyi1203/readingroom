@@ -80,6 +80,11 @@ Route::group(
         Route::get('files/download/{id}', 'FileController@download'); // 文件下载接口
         Route::apiResource('files', 'FileController'); // 文件操作接口
 
+        //用户快捷菜单
+        Route::apiResource('menu', 'MenuController',['only'=>[
+          'index', 'store', 'destroy'
+        ]]);
+
         // 职称申报系统接口
         Route::get('progress/baseinfo/detail', 'ProgressBaseInfoController@getBaseInfo'); // 获得用户自己申报基本信息接口
         Route::post('progress/baseinfo/edit', 'ProgressBaseInfoController@edit'); // 修改用户自己的申报基本信息接口
