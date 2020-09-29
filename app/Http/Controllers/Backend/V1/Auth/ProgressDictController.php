@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Backend\V1\Auth;
 use App\Http\Controllers\Backend\V1\APIBaseController;
 use App\Models\Backend\ProgressDict;
 use App\Models\Backend\ProgressDictCategory;
+use App\Models\Backend\ProgressBaseinfo;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\DictRequest;
 use Illuminate\Support\Arr;
 
 class ProgressDictController extends APIBaseController
 {
+  /**
+   * 获取数据字典列表
+   * @param Request $request
+   * @return JsonResponse
+   */
   public function index(Request $request)
   {
     $dictList = [];
@@ -28,7 +36,7 @@ class ProgressDictController extends APIBaseController
         ->orderby('dict_category', 'asc')
         ->orderby('order_sort', 'asc')
         ->get()
-        ->groupBy(function($dictItem, $dictKey) use ($categories) {
+        ->groupBy(function ($dictItem, $dictKey) use ($categories) {
           return Arr::first($categories, function ($cateItem, $cateKey) use ($dictItem, $dictKey) {
             return $dictItem['dict_category'] === $cateItem['id'];
           })['category_name'];
@@ -49,5 +57,80 @@ class ProgressDictController extends APIBaseController
 
     return $this->success($dictList);
 
+  }
+
+  /**
+   * 添加数据字典列表
+   * @param DictRequest $request
+   * @return JsonResponse
+   */
+  public function store(DictRequest $request)
+  {
+    // 获取数据字典的值
+    $dictValue = ProgressDict::where('dict_category', $request->dict_category)->max('dict_value');
+    $dictValue = $dictValue ? ++$dictValue : 1;
+
+    $dict = ProgressDict::create([
+      'dict_code' => $request->dict_code,
+      'dict_name' => $request->dict_name,
+      'dict_value' => $dictValue,
+      'dict_category' => $request->dict_category,
+      'order_sort' => $request->order_sort ? $request->order_sort : 0,
+      'remark' => $request->remark,
+    ]);
+    return $this->success($dict);
+  }
+
+  /**
+   * 更新数据字典
+   * @param DictRequest $request
+   * @param $id
+   * @return JsonResponse
+   */
+  public function update(DictRequest $request, $id)
+  {
+    $dict = ProgressDict::find($id);
+    $dict->fill([
+      'dict_code' => $request->dict_code,
+      'dict_name' => $request->dict_name,
+      'order_sort' => $request->order_sort ? $request->order_sort : 0,
+      'remark' => $request->remark,
+    ])->save();
+    return $this->success($dict);
+  }
+
+  /**
+   * 删除数据字典
+   * @param DictRequest $request
+   * @param $id
+   * @return JsonResponse
+   */
+  public function destroy($id)
+  {
+    $dict = ProgressDict::find($id);
+    if (!$this->chkForienKey($dict)) {
+      return $this->failed('该数据字典被使用中，请删除数据后再删除该字典数据');
+    }
+
+    $dict->delete();
+    $this->success(null, '成功删除数据.');
+  }
+
+  /**
+   * 检查外键
+   * @param $dict
+   * @return bool
+   */
+  private function chkForienKey($dict)
+  {
+    switch ($dict->category->category_name) {
+      case 'course':
+        $baseinfoCnt = ProgressBaseinfo::where('apply_course', $dict->dict_value)->count();
+        if ($baseinfoCnt) {
+          return false;
+        }
+        break;
+    }
+    return true;
   }
 }

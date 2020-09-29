@@ -76,7 +76,13 @@ class APIBaseController extends Controller
 
   }
 
-  //失败返回
+  /**
+   * 失败返回
+   * @param int $code
+   * @param string $msg
+   * @param string $data
+   * @return JsonResponse
+   */
   protected function error($code = 422, $msg = "fail", $data = "")
   {
     $this->parseNull($data);

@@ -81,7 +81,7 @@ Route::group(
         Route::apiResource('files', 'FileController'); // 文件操作接口
 
         //用户快捷菜单
-        Route::apiResource('menu', 'MenuController',['only'=>[
+        Route::apiResource('menu', 'MenuController', ['only' => [
           'index', 'store', 'destroy'
         ]]);
 
@@ -90,7 +90,8 @@ Route::group(
         Route::post('progress/baseinfo/edit', 'ProgressBaseInfoController@edit'); // 修改用户自己的申报基本信息接口
 
         Route::apiResource('progress/baseinfo', 'ProgressBaseInfoController'); // 教师申报基本信息接口
-        Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
+//        Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
+        Route::apiResource('progress/dict', 'ProgressDictController'); // 数据字典增删改查接口
 
         Route::post('progress/morals/edit', 'ProgressMoralController@edit'); //师德师风接口
         Route::get('progress/morals/detail', 'ProgressMoralController@detail'); //师德师风接口
