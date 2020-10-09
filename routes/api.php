@@ -91,7 +91,9 @@ Route::group(
 
         Route::apiResource('progress/baseinfo', 'ProgressBaseInfoController'); // 教师申报基本信息接口
 //        Route::get('progress/dict', 'ProgressDictController@index'); // 数据字典取得接口
+        Route::get('progress/dict/search', 'ProgressDictController@search'); // 数据字典查询接口（带分页）
         Route::apiResource('progress/dict', 'ProgressDictController'); // 数据字典增删改查接口
+        Route::get('progress/dict_category', 'ProgressCategoryController@index'); // 数据字典类型
 
         Route::post('progress/morals/edit', 'ProgressMoralController@edit'); //师德师风接口
         Route::get('progress/morals/detail', 'ProgressMoralController@detail'); //师德师风接口

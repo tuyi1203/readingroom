@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\ModelFilters\Backend\ProgressDictFilter;
 use App\Models\Backend\ProgressDict;
 use App\Models\Backend\ProgressDictCategory;
 use App\Models\Backend\ProgressBaseinfo;
@@ -60,6 +61,21 @@ class ProgressDictController extends APIBaseController
   }
 
   /**
+   * 获取数据字典列表接口
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function search(Request $request)
+  {
+    $this->checkPermission('course_manage');
+    $dictList = ProgressDict::filter($this->getParams($request), ProgressDictFilter::class)
+      ->paginate($this->getPageSize($request), ['*'], 'page',
+        $this->getCurrentPage($request));
+
+    return $this->success($dictList->toArray());
+  }
+
+  /**
    * 添加数据字典列表
    * @param DictRequest $request
    * @return JsonResponse
@@ -67,8 +83,13 @@ class ProgressDictController extends APIBaseController
   public function store(DictRequest $request)
   {
     // 获取数据字典的值
+    $this->checkPermission('course_manage');
     $dictValue = ProgressDict::where('dict_category', $request->dict_category)->max('dict_value');
     $dictValue = $dictValue ? ++$dictValue : 1;
+
+    if (!$this->chkSameDict($request->dict_category, $request->dict_name)) {
+      return $this->failed('数据字典重复，请修改后重新提交');
+    }
 
     $dict = ProgressDict::create([
       'dict_code' => $request->dict_code,
@@ -89,6 +110,7 @@ class ProgressDictController extends APIBaseController
    */
   public function update(DictRequest $request, $id)
   {
+    $this->checkPermission('course_manage');
     $dict = ProgressDict::find($id);
     $dict->fill([
       'dict_code' => $request->dict_code,
@@ -101,12 +123,12 @@ class ProgressDictController extends APIBaseController
 
   /**
    * 删除数据字典
-   * @param DictRequest $request
    * @param $id
    * @return JsonResponse
    */
   public function destroy($id)
   {
+    $this->checkPermission('course_manage');
     $dict = ProgressDict::find($id);
     if (!$this->chkForienKey($dict)) {
       return $this->failed('该数据字典被使用中，请删除数据后再删除该字典数据');
@@ -130,6 +152,24 @@ class ProgressDictController extends APIBaseController
           return false;
         }
         break;
+    }
+    return true;
+  }
+
+  /**
+   * 检查是否有相同的数据字典
+   * @param $dictCategory
+   * @param $dictName
+   * @return bool
+   */
+  private function chkSameDict($dictCategory, $dictName)
+  {
+    $count = ProgressDict::where('dict_category', $dictCategory)
+      ->where('dict_name', $dictName)
+      ->count();
+
+    if ($count) {
+      return false;
     }
     return true;
   }

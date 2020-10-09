@@ -3,9 +3,12 @@
 namespace App\Models\Backend;
 
 use Illuminate\Database\Eloquent\Model;
+use EloquentFilter\Filterable;
 
 class ProgressDict extends Model
 {
+  use Filterable;
+
   protected $table = 'progress_dicts';
   protected $fillable = [
     'dict_code',

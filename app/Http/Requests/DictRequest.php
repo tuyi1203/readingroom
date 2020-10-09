@@ -16,12 +16,18 @@ class DictRequest extends FormRequest
   {
     switch ($this->method()) {
       case 'POST':
-      case 'PUT':
         return [
           'dict_category' => 'required|numeric',
           'dict_code' => 'string',
           'dict_name' => 'required|string',
           'remark' => 'string',
+          'order_sort' => 'nullable|numeric'
+        ];
+        break;
+      case 'PUT':
+        return [
+          'dict_name' => 'required|string',
+          'remark' => 'nullable|string',
           'order_sort' => 'nullable|numeric'
         ];
         break;
