@@ -27,5 +27,7 @@ class ProgressBaseinfo extends Model
     'education_no',
     'degree_no',
     'subject',
+    'birthday',
+    'zai_bian'
   ];
 }

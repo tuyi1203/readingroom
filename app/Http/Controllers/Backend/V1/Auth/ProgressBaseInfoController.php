@@ -84,6 +84,8 @@ class ProgressBaseInfoController extends APIBaseController
       'had_position' => $request->input('had_position'),
       'apply_position' => $request->input('apply_position'),
       'review_team_name' => $request->input('review_team_name'),
+      'birthday' => $request->input('birthday'),
+      'zai_bian' => $request->input('zai_bian'),
     ]);
 
     if (!$baseInfo) {
