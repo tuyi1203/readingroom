@@ -27,7 +27,7 @@ Route::group(
   function () {
     Route::group([
       'namespace' => 'V1',
-      'middleware' => 'throttle:120,1'
+//      'middleware' => 'throttle:120,1'
     ], function () {
 
       Route::prefix('wechat')->group(function () {
@@ -129,6 +129,9 @@ Route::group(
         Route::post('progress/educate/achievement', 'ProgressEducateAchievementController@store'); // 增加教学成果接口（教师自身）
         Route::delete('progress/educate/achievement/{id}', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
 //        Route::delete('progress/educate/achievement/del', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
+
+        Route::get('progress/teacher/teach/{id}','ProgressTeacherController@teachDetail'); // 教育成果详情
+        Route::apiResource('progress/teacher', 'ProgressTeacherController', ['only' => ['index', 'show']]); // 教师信息查询接口
       });
     });
   }

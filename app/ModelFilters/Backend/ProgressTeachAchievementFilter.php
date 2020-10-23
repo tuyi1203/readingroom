@@ -19,6 +19,11 @@ class ProgressTeachAchievementFilter extends ModelFilter
     return $this->where('type', $value);
   }
 
+  public function user($id)
+  {
+    return $this->where('user_id', $id);
+  }
+
   public function awardDateFrom($value)
   {
     return $this->where('award_date', '>=', $value);

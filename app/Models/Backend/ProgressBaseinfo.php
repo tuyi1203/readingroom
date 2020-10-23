@@ -2,10 +2,12 @@
 
 namespace App\Models\Backend;
 
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 class ProgressBaseinfo extends Model
 {
+  use Filterable;
   protected $table = 'progress_baseinfos';
 
   protected $fillable = [

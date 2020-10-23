@@ -20,6 +20,7 @@ class ProgressQualificationWorkExperienceController extends APIBaseController
     $educateDetail = Educate::where('user_id', $this->user->id)->firstOrFail();
     $experiences = Experience::where('user_id', $this->user->id)->orderby('order_sort', 'asc')->get();
     $detailInfo = [
+      'id' => $educateDetail->id,
       'rural_teach_years' => $educateDetail->rural_teach_years,
       'experience' => $experiences->toArray(),
     ];
