@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
 use App\ModelFilters\Backend\ProgressBaseinfoFilter;
+use App\ModelFilters\Backend\ProgressEducateAchievementFilter;
 use App\ModelFilters\Backend\ProgressTeachAchievementFilter as AchievementFilter;
 use App\Models\Backend\ExtendRole as Role;
 use App\Models\Backend\FileInfo;
 use App\Models\Backend\ProgressBaseinfo;
+use App\Models\Backend\ProgressEducateAchievement;
 use App\Models\Backend\ProgressEducateBaseinfo;
 use App\Models\Backend\ProgressMoral;
 use App\Models\Backend\ProgressQualificationEducate;
@@ -87,10 +89,10 @@ class ProgressTeacherController extends APIBaseController
 
     } else if ($request->input('type') == 'teach') { // 教育成果
       $columns = $this->getColumns4Show($request->input('category'));
-      $params = [
-        'user_id' => $uid,
-        'type' => $request->category
-      ];
+      $params = $this->getParams($request);
+      $params['user_id'] = $uid;
+      $params['type'] = $request->category;
+
       $teacherInfo = Achievement::filter($params, AchievementFilter::class)
         ->paginate(
           $this->getPageSize($request),
@@ -98,20 +100,57 @@ class ProgressTeacherController extends APIBaseController
           'page',
           $this->getCurrentPage($request)
         );
+    } else if ($request->input('type') == 'educate') { // 教学成果
+      if ($request->category == 'baseinfo') { // 教学成果基本情况
+        $teacherInfo = ProgressEducateBaseinfo::where('user_id', $uid)->firstOrFail();
+        $files = FileInfo::where('bize_type','educate/baseinfo')->where('bize_id',$teacherInfo->id)->get();
+        $teacherInfo->files = $files;
+      }
+      if ($request->category == 'list') { // 教学成果列表
+        $columns = $this->getEducateColumns4Show($request->input('category_type'));
+        $params = $this->getParams($request);
+        $params['user_id'] = $uid;
+        $params['type'] = $request->category_type;
+        $teacherInfo = ProgressEducateAchievement::filter($params, ProgressEducateAchievementFilter::class)
+          ->paginate(
+            $this->getPageSize($request),
+            $columns,
+            'page',
+            $this->getCurrentPage($request)
+          );
+      }
+
+
     }
     return $this->success($teacherInfo);
   }
 
   /**
-   * 获取单个信息详情
+   * 获取单个教育成果信息详情
    * @param Request $request
    * @param $id
    * @return JsonResponse
    */
   public function teachDetail(Request $request, $id)
   {
+    $this->checkPermission('teacher_info_search');
     $detail = Achievement::findOrFail($id);
     $achievementFiles = FileInfo::where('bize_type', 'teach/achievement')->where('bize_id', $id)->get();
+    $detail->files = $achievementFiles;
+    return $this->success($detail);
+  }
+
+  /**
+   * 获取单个教学成果信息详情
+   * @param Request $request
+   * @param $id
+   * @return JsonResponse
+   */
+  public function educateDetail(Request $request, $id)
+  {
+    $this->checkPermission('teacher_info_search');
+    $detail = ProgressEducateAchievement::findOrFail($id);
+    $achievementFiles = FileInfo::where('bize_type', 'educate/achievement')->where('bize_id', $id)->get();
     $detail->files = $achievementFiles;
     return $this->success($detail);
   }
@@ -159,6 +198,44 @@ class ProgressTeacherController extends APIBaseController
           'award_level',
           'award_position',
           'award_role',
+          'award_authoriry_organization',
+          'award_authoriry_country',
+        ];
+        break;
+    }
+    return $columns;
+  }
+
+  /**
+   * 设置需要展示的字段
+   * @param $type
+   * @return array
+   */
+  private function getEducateColumns4Show($type)
+  {
+    $columns = ['*'];
+    switch ($type) {
+      case 2:
+        $columns = [
+          'id',
+          'type',
+          'achievement_type',
+          'lecture_date',
+          'lecture_content',
+          'lecture_person',
+          'lecture_organization',
+        ];
+        break;
+      case 1:
+      default:
+        $columns = [
+          'id',
+          'type',
+          'achievement_type',
+          'award_date',
+          'award_title',
+          'award_level',
+          'award_position',
           'award_authoriry_organization',
           'award_authoriry_country',
         ];

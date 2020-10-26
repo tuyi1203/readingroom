@@ -131,6 +131,7 @@ Route::group(
 //        Route::delete('progress/educate/achievement/del', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
 
         Route::get('progress/teacher/teach/{id}','ProgressTeacherController@teachDetail'); // 教育成果详情
+        Route::get('progress/teacher/educate/{id}','ProgressTeacherController@educateDetail'); // 教学成果详情
         Route::apiResource('progress/teacher', 'ProgressTeacherController', ['only' => ['index', 'show']]); // 教师信息查询接口
       });
     });
