@@ -135,6 +135,8 @@ Route::group(
         Route::get('progress/teacher/research/{id}', 'ProgressTeacherController@researchDetail'); // 科研成果详情
         Route::get('progress/teacher/pdf/{uid}', 'ProgressTeacherController@pdf'); // 教师信息PDF下载
         Route::apiResource('progress/teacher', 'ProgressTeacherController', ['only' => ['index', 'show']]); // 教师信息查询接口
+
+        Route::apiResource('progress/award/achievement','ProgressAwardAchievementController'); // 荣誉
       });
     });
   }

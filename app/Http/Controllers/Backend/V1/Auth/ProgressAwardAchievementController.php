@@ -3,21 +3,68 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
-use App\ModelFilters\Backend\ProgressTeachAchievementFilter as AchievementFilter;
-use App\Models\Backend\ProgressTeachAchievement as Achievement;
+use App\ModelFilters\Backend\ProgressAwardAchievementFilter as AchievementFilter;
 use App\Models\Backend\FileInfo;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Backend\ProgressAwardAchievement as Achievement;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
-class ProgressTeachAchievementController extends APIBaseController
+class ProgressAwardAchievementController extends APIBaseController
 {
-  /*
-  * 展示教育成果列表
-  */
+  /**
+   * 创建或更新荣誉详情接口
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function edit(Request $request)
+  {
+    $this->checkPermission('edit_award_achievement');
+
+    $validator = Validator::make($request->all(), [
+
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $baseInfo = BaseInfo::updateOrCreate([
+      'user_id' => $this->user->id,
+    ], [
+      'effect' => $request->input('effect'),
+      'observe' => $request->input('observe'),
+      'communicate' => $request->input('communicate'),
+      'guide' => $request->input('guide'),
+      'elective' => $request->input('elective'),
+    ]);
+
+    if (!$baseInfo) {
+      return $this->failed('Update failed.');
+    }
+
+    //更新附件信息
+    if ($request->filled('fileids')) {
+      FileInfo::whereIn('id', $request->input('fileids'))
+        ->update([
+          'bize_id' => $baseInfo->id,
+        ]);
+    }
+
+    return $this->success($baseInfo, 'Update succeed.');
+  }
+
+
+  /**
+   * 展示教学成果列表
+   * @param Request $request
+   * @return mixed
+   * @throws \ErrorException
+   */
   public function index(Request $request)
   {
-    $this->checkPermission('list_teach_achievement');
+    $this->checkPermission('list_award_achievement');
 
     if (!$request->has('type')) {
       throw new \ErrorException('No params');
@@ -37,7 +84,7 @@ class ProgressTeachAchievementController extends APIBaseController
       return $item->id;
     });
 
-    $achievementFiles = FileInfo::where('bize_type', 'teach/achievement')->whereIn('bize_id', $ids)->get();
+    $achievementFiles = FileInfo::where('bize_type', 'award/achievement')->whereIn('bize_id', $ids)->get();
 
     $achievementsMapped = $achievements->map(function ($item, $index) use ($achievementFiles) {
 
@@ -49,32 +96,40 @@ class ProgressTeachAchievementController extends APIBaseController
     return $this->success($achievementsMapped->all());
   }
 
-  /*
-  * 展示教育成果详情
-  */
+
+  /**
+   * 展示教学成果详情
+   * @param Request $request
+   * @param $id
+   * @return mixed
+   */
   public function show(Request $request, $id)
   {
 
-    $this->checkPermission('detail_teach_achievement');
+    $this->checkPermission('detail_award_achievement');
 
     $detail = Achievement::where('user_id', $this->user->id)->where('id', $id)->firstOrFail();
     $columns = $this->getColumns4Show($detail->type);
     $detail = Achievement::where('user_id', $this->user->id)->where('id', $id)->first($columns);
-    $achievementFiles = FileInfo::where('bize_type', 'teach/achievement')->where('bize_id', $id)->get();
+    $achievementFiles = FileInfo::where('bize_type', 'award/achievement')->where('bize_id', $id)->get();
     $detail->achievement_files = $achievementFiles;
 
     return $this->success($detail->toArray());
   }
 
-  /*
-  * 删除教育成果数据
-  */
+
+  /**
+   * 显出教学成果数据
+   * @param Request $request
+   * @param $id
+   * @return mixed
+   */
   public function destroy(Request $request, $id)
   {
-    $this->checkPermission('del_teach_achievement');
+    $this->checkPermission('del_award_achievement');
 
     $achievement = Achievement::where('id', $id)->where('user_id', $this->user->id)->firstOrFail();
-    $achievementFiles = FileInfo::where('bize_type', 'teach/achievement')->where('bize_id', $achievement->id)->get();
+    $achievementFiles = FileInfo::where('bize_type', 'award/achievement')->where('bize_id', $achievement->id)->get();
 
     //删除记录
     $deleteResult = $achievement->delete();
@@ -93,12 +148,15 @@ class ProgressTeachAchievementController extends APIBaseController
     return $this->success(null, 'Delete succeed.');
   }
 
-  /*
-  * 修改教育成果数据
-  */
+  /**
+   * 修改教学成果数据
+   * @param Request $request
+   * @param $id
+   * @return mixed
+   */
   public function update(Request $request, $id)
   {
-    $this->checkPermission('edit_teach_achievement');
+    $this->checkPermission('edit_award_achievement');
 
     $detail = Achievement::where('user_id', $this->user->id)->where('id', $id)->first();
     $columns = $this->setColunms($detail->type, $request);
@@ -108,12 +166,14 @@ class ProgressTeachAchievementController extends APIBaseController
     return $this->success($detail);
   }
 
-  /*
-  * 新增教育成果数据
-  */
+  /**
+   * 新增教学成果数据
+   * @param Request $request
+   * @return mixed
+   */
   public function store(Request $request)
   {
-    $this->checkPermission('add_teach_achievement');
+    $this->checkPermission('add_award_achievement');
 
     $validator = Validator::make($request->all(), [
       'type' => 'required|integer',
@@ -134,7 +194,7 @@ class ProgressTeachAchievementController extends APIBaseController
       FileInfo::where('user_id', $this->user->id)->whereIn(
         'bize_type',
         [
-          'teach/achievement',
+          'award/achievement',
         ]
       )->whereIn('id', $request->input('fileids'))
         ->where('user_id', $this->user->id)
@@ -145,13 +205,17 @@ class ProgressTeachAchievementController extends APIBaseController
     return $this->success($result->id);
   }
 
-  /*
-  * 设置需要填充的字段
-  */
+  /**
+   * 设置需要填充的字段
+   * @param $type
+   * @param Request $request
+   * @return array
+   */
   private function setColunms($type, Request $request)
   {
     $columns = [
       'user_id' => $this->user->id,
+//      'achievement_type' => $request->input('achievement_type'),
     ];
 
     if ($request->has('type')) { // 新增的时候
@@ -159,40 +223,24 @@ class ProgressTeachAchievementController extends APIBaseController
     }
 
     switch ($type) {
-      case 2:
-        $columns = Arr::collapse([$columns, [
-          'achievement_type' => $request->input('achievement_type'),
-          'manage_exp_communicate_date' => $request->input('manage_exp_communicate_date'),
-          'manage_exp_communicate_content' => $request->input('manage_exp_communicate_content'),
-          'manage_exp_communicate_role' => $request->input('manage_exp_communicate_role'),
-          'manage_exp_communicate_range' => $request->input('manage_exp_communicate_range'),
-        ]]);
-        break;
-      case 3:
-        $columns = Arr::collapse([$columns, [
-          'achievement_type' => $request->input('achievement_type'),
-          'teacher_guide_date_start' => $request->input('teacher_guide_date_start'),
-          'teacher_guide_date_end' => $request->input('teacher_guide_date_end'),
-          'teacher_guide_name' => $request->input('teacher_guide_name'),
-          'teacher_guide_content' => $request->input('teacher_guide_content'),
-          'teacher_guide_effect' => $request->input('teacher_guide_effect'),
-        ]]);
-        break;
+//      case 2:
+//        $columns = Arr::collapse([$columns, [
+//          'lecture_date' => $request->input('lecture_date'),
+//          'lecture_content' => $request->input('lecture_content'),
+//          'lecture_person' => $request->input('lecture_person'),
+//          'lecture_organization' => $request->input('lecture_organization'),
+//          'lecture_scope' => $request->input('lecture_scope'),
+//        ]]);
+//        break;
       case 1:
       default:
         $columns = Arr::collapse([$columns, [
-          'teacher_guide_date_start' => $request->input('teacher_guide_date_start'),
-          'teacher_guide_date_end' => $request->input('teacher_guide_date_end'),
-          'teacher_guide_name' => $request->input('teacher_guide_name'),
-          'teacher_guide_content' => $request->input('teacher_guide_content'),
-          'teacher_guide_effect' => $request->input('teacher_guide_effect'),
-          'award_date' => $request->input('award_date'),
-          'award_main' => $request->input('award_main'),
-          'award_title' => $request->input('award_title'),
+          'award_remark' => $request->input('award_remark'),
           'award_type' => $request->input('award_type'),
+          'award_date' => $request->input('award_date'),
+          'award_title' => $request->input('award_title'),
           'award_level' => $request->input('award_level'),
           'award_position' => $request->input('award_position'),
-          'award_role' => $request->input('award_role'),
           'award_authoriry_organization' => $request->input('award_authoriry_organization'),
           'award_authoriry_country' => $request->input('award_authoriry_country'),
         ]]);
@@ -202,9 +250,8 @@ class ProgressTeachAchievementController extends APIBaseController
     return $columns;
   }
 
-
   /**
-   * 获取需要展示的字段
+   * 设置需要展示的字段
    * @param $type
    * @return array
    */
@@ -212,57 +259,43 @@ class ProgressTeachAchievementController extends APIBaseController
   {
     $columns = ['*'];
     switch ($type) {
-      case 2:
-        $columns = [
-          'id',
-          'type',
-          'achievement_type',
-          'manage_exp_communicate_date',
-          'manage_exp_communicate_content',
-          'manage_exp_communicate_role',
-          'manage_exp_communicate_range',
-        ];
-        break;
-      case 3:
-        $columns = [
-          'id',
-          'type',
-          'achievement_type',
-          'teacher_guide_date_start',
-          'teacher_guide_date_end',
-          'teacher_guide_name',
-          'teacher_guide_content',
-          'teacher_guide_effect',
-        ];
-        break;
+//      case 2:
+//        $columns = [
+//          'id',
+//          'type',
+//          'achievement_type',
+//          'lecture_date',
+//          'lecture_content',
+//          'lecture_person',
+//          'lecture_organization',
+//          'lecture_scope'
+//        ];
+//        break;
       case 1:
       default:
         $columns = [
           'id',
           'type',
           'award_date',
-          'award_main',
+          'award_remark',
           'award_title',
           'award_type',
           'award_level',
           'award_position',
-          'award_role',
           'award_authoriry_organization',
           'award_authoriry_country',
-          'teacher_guide_date_start',
-          'teacher_guide_date_end',
-          'teacher_guide_name',
-          'teacher_guide_content',
-          'teacher_guide_effect',
         ];
         break;
     }
     return $columns;
   }
 
-  /*
-  * 获取数据对应的文件信息
-  */
+  /**
+   * 获取数据对应的文件信息
+   * @param $fileCollections
+   * @param $item
+   * @return array
+   */
   private function getFiles($fileCollections, $item)
   {
     $files = $fileCollections->filter(function ($file) use ($item) {

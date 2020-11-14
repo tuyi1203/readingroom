@@ -69,7 +69,7 @@ class ProgressEducateAchievementController extends APIBaseController
 
     //更新附件信息
     if ($request->filled('fileids')) {
-      FileInfo::whereIn('id',$request->input('fileids'))
+      FileInfo::whereIn('id', $request->input('fileids'))
         ->update([
           'bize_id' => $baseInfo->id,
         ]);
@@ -200,7 +200,7 @@ class ProgressEducateAchievementController extends APIBaseController
 
     $validator = Validator::make($request->all(), [
       'type' => 'required|integer',
-      'achievement_type' => 'required|string',
+//      'achievement_type' => 'required|string',
     ]);
 
     if ($validator->fails()) {
@@ -246,17 +246,37 @@ class ProgressEducateAchievementController extends APIBaseController
     }
 
     switch ($type) {
+      case 3:
+        $columns = Arr::collapse([$columns, [
+          'award_type' => $request->input('award_type'),
+          'award_date' => $request->input('award_date'),
+          'award_main' => $request->input('award_main'),
+          'award_title' => $request->input('award_title'),
+          'award_level' => $request->input('award_level'),
+          'award_position' => $request->input('award_position'),
+          'award_role' => $request->input('award_role'),
+          'award_authoriry_organization' => $request->input('award_authoriry_organization'),
+          'award_authoriry_country' => $request->input('award_authoriry_country'),
+          'teacher_guide_date_start' => $request->input('teacher_guide_date_start'),
+          'teacher_guide_date_end' => $request->input('teacher_guide_date_end'),
+          'teacher_guide_name' => $request->input('teacher_guide_name'),
+          'teacher_guide_content' => $request->input('teacher_guide_content'),
+          'teacher_guide_effect' => $request->input('teacher_guide_effect'),
+        ]]);
+        break;
       case 2:
         $columns = Arr::collapse([$columns, [
           'lecture_date' => $request->input('lecture_date'),
           'lecture_content' => $request->input('lecture_content'),
           'lecture_person' => $request->input('lecture_person'),
           'lecture_organization' => $request->input('lecture_organization'),
+          'lecture_scope' => $request->input('lecture_scope'),
         ]]);
         break;
       case 1:
       default:
         $columns = Arr::collapse([$columns, [
+          'award_type' => $request->input('award_type'),
           'award_date' => $request->input('award_date'),
           'award_title' => $request->input('award_title'),
           'award_level' => $request->input('award_level'),
@@ -279,6 +299,26 @@ class ProgressEducateAchievementController extends APIBaseController
   {
     $columns = ['*'];
     switch ($type) {
+      case 3:
+        $columns = [
+          'id',
+          'type',
+          'award_date',
+          'award_main',
+          'award_title',
+          'award_type',
+          'award_level',
+          'award_position',
+          'award_role',
+          'award_authoriry_organization',
+          'award_authoriry_country',
+          'teacher_guide_date_start',
+          'teacher_guide_date_end',
+          'teacher_guide_name',
+          'teacher_guide_content',
+          'teacher_guide_effect',
+        ];
+        break;
       case 2:
         $columns = [
           'id',
@@ -288,6 +328,7 @@ class ProgressEducateAchievementController extends APIBaseController
           'lecture_content',
           'lecture_person',
           'lecture_organization',
+          'lecture_scope'
         ];
         break;
       case 1:
@@ -295,6 +336,7 @@ class ProgressEducateAchievementController extends APIBaseController
         $columns = [
           'id',
           'type',
+          'award_type',
           'achievement_type',
           'award_date',
           'award_title',
