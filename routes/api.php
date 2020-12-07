@@ -136,7 +136,10 @@ Route::group(
         Route::get('progress/teacher/pdf/{uid}', 'ProgressTeacherController@pdf'); // 教师信息PDF下载
         Route::apiResource('progress/teacher', 'ProgressTeacherController', ['only' => ['index', 'show']]); // 教师信息查询接口
 
-        Route::apiResource('progress/award/achievement','ProgressAwardAchievementController'); // 荣誉
+        Route::get('progress/award/search/excel', 'ProgressAwardSearchController@download'); // 下载教师获奖excel数据
+        Route::apiResource('progress/award/search', 'ProgressAwardSearchController', ['only' => ['index', 'show']]); // 教师获奖信息查询接口
+
+        Route::apiResource('progress/award/achievement', 'ProgressAwardAchievementController'); // 荣誉
       });
     });
   }

@@ -4,7 +4,7 @@ namespace App\ModelFilters\Backend;
 
 use EloquentFilter\ModelFilter;
 
-class ProgressAwardAchievementFilter extends ModelFilter
+class ProgressTeacherAwardFilter extends ModelFilter
 {
   /**
    * Related Models that have ModelFilters as well as the method on the ModelFilter
@@ -14,24 +14,29 @@ class ProgressAwardAchievementFilter extends ModelFilter
    */
   public $relations = [];
 
-  public function awardTitle($title)
+  public function campus($campus)
   {
-    return $this->where('award_title', $title);
+    return $this->where('campus', $campus);
   }
 
-  public function awardDateFrom($value)
+  public function awardOrAchievement($which)
   {
-    return $this->where('award_date', '>=', $value);
+    return $this->whereLike('award_or_achievement', $which);
   }
 
-  public function awardDateTo($value)
+  public function dateFrom($value)
   {
-    return $this->where('award_date', '<=', $value);
+    return $this->where('the_date', '>=', $value);
   }
 
-  public function awardAuthoriryOrganization($organization)
+  public function dateTo($value)
   {
-    return $this->whereLike('award_authoriry_organization', $organization);
+    return $this->where('the_date', '<=', $value);
+  }
+
+  public function userName($teacherName)
+  {
+    return $this->whereLike('user_name', $teacherName);
   }
 
   public function order($value)

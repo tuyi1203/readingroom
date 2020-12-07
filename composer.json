@@ -19,6 +19,7 @@
         "laravel/passport": "^8.3",
         "laravel/tinker": "^2.0",
         "lodash-php/lodash-php": "^0.0.6",
+        "maatwebsite/excel": "^3.1",
         "overtrue/easy-sms": "^1.1",
         "overtrue/laravel-wechat": "^5.0",
         "spatie/laravel-permission": "~3.0",
