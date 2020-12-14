@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\ModelFilters\Backend\ProgressAwardAchievementFilter;
 use App\ModelFilters\Backend\ProgressBaseinfoFilter;
 use App\ModelFilters\Backend\ProgressEducateAchievementFilter;
 use App\ModelFilters\Backend\ProgressResearchAchievementFilter;
 use App\ModelFilters\Backend\ProgressTeachAchievementFilter as AchievementFilter;
 use App\Models\Backend\ExtendRole as Role;
 use App\Models\Backend\FileInfo;
+use App\Models\Backend\ProgressAwardAchievement;
 use App\Models\Backend\ProgressBaseinfo;
 use App\Models\Backend\ProgressDict;
 use App\Models\Backend\ProgressDictCategory;
@@ -141,6 +143,19 @@ class ProgressTeacherController extends APIBaseController
           'page',
           $this->getCurrentPage($request)
         );
+    } else if ($request->input('type') == 'award') { // 荣誉及其他
+      $columns = $this->getAwardColumns4Show($request->input('category'));
+      $params = $this->getParams($request);
+      $params['user_id'] = $uid;
+      $params['type'] = $request->category;
+
+      $teacherInfo = ProgressAwardAchievement::filter($params, ProgressAwardAchievementFilter::class)
+        ->paginate(
+          $this->getPageSize($request),
+          $columns,
+          'page',
+          $this->getCurrentPage($request)
+        );
     }
     return $this->success($teacherInfo);
   }
@@ -189,6 +204,21 @@ class ProgressTeacherController extends APIBaseController
     $detail->achievement_files = $achievementFiles;
     $awardFiles = FileInfo::where('bize_type', 'research/award')->where('bize_id', $id)->get();
     $detail->award_files = $awardFiles;
+    return $this->success($detail);
+  }
+
+  /**
+   * 获取单个荣誉及其他详情
+   * @param Request $request
+   * @param $id
+   * @return JsonResponse
+   */
+  public function awardDetail(Request $request, $id)
+  {
+    $this->checkPermission('teacher_info_search');
+    $detail = ProgressAwardAchievement::findOrFail($id);
+    $achievementFiles = FileInfo::where('bize_type', 'award/achievement')->where('bize_id', $id)->get();
+    $detail->files = $achievementFiles;
     return $this->success($detail);
   }
 
@@ -403,12 +433,18 @@ class ProgressTeacherController extends APIBaseController
           'lecture_organization',
         ];
         break;
+      case 3:
+        $columns = [
+          '*'
+        ];
+        break;
       case 1:
       default:
         $columns = [
           'id',
           'type',
           'achievement_type',
+          'award_type',
           'award_date',
           'award_title',
           'award_level',
@@ -418,6 +454,50 @@ class ProgressTeacherController extends APIBaseController
         ];
         break;
     }
+    return $columns;
+  }
+
+  /**
+   * 设置需要展示的字段
+   * @param $type
+   * @return array
+   */
+  private function getAwardColumns4Show($type)
+  {
+    $columns = ['*'];
+//    switch ($type) {
+//      case 2:
+//        $columns = [
+//          'id',
+//          'type',
+//          'achievement_type',
+//          'lecture_date',
+//          'lecture_content',
+//          'lecture_person',
+//          'lecture_organization',
+//        ];
+//        break;
+//      case 3:
+//        $columns = [
+//          '*'
+//        ];
+//        break;
+//      case 1:
+//      default:
+//        $columns = [
+//          'id',
+//          'type',
+//          'achievement_type',
+//          'award_type',
+//          'award_date',
+//          'award_title',
+//          'award_level',
+//          'award_position',
+//          'award_authoriry_organization',
+//          'award_authoriry_country',
+//        ];
+//        break;
+//    }
     return $columns;
   }
 

@@ -129,17 +129,21 @@ Route::group(
         Route::post('progress/educate/achievement', 'ProgressEducateAchievementController@store'); // 增加教学成果接口（教师自身）
         Route::delete('progress/educate/achievement/{id}', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
 //        Route::delete('progress/educate/achievement/del', 'ProgressEducateAchievementController@destroy'); // 删除教学成果（教师自身）
+        Route::apiResource('progress/award/achievement', 'ProgressAwardAchievementController'); // 荣誉（教师自身）
+
+
 
         Route::get('progress/teacher/teach/{id}', 'ProgressTeacherController@teachDetail'); // 教育成果详情
         Route::get('progress/teacher/educate/{id}', 'ProgressTeacherController@educateDetail'); // 教学成果详情
         Route::get('progress/teacher/research/{id}', 'ProgressTeacherController@researchDetail'); // 科研成果详情
+        Route::get('progress/teacher/award/{id}', 'ProgressTeacherController@awardDetail'); // 荣誉和其他详情
         Route::get('progress/teacher/pdf/{uid}', 'ProgressTeacherController@pdf'); // 教师信息PDF下载
         Route::apiResource('progress/teacher', 'ProgressTeacherController', ['only' => ['index', 'show']]); // 教师信息查询接口
 
         Route::get('progress/award/search/excel', 'ProgressAwardSearchController@download'); // 下载教师获奖excel数据
         Route::apiResource('progress/award/search', 'ProgressAwardSearchController', ['only' => ['index', 'show']]); // 教师获奖信息查询接口
 
-        Route::apiResource('progress/award/achievement', 'ProgressAwardAchievementController'); // 荣誉
+
       });
     });
   }
