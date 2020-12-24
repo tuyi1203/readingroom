@@ -407,6 +407,8 @@ class ProgressTeacherController extends APIBaseController
           'award_role',
           'award_authoriry_organization',
           'award_authoriry_country',
+          'teacher_guide_name',
+          'teacher_guide_content'
         ];
         break;
     }
