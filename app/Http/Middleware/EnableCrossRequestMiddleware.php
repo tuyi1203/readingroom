@@ -28,6 +28,7 @@ class EnableCrossRequestMiddleware
 
     $allow_origin = [
       'http://localhost:3300',
+      'http://222.178.117.106:83'
     ];
     if (in_array($origin, $allow_origin)) {
       if ($request->isMethod('OPTIONS')) {
