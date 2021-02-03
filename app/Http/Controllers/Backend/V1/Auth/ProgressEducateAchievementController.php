@@ -95,7 +95,7 @@ class ProgressEducateAchievementController extends APIBaseController
 
     $columns = $this->getColumns4Show($request->input('type'));
 
-    $achievements = Achievement::filter($this->getParams($request), AchievementFilter::class)
+    $achievements = Achievement::filter($this->getParams($request, ['user_id' => $this->user->id]), AchievementFilter::class)
       ->paginate(
         $this->getPageSize($request),
         $columns,

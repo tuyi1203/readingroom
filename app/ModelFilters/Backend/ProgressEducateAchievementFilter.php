@@ -14,6 +14,11 @@ class ProgressEducateAchievementFilter extends ModelFilter
    */
   public $relations = [];
 
+  public function user($id)
+  {
+    return $this->where('user_id', $id);
+  }
+
   public function type($value)
   {
     return $this->where('type', $value);

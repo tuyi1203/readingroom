@@ -14,6 +14,11 @@ class ProgressAwardAchievementFilter extends ModelFilter
    */
   public $relations = [];
 
+  public function user($id)
+  {
+    return $this->where('user_id', $id);
+  }
+
   public function awardTitle($title)
   {
     return $this->where('award_title', $title);
