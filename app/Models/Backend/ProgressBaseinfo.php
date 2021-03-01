@@ -31,6 +31,7 @@ class ProgressBaseinfo extends Model
     'subject',
     'birthday',
     'zai_bian',
-    'campus'
+    'campus',
+    'user_id'
   ];
 }
