@@ -1,8 +1,9 @@
 /node_modules
 /public/hot
-/public/storage
+/storage/logs
+/storage/app/secure_upload
+/storage/app/tmp
 /storage/*.key
-/public/secure_upload
 /vendor
 .env
 .env.backup
@@ -13,3 +14,7 @@ npm-debug.log
 yarn-error.log
 /.idea/
 composer.lock
+phpunit.xml
+.editorconfig
+.styleci.yml
+
