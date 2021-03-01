@@ -61,7 +61,7 @@ class AuthController extends APIBaseController
   public function login(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'email' => 'required|string|email',
+      'email' => 'required|string',
       'password' => 'required|string',
     ]);
 
@@ -92,6 +92,10 @@ class AuthController extends APIBaseController
     */
 
     $user = User::where('email', $request->email)->where('is_active', 1)->first();
+    // 2021.3.1 增加手机号码登陆方式
+    if (!$user) {
+      $user = User::where('mobile', $request->email)->where('is_active', 1)->first();
+    }
     if (!$user || !Hash::check($request->password, $user->password)) {
       return $this->error(402, '用户名或密码错误');
     }
