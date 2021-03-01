@@ -96,21 +96,29 @@ class ProgressMoralController extends APIBaseController
       case 'summary':
         $validator = Validator::make($request->all(), [
           'summary' => 'required|string',
+        ], [
+          'summary.required' => '请输入师德师风综述'
         ]);
         break;
       case 'kaohe':
         $validator = Validator::make($request->all(), [
           'kaohe' => 'required|string',
+        ], [
+          'kaohe.required' => '请填写本人情况',
         ]);
         break;
       case 'warning':
         $validator = Validator::make($request->all(), [
           'warning' => 'required|string',
+        ], [
+          'warning.required' => '请填写本人情况'
         ]);
         break;
       case 'punish':
         $validator = Validator::make($request->all(), [
           'punish' => 'required|string',
+        ], [
+          'punish.required' => '请填写本人情况'
         ]);
         break;
     }

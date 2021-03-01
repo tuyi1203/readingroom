@@ -17,11 +17,9 @@ class ProgressBaseInfoController extends APIBaseController
   public function show(Request $request, $id)
   {
 
-
 //    if (intval($baseInfo['user_id']) !== intval($this->user->id)) {// 数据权限验证
 //      throw new UnauthorizedException(403);
 //    }
-
 
   }
 
