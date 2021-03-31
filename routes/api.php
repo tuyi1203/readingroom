@@ -58,11 +58,14 @@ Route::group(
         //角色接口
         Route::apiResource('roles', 'RoleController');
 
+        Route::put('profile/password', 'ProfileController@setPassword');
+
         // 权限管理接口
         Route::get('permissions/rid/{rid}', 'PermissionController@index'); // 获取角色权限接口
         Route::get('permissions/pid/{pid}', 'PermissionController@index'); // 获取权限接口
         Route::apiResource('permissions', 'PermissionController'); //获取所有权限接口
         Route::put('permissions/rid/{rid}', 'PermissionController@updateRolePermissions'); // 更新角色权限接口
+
 
         //用户管理接口
         Route::apiResource('users', 'UserController');
