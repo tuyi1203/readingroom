@@ -90,7 +90,7 @@ Route::group(
 //        Route::get('/dict', 'ProgressDictController@index'); // 数据字典取得接口
           Route::get('/dict/search', 'ProgressDictController@search'); // 数据字典查询接口（带分页）
           Route::apiResource('/dict', 'ProgressDictController'); // 数据字典增删改查接口
-          Route::get('/dict_category', 'ProgressCategoryController@index'); // 数据字典类型
+          Route::get('/dict_category', 'ProgressDictCategoryController@index'); // 数据字典类型
 
           //师德师风接口组
           Route::group(['prefix' => 'morals'], function () {

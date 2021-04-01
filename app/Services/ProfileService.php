@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Models\Backend\User;
 use \Hash;
 
-class ProfileService
+class ProfileService extends BaseService
 {
   /**
    * 检查输入的密码是否和当前数据库中的用户密码一致
