@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 
 class ProgressDictController extends APIBaseController
 {
+
   /**
    * 获取数据字典列表
    * @param Request $request
@@ -67,7 +68,7 @@ class ProgressDictController extends APIBaseController
    */
   public function search(Request $request)
   {
-    $this->checkPermission('course_manage');
+    $this->checkPermission('dict_manage');
     $dictList = ProgressDict::filter($this->getParams($request), ProgressDictFilter::class)
       ->paginate($this->getPageSize($request), ['*'], 'page',
         $this->getCurrentPage($request));
@@ -83,7 +84,7 @@ class ProgressDictController extends APIBaseController
   public function store(DictRequest $request)
   {
     // 获取数据字典的值
-    $this->checkPermission('course_manage');
+    $this->checkPermission('dict_manage');
     $dictValue = ProgressDict::where('dict_category', $request->dict_category)->max('dict_value');
     $dictValue = $dictValue ? ++$dictValue : 1;
 
@@ -110,7 +111,7 @@ class ProgressDictController extends APIBaseController
    */
   public function update(DictRequest $request, $id)
   {
-    $this->checkPermission('course_manage');
+    $this->checkPermission('dict_manage');
     $dict = ProgressDict::find($id);
     $dict->fill([
       'dict_code' => $request->dict_code,
@@ -128,7 +129,7 @@ class ProgressDictController extends APIBaseController
    */
   public function destroy($id)
   {
-    $this->checkPermission('course_manage');
+    $this->checkPermission('dict_manage');
     $dict = ProgressDict::find($id);
     if (!$this->chkForienKey($dict)) {
       return $this->failed('该数据字典被使用中，请删除数据后再删除该字典数据');
