@@ -26,10 +26,7 @@ class EnableCrossRequestMiddleware
 
     $response = $next($request);
 
-    $allow_origin = [
-      'http://localhost:3300',
-      'http://222.178.117.106:83'
-    ];
+    $allow_origin = explode(',', env('ALLOW_ORIGIN'));
     if (in_array($origin, $allow_origin)) {
       if ($request->isMethod('OPTIONS')) {
         return response()->json('{"method":"OPTIONS"}', 200, $headers);
