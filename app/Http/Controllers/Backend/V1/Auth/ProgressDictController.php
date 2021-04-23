@@ -95,7 +95,7 @@ class ProgressDictController extends APIBaseController
     $dict = ProgressDict::create([
       'dict_code' => $request->dict_code,
       'dict_name' => $request->dict_name,
-      'dict_value' => $dictValue,
+      'dict_value' => $request->dictValue,
       'dict_category' => $request->dict_category,
       'order_sort' => $request->order_sort ? $request->order_sort : 0,
       'remark' => $request->remark,
@@ -116,6 +116,7 @@ class ProgressDictController extends APIBaseController
     $dict->fill([
       'dict_code' => $request->dict_code,
       'dict_name' => $request->dict_name,
+      'dict_value' => $request->dictValue,
       'order_sort' => $request->order_sort ? $request->order_sort : 0,
       'remark' => $request->remark,
     ])->save();
