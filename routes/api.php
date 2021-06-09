@@ -79,7 +79,26 @@ Route::group(
           'index', 'store', 'destroy'
         ]]);
 
-        // 职称申报系统接口
+
+        // 学生档案管理子系统接口
+        Route::group(['prefix' => 'students'], function () {
+          Route::group(['prefix' => 'speciality'], function () {
+
+            // 获取班级信息接口
+            Route::get('get_campus_classes', 'StudentsSpecialityInfoController@getCampusClasses');
+
+            // 获取学生特长信息接口
+            Route::get('info_search', 'StudentsSpecialityInfoController@getInfos');
+
+            // 获取学生特长类别信息接口
+            Route::get('get_speciality_types', 'StudentsSpecialityInfoController@getSpecialityTypes');
+
+            // 获取学生特长名称列表接口
+            Route::get('get_info_names', 'StudentsSpecialityInfoController@getInfoNames');
+          });
+        });
+
+        // 职称申报子系统接口
         Route::group(['prefix' => 'progress'], function () {
 
           Route::get('/baseinfo/detail', 'ProgressBaseInfoController@getBaseInfo'); // 获得用户自己申报基本信息接口

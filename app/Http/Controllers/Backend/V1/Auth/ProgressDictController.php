@@ -116,7 +116,7 @@ class ProgressDictController extends APIBaseController
     $dict->fill([
       'dict_code' => $request->dict_code,
       'dict_name' => $request->dict_name,
-      'dict_value' => $request->dictValue,
+      'dict_value' => $request->dict_value,
       'order_sort' => $request->order_sort ? $request->order_sort : 0,
       'remark' => $request->remark,
     ])->save();
