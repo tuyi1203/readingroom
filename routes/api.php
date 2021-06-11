@@ -84,17 +84,22 @@ Route::group(
         Route::group(['prefix' => 'students'], function () {
           Route::group(['prefix' => 'speciality'], function () {
 
+            //----------------学生档案系统通用接口----------------------
             // 获取班级信息接口
-            Route::get('get_campus_classes', 'StudentsSpecialityInfoController@getCampusClasses');
+            Route::get('get_campus_classes', 'StudentsSpecialityCommonController@getCampusClasses');
 
+            // 获取学生特长类别信息接口
+            Route::get('get_speciality_types', 'StudentsSpecialityCommonController@getSpecialityTypes');
+
+            //----------------学生档案系统特长信息接口----------------------
             // 获取学生特长信息接口
             Route::get('info_search', 'StudentsSpecialityInfoController@getInfos');
 
-            // 获取学生特长类别信息接口
-            Route::get('get_speciality_types', 'StudentsSpecialityInfoController@getSpecialityTypes');
-
             // 获取学生特长名称列表接口
             Route::get('get_info_names', 'StudentsSpecialityInfoController@getInfoNames');
+
+            // 学生特长数据下载接口
+            Route::get('info_search_excel', 'StudentsSpecialityInfoController@download'); // 下载教师获奖excel数据
           });
         });
 
