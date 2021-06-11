@@ -41,10 +41,24 @@ class StudentsSpecialityService extends BaseService
   }
 
   /**
-   * 获取学生特长数据
+   * 获取学生获奖数据
    * @param $params
-   * @return void
+   * @return bool
    */
+  public function getAwards($params)
+  {
+    return $this->sendRequest(
+      env('STUDENT_APP_URL') . '/students/speciality/awards',
+      "GET",
+      $params
+    );
+  }
+
+  /**
+ * 获取学生特长数据
+ * @param $params
+ * @return void
+ */
   public function getInfos4Output($params)
   {
     $infoData = $this->sendRequest(
@@ -57,24 +71,66 @@ class StudentsSpecialityService extends BaseService
 
     $types = $this->getSpecialityTypes(null);
 
-    foreach ($infoData as &$item) {
-      // 获取校区名称
-      $item['student_class']['campus_name'] = Arr::first($dicts['campus'], function ($value , $key) use ($item) {
-        return $value['dict_value'] == $item['student_class']['campus'];
-      })['dict_name'];
+    if (is_array($infoData) && count($infoData)) {
+      foreach ($infoData as &$item) {
+        // 获取校区名称
+        $item['student_class']['campus_name'] = Arr::first($dicts['campus'], function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['student_class']['campus'];
+        })['dict_name'];
 
-      // 获取性别名称
-      $item['student']['gender_name'] = Arr::first($dicts['gender'], function ($value , $key) use ($item) {
-        return $value['dict_value'] == $item['student']['gender'];
-      })['dict_name'];
+        // 获取性别名称
+        $item['student']['gender_name'] = Arr::first($dicts['gender'], function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['student']['gender'];
+        })['dict_name'];
 
-      // 获取特长类别
-      $item['speciality_type_name'] = Arr::first($types, function ($value , $key) use ($item) {
-        return $value['dict_value'] == $item['speciality_type'];
-      })['dict_name'];
+        // 获取特长类别
+        $item['speciality_type_name'] = Arr::first($types, function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['speciality_type'];
+        })['dict_name'];
+      }
     }
 
     return $infoData;
+
+  }
+
+  /**
+   * 获取学生特长数据
+   * @param $params
+   * @return void
+   */
+  public function getAwards4Output($params)
+  {
+    $awardData = $this->sendRequest(
+      env('STUDENT_APP_URL') . '/students/speciality/awards',
+      "GET",
+      $params
+    )['data'];
+
+    $dicts = $this->getDicts(['gender', 'campus']);
+
+    $types = $this->getSpecialityTypes(null);
+
+    if (is_array($awardData) && count($awardData)) {
+      foreach ($awardData as &$item) {
+        // 获取校区名称
+        $item['student_class']['campus_name'] = Arr::first($dicts['campus'], function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['student_class']['campus'];
+        })['dict_name'];
+
+        // 获取性别名称
+        $item['student']['gender_name'] = Arr::first($dicts['gender'], function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['student']['gender'];
+        })['dict_name'];
+
+        // 获取特长类别
+        $item['speciality_type_name'] = Arr::first($types, function ($value , $key) use ($item) {
+          return $value['dict_value'] == $item['speciality_type'];
+        })['dict_name'];
+      }
+    }
+
+    return $awardData;
 
   }
 

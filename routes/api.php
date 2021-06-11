@@ -99,7 +99,14 @@ Route::group(
             Route::get('get_info_names', 'StudentsSpecialityInfoController@getInfoNames');
 
             // 学生特长数据下载接口
-            Route::get('info_search_excel', 'StudentsSpecialityInfoController@download'); // 下载教师获奖excel数据
+            Route::get('info_search_excel', 'StudentsSpecialityInfoController@download');
+
+            //----------------学生档案系统获奖信息接口----------------------
+            // 获取学生获奖信息接口
+            Route::get('award_search', 'StudentsSpecialityAwardController@getAwards');
+
+            // 下载学生获奖数据
+            Route::get('award_search_excel', 'StudentsSpecialityAwardController@download');
           });
         });
 
