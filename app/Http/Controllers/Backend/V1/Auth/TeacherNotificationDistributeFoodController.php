@@ -9,7 +9,18 @@ use Illuminate\Http\Request;
 class TeacherNotificationDistributeFoodController extends APIBaseController
 {
   /***
-   * 导入上课通知数据
+   * 开关打饭通知
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function setting(Request $request): JsonResponse
+  {
+    return $this->success([]);
+  }
+
+
+  /***
+   * 导入打饭通知数据
    * @param Request $request
    * @return JsonResponse
    */
@@ -41,10 +52,10 @@ class TeacherNotificationDistributeFoodController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int $id
    * @return JsonResponse
    */
-  public function show(Request $request, $id): JsonResponse
+  public function show(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
   }
@@ -52,10 +63,10 @@ class TeacherNotificationDistributeFoodController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int $id
    * @return JsonResponse
    */
-  public function update(Request $request, $id): JsonResponse
+  public function update(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
   }
@@ -63,21 +74,11 @@ class TeacherNotificationDistributeFoodController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int $id
    * @return JsonResponse
    */
-  public function destory(Request $request, $id): JsonResponse
+  public function destroy(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
-  }
-
-  /***
-   *
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function delete(Request $request): JsonResponse
-  {
-    return $this->success([]);
   }
 }

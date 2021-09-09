@@ -9,7 +9,17 @@ use Illuminate\Http\Request;
 class TeacherNotificationAfterClassServiceController extends APIBaseController
 {
   /***
-   * 导入课后延时服务通知数据
+   * 开关课后延时服务通知
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function setting(Request $request): JsonResponse
+  {
+    return $this->success([]);
+  }
+
+  /***
+   * 导入课后延时服务通知excel
    * @param Request $request
    * @return JsonResponse
    */
@@ -41,10 +51,10 @@ class TeacherNotificationAfterClassServiceController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int $id
    * @return JsonResponse
    */
-  public function show(Request $request, $id): JsonResponse
+  public function show(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
   }
@@ -52,10 +62,10 @@ class TeacherNotificationAfterClassServiceController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int $id
    * @return JsonResponse
    */
-  public function update(Request $request, $id): JsonResponse
+  public function update(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
   }
@@ -63,22 +73,12 @@ class TeacherNotificationAfterClassServiceController extends APIBaseController
   /***
    *
    * @param Request $request
-   * @param $id
+   * @param int|null $id
    * @return JsonResponse
    */
-  public function destory(Request $request, $id): JsonResponse
+  public function destroy(Request $request, int $id = null): JsonResponse
   {
     return $this->success($id);
-  }
-
-  /***
-   * 删除
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function delete(Request $request): JsonResponse
-  {
-    return $this->success([]);
   }
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,31 +216,31 @@ Route::group(
         // 教师通知子系统接口
         Route::group(['prefix' => 'teacher/notifications'], function(){ //教师通知系统
           Route::group(['prefix' => 'attend_class'], function(){ // 上课提醒
+            Route::put('/setting', 'TeacherNotificationAttendClassController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationAttendClassController@excel'); // 上传excel
             Route::get('/{id}', 'TeacherNotificationAttendClassController@show');
             Route::put('/{id}', 'TeacherNotificationAttendClassController@update');
-            Route::delete('/{id}', 'TeacherNotificationAttendClassController@destory');
+            Route::delete('/{id?}', 'TeacherNotificationAttendClassController@destroy');
             Route::get('/', 'TeacherNotificationAttendClassController@index'); // 通知日期列表
             Route::post('/', 'TeacherNotificationAttendClassController@store'); // 批量添加通知日期
-            Route::delete('/', 'TeacherNotificationAttendClassController@delete'); // 批量删除通知
           });
           Route::group(['prefix' => 'distribute_food'], function(){ // 打饭提醒
+            Route::post('/setting', 'TeacherNotificationDistributeFoodController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationDistributeFoodController@excel'); // 上传excel
-            Route::get('/{id}', 'TeacherNotificationDistributeFoodController@show');
-            Route::put('/{id}', 'TeacherNotificationDistributeFoodController@update');
-            Route::delete('/{id}', 'TeacherNotificationDistributeFoodController@destory');
+            Route::get('/{id}', 'TeacherNotificationDistributeFoodController@show')->where('id', '[0-9]+');
+            Route::put('/{id}', 'TeacherNotificationDistributeFoodController@update')->where('id', '[0-9]+');
+            Route::delete('/{id?}', 'TeacherNotificationDistributeFoodController@destroy');
             Route::get('/', 'TeacherNotificationDistributeFoodController@index'); // 通知日期列表
             Route::post('/', 'TeacherNotificationDistributeFoodController@store'); // 批量添加通知日期
-            Route::delete('/', 'TeacherNotificationDistributeFoodController@delete'); // 批量删除通知
           });
           Route::group(['prefix' => 'after_class_service'], function(){ // 上课提醒
+            Route::post('/setting', 'TeacherNotificationAfterClassServiceController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationAfterClassServiceController@excel'); // 上传excel
-            Route::get('/{id}', 'TeacherNotificationAfterClassServiceController@show');
-            Route::put('/{id}', 'TeacherNotificationAfterClassServiceController@update');
-            Route::delete('/{id}', 'TeacherNotificationAfterClassServiceController@destory');
+            Route::get('/{id}', 'TeacherNotificationAfterClassServiceController@show')->where('id', '[0-9]+');
+            Route::put('/{id}', 'TeacherNotificationAfterClassServiceController@update')->where('id', '[0-9]+');
+            Route::delete('/{id?}', 'TeacherNotificationAfterClassServiceController@destroy');
             Route::get('/', 'TeacherNotificationAfterClassServiceController@index'); // 通知日期列表
             Route::post('/', 'TeacherNotificationAfterClassServiceController@store'); // 批量添加通知日期
-            Route::delete('/', 'TeacherNotificationAfterClassServiceController@delete'); // 批量删除通知
           });
         });
 
