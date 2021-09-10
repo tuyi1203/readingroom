@@ -218,14 +218,14 @@ Route::group(
           Route::group(['prefix' => 'attend_class'], function(){ // 上课提醒
             Route::put('/setting', 'TeacherNotificationAttendClassController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationAttendClassController@excel'); // 上传excel
-            Route::get('/{id}', 'TeacherNotificationAttendClassController@show');
-            Route::put('/{id}', 'TeacherNotificationAttendClassController@update');
+            Route::get('/{id}', 'TeacherNotificationAttendClassController@show')->where('id', '[0-9]+');
+            Route::put('/{id}', 'TeacherNotificationAttendClassController@update')->where('id', '[0-9]+');
             Route::delete('/{id?}', 'TeacherNotificationAttendClassController@destroy');
             Route::get('/', 'TeacherNotificationAttendClassController@index'); // 通知日期列表
             Route::post('/', 'TeacherNotificationAttendClassController@store'); // 批量添加通知日期
           });
           Route::group(['prefix' => 'distribute_food'], function(){ // 打饭提醒
-            Route::post('/setting', 'TeacherNotificationDistributeFoodController@setting'); // 开关
+            Route::put('/setting', 'TeacherNotificationDistributeFoodController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationDistributeFoodController@excel'); // 上传excel
             Route::get('/{id}', 'TeacherNotificationDistributeFoodController@show')->where('id', '[0-9]+');
             Route::put('/{id}', 'TeacherNotificationDistributeFoodController@update')->where('id', '[0-9]+');
@@ -234,7 +234,7 @@ Route::group(
             Route::post('/', 'TeacherNotificationDistributeFoodController@store'); // 批量添加通知日期
           });
           Route::group(['prefix' => 'after_class_service'], function(){ // 上课提醒
-            Route::post('/setting', 'TeacherNotificationAfterClassServiceController@setting'); // 开关
+            Route::put('/setting', 'TeacherNotificationAfterClassServiceController@setting'); // 开关
             Route::post('/excel', 'TeacherNotificationAfterClassServiceController@excel'); // 上传excel
             Route::get('/{id}', 'TeacherNotificationAfterClassServiceController@show')->where('id', '[0-9]+');
             Route::put('/{id}', 'TeacherNotificationAfterClassServiceController@update')->where('id', '[0-9]+');
