@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\Models\Backend\TeacherNotificationSetting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TeacherNotificationDistributeFoodController extends APIBaseController
 {
+  const NOTIFICATION_TYPE = 'distribute_food';
+
   /***
    * 开关打饭通知
    * @param Request $request
@@ -15,7 +19,28 @@ class TeacherNotificationDistributeFoodController extends APIBaseController
    */
   public function setting(Request $request): JsonResponse
   {
-    return $this->success([]);
+    $validator = Validator::make($request->all(), [
+      'state' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $obj = TeacherNotificationSetting::updateOrCreate([
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+    ], [
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+      'state' => $request->input('state'),
+    ]);
+
+    if (!$obj) {
+      return $this->failed('Update failed.');
+    }
+
+    return $this->success([$obj]);
   }
 
 
