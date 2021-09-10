@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class TeacherNotificationAttendClassController extends APIBaseController
 {
+  const NOTIFICATION_TYPE = 'attend_class';
+
   /***
    * 开关上课通知
    * @param Request $request
@@ -15,7 +17,19 @@ class TeacherNotificationAttendClassController extends APIBaseController
    */
   public function setting(Request $request): JsonResponse
   {
-    return $this->success([]);
+    $validator = Validator::make($request->all(), [
+      'state' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $user = TeacherNotificationSetting::where([['user_id', $this->user->id], ['notification_type', self::NOTIFICATION_TYPE]])->firstOrFail();
+    $user->state = $request->input('state');
+    $user->save();
+
+    return $this->success([$user]);
   }
 
   /***
