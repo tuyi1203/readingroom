@@ -25,11 +25,20 @@ class TeacherNotificationAttendClassController extends APIBaseController
       return $this->validateError($validator->errors()->first());
     }
 
-    $user = TeacherNotificationSetting::where([['user_id', $this->user->id], ['notification_type', self::NOTIFICATION_TYPE]])->firstOrFail();
-    $user->state = $request->input('state');
-    $user->save();
+    $obj = TeacherNotificationSetting::updateOrCreate([
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+    ], [
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+      'state' => $request->input('state'),
+    ]);
 
-    return $this->success([$user]);
+    if (!$obj) {
+      return $this->failed('Update failed.');
+    }
+
+    return $this->success([$obj]);
   }
 
   /***
