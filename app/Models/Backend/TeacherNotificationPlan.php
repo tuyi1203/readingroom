@@ -15,6 +15,7 @@ class TeacherNotificationPlan extends Model
     'user_id',
     'notification_type',
     'plan_date',
+    'plan_time',
     'state',
   ];
 }

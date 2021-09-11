@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\V1\Auth;
 use App\Http\Controllers\Backend\V1\APIBaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TeacherNotificationAttendClassController extends APIBaseController
 {
@@ -48,7 +49,103 @@ class TeacherNotificationAttendClassController extends APIBaseController
    */
   public function excel(Request $request): JsonResponse
   {
-    return $this->success([]);
+    /**---Excel文件上传-----------------------------------------------------------------------------------------------*/
+    $validator = Validator::make($request->all(), [
+      'bize_type' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $file = $request->file('file');
+    $originalName = $file->getClientOriginalName(); // 文件原名
+    $ext = $file->getClientOriginalExtension();     // 扩展名
+    $realPath = $file->getRealPath();               //临时文件的绝对路径
+    $fileSize = $file->getClientSize();
+    $fileMimeType = $file->getClientMimeType();
+
+    if (!in_array($ext, ['xls','xlsx','xlsb','xlsm','xlst'])) {
+      return $this->failed('请上传Excel文件');
+    }
+
+    if (!$request->hasFile('file')) {
+      return $this->failed('请选择上传的文件');
+    }
+
+    if (!$file->isValid()) {
+      return $this->failed('文件上传失败');
+    }
+
+    $fileConf = FileConf::where('bize_type', $request->input('bize_type'))->where('enabled', 1)->first();
+    if ($fileConf->file_size_limit < $fileSize) {
+      return $this->failed('文件尺寸过大，请重新上传');
+    }
+
+    $newFileName = (string)Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
+    // 使用我们新建的uploads本地存储空间（目录）
+    $newPath = $fileConf->path . date("Y_m_d_H");
+    $bool = Storage::disk('upload')->put($newPath . DIRECTORY_SEPARATOR . $newFileName, file_get_contents($realPath));
+    if (!$bool) {
+      return $this->failed('文件上传失败');
+    }
+
+    $fileInfo = FileInfo::create([
+      'bize_type' => $request->input('bize_type'),
+      'bize_id' => ($request->has('bize_id') && $request->input('bize_id')) ? $request->input('bize_id') : null,
+      'original_name' => $originalName,
+      'new_name' => $newFileName,
+      'file_type' => $fileMimeType,
+      'file_size' => $fileSize,
+      'file_path' => $newPath,
+      'relative_path' => $fileConf->resource_realm,
+      'user_id' => $this->user->id,
+      'real_path' => $newPath . '/' . $newFileName,
+      'del_flg' => 0,
+    ]);
+
+
+    /**---数据导入-----------------------------------------------------------------------------------------------*/
+    $tmpExcel = Excel::toArray(new TeacherNotificationPlanImport, $newPath . DIRECTORY_SEPARATOR . $newFileName);
+    $error = [];//导入记录与错误提示信息
+    $data = [];//有效数据
+    if ($tmpExcel[0]) {
+      foreach ($tmpExcel[0] as $lineNum => $row) {
+        if ($lineNum == 0) {
+          continue;
+        }
+
+        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[0])) {
+          $data[] = [
+            'user_id' => $this->user->id,
+            'notification_type' => self::NOTIFICATION_TYPE,
+            'plan_date' => $row[0],
+          ];
+        } else {
+          $error[$lineNum] = [
+            $row[0],
+            '日期格式错误（' . $row[0] . '）',
+          ];
+        }
+      }
+    }
+
+    if ($data) {
+      foreach ($data as $item) {
+        TeacherNotificationPlan::updateOrCreate($item, $item);
+      }
+    }
+
+
+    /**---异常数据导入-----------------------------------------------------------------------------------------------*/
+    //Excel::download(new TeacherNotificationPlanExport($error), '教师通知1.xlsx');
+
+    return $this->success([
+      'fileId' => $fileInfo->id,
+      'created_at' => $fileInfo->created_at,
+      'excel' => $tmpExcel,
+      'error_excel' => $error,
+    ]);
   }
 
   /***
