@@ -104,13 +104,25 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
-   * 获取当前用户的课后延时服务通知列表
+   * 上课通知单条与多条删除
    * @param Request $request
    * @param int|null $id
    * @return JsonResponse
    */
   public function destroy(Request $request, int $id = null): JsonResponse
   {
-    return $this->success($id);
+    $ids = $request->input('ids');
+    if($ids){
+      foreach ($ids as  $id) {
+        TeacherNotificationPlan::where('id', $id)->delete();
+      }
+    } elseif ($id) {
+      $obj = TeacherNotificationPlan::where('id', $id)->delete();
+      if (!$obj) {
+        $this->failed('Delete Failed.');
+      }
+    }
+
+    return $this->success(null, 'Delete succeed.');
   }
 }
