@@ -18,4 +18,9 @@ class TeacherNotificationPlanFilter extends ModelFilter
   {
     return $this->where('user_id', $id);
   }
+
+  public function notificationType($type)
+  {
+    return $this->where('notification_type', $type);
+  }
 }

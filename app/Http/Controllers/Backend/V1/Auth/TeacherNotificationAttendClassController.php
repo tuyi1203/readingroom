@@ -59,7 +59,7 @@ class TeacherNotificationAttendClassController extends APIBaseController
   public function index(Request $request): JsonResponse
   {
     $fields = explode(',', $request->input('fields', '*'));
-    $users = TeacherNotificationPlan::filter($this->getParams($request, ['user_id' => $this->user->id]), TeacherNotificationPlanFilter::class)
+    $users = TeacherNotificationPlan::filter($this->getParams($request, ['user_id' => $this->user->id, 'notification_type' => self::NOTIFICATION_TYPE]), TeacherNotificationPlanFilter::class)
       ->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
 
     return $this->success($users->toArray());

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\ModelFilters\Backend\TeacherNotificationPlanFilter;
+use App\Models\Backend\TeacherNotificationPlan;
 use App\Models\Backend\TeacherNotificationSetting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -60,7 +62,11 @@ class TeacherNotificationAfterClassServiceController extends APIBaseController
    */
   public function index(Request $request): JsonResponse
   {
-    return $this->success([]);
+    $fields = explode(',', $request->input('fields', '*'));
+    $users = TeacherNotificationPlan::filter($this->getParams($request, ['user_id' => $this->user->id, 'notification_type' => self::NOTIFICATION_TYPE]), TeacherNotificationPlanFilter::class)
+      ->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
+
+    return $this->success($users->toArray());
   }
 
   /***
