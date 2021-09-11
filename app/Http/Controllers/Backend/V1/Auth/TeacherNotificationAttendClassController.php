@@ -87,14 +87,20 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
-   * 获取当前用户的课后延时服务通知列表
+   * 上课通知单条修改
    * @param Request $request
    * @param int $id
    * @return JsonResponse
    */
   public function update(Request $request, int $id): JsonResponse
   {
-    return $this->success($id);
+    $obj = TeacherNotificationPlan::where('id', $id)->first();
+    $obj->plan_date = $request->input('plan_date');
+    $obj->plan_time = $request->input('plan_time');
+    $obj->state = $request->input('state');
+    $obj->save();
+
+    return $this->success([$obj]);
   }
 
   /***
