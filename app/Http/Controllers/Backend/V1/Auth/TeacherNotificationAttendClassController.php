@@ -189,10 +189,18 @@ class TeacherNotificationAttendClassController extends APIBaseController
       }
 
       foreach ($ids as  $id) {
-        TeacherNotificationPlan::where('id', $id)->delete();
+        TeacherNotificationPlan::where([
+          ['id', $id],
+          ['user_id', $this->user->id],
+          ['notification_type', self::NOTIFICATION_TYPE]
+        ])->delete();
       }
     } elseif ($id) {
-      $obj = TeacherNotificationPlan::where('id', $id)->delete();
+      $obj = TeacherNotificationPlan::where([
+        ['id', $id],
+        ['user_id', $this->user->id],
+        ['notification_type', self::NOTIFICATION_TYPE]
+      ])->delete();
       if (!$obj) {
         return $this->failed('Delete Failed.');
       }
@@ -223,7 +231,11 @@ class TeacherNotificationAttendClassController extends APIBaseController
     $plan_time = $request->input('plan_time');
     $state = $request->input('state', 0);
 
-    $obj = TeacherNotificationPlan::where('id', $id)->first();
+    $obj = TeacherNotificationPlan::where([
+      ['id', $id],
+      ['user_id', $this->user->id],
+      ['notification_type', self::NOTIFICATION_TYPE]
+    ])->first();
     $obj->plan_date = $plan_date;
     $obj->plan_time = $plan_time;
     $obj->plan_datetime = $plan_date.' '.$plan_time;
@@ -232,7 +244,6 @@ class TeacherNotificationAttendClassController extends APIBaseController
 
     return $this->success([$obj]);
   }
-
 
   /***
    * 上课通知单条新增
@@ -284,7 +295,11 @@ class TeacherNotificationAttendClassController extends APIBaseController
    */
   public function show(Request $request, int $id): JsonResponse
   {
-    $obj = TeacherNotificationPlan::where('id', $id)->firstOrFail();
+    $obj = TeacherNotificationPlan::where([
+      ['id', $id],
+      ['user_id', $this->user->id],
+      ['notification_type', self::NOTIFICATION_TYPE]
+    ])->firstOrFail();
 
     return $this->success($obj);
   }
