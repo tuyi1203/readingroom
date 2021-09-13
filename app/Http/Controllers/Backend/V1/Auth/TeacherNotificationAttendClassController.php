@@ -277,13 +277,15 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
-   * 获取当前用户的课后延时服务通知列表
+   * 获取上课通知单条记录
    * @param Request $request
    * @param int $id
    * @return JsonResponse
    */
   public function show(Request $request, int $id): JsonResponse
   {
-    return $this->success($id);
+    $obj = TeacherNotificationPlan::where('id', $id)->firstOrFail();
+
+    return $this->success($obj);
   }
 }
