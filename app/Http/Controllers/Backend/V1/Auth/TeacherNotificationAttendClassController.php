@@ -235,13 +235,45 @@ class TeacherNotificationAttendClassController extends APIBaseController
 
 
   /***
-   * 获取当前用户的课后延时服务通知列表
+   * 上课通知单条新增
    * @param Request $request
    * @return JsonResponse
    */
   public function store(Request $request): JsonResponse
   {
-    return $this->success([]);
+    $validator = Validator::make($request->all(), [
+      'plan_date' => 'required|dateFormat:Y-m-d',
+      'plan_time' => 'required|dateFormat:H:i:s',
+      'state' => 'required|int|min:0|max:1',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $plan_date = $request->input('plan_date');
+    $plan_time = $request->input('plan_time');
+    $state = $request->input('state', 0);
+
+    $obj = TeacherNotificationPlan::updateOrCreate([
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+      'plan_date' => $plan_date,
+      'plan_time' => $plan_time,
+    ], [
+      'user_id' => $this->user->id,
+      'notification_type' => self::NOTIFICATION_TYPE,
+      'plan_date' => $plan_date,
+      'plan_time' => $plan_time,
+      'plan_datetime' => $plan_date.' '.$plan_time,
+      'state' => $state,
+    ]);
+
+    if (!$obj) {
+      return $this->failed('Create failed.');
+    }
+
+    return $this->success([$obj]);
   }
 
   /***
