@@ -29,12 +29,14 @@ class TeacherNotificationAttendClassController extends APIBaseController
   public function setting(Request $request): JsonResponse
   {
     $validator = Validator::make($request->all(), [
-      'state' => 'required',
+      'state' => 'required|int|min:0|max:1',
     ]);
 
     if ($validator->fails()) {
       return $this->validateError($validator->errors()->first());
     }
+
+    $state = $request->input('state', 0);
 
     $obj = TeacherNotificationSetting::updateOrCreate([
       'user_id' => $this->user->id,
@@ -42,7 +44,7 @@ class TeacherNotificationAttendClassController extends APIBaseController
     ], [
       'user_id' => $this->user->id,
       'notification_type' => self::NOTIFICATION_TYPE,
-      'state' => $request->input('state'),
+      'state' => $state,
     ]);
 
     if (!$obj) {
@@ -173,6 +175,66 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
+   * 上课通知单条与多条删除
+   * @param Request $request
+   * @param int|null $id
+   * @return JsonResponse
+   */
+  public function destroy(Request $request, int $id = null): JsonResponse
+  {
+    $ids = $request->input('ids');
+    if($ids){
+      if(!is_array($ids)){
+        return $this->failed('ids is not an array.');
+      }
+
+      foreach ($ids as  $id) {
+        TeacherNotificationPlan::where('id', $id)->delete();
+      }
+    } elseif ($id) {
+      $obj = TeacherNotificationPlan::where('id', $id)->delete();
+      if (!$obj) {
+        return $this->failed('Delete Failed.');
+      }
+    }
+
+    return $this->success(null, 'Delete succeed.');
+  }
+
+  /***
+   * 上课通知单条修改
+   * @param Request $request
+   * @param int $id
+   * @return JsonResponse
+   */
+  public function update(Request $request, int $id): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'plan_date' => 'required|dateFormat:Y-m-d',
+      'plan_time' => 'required|dateFormat:H:i:s',
+      'state' => 'required|int|min:0|max:1',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $plan_date = $request->input('plan_date');
+    $plan_time = $request->input('plan_time');
+    $state = $request->input('state', 0);
+
+    $obj = TeacherNotificationPlan::where('id', $id)->first();
+    $obj->plan_date = $plan_date;
+    $obj->plan_time = $plan_time;
+    $obj->plan_datetime = $plan_date.' '.$plan_time;
+    $obj->state = $state;
+    $obj->save();
+
+    return $this->success([$obj]);
+  }
+
+
+  /***
    * 获取当前用户的课后延时服务通知列表
    * @param Request $request
    * @return JsonResponse
@@ -191,45 +253,5 @@ class TeacherNotificationAttendClassController extends APIBaseController
   public function show(Request $request, int $id): JsonResponse
   {
     return $this->success($id);
-  }
-
-  /***
-   * 上课通知单条修改
-   * @param Request $request
-   * @param int $id
-   * @return JsonResponse
-   */
-  public function update(Request $request, int $id): JsonResponse
-  {
-    $obj = TeacherNotificationPlan::where('id', $id)->first();
-    $obj->plan_date = $request->input('plan_date');
-    $obj->plan_time = $request->input('plan_time');
-    $obj->state = $request->input('state');
-    $obj->save();
-
-    return $this->success([$obj]);
-  }
-
-  /***
-   * 上课通知单条与多条删除
-   * @param Request $request
-   * @param int|null $id
-   * @return JsonResponse
-   */
-  public function destroy(Request $request, int $id = null): JsonResponse
-  {
-    $ids = $request->input('ids');
-    if($ids){
-      foreach ($ids as  $id) {
-        TeacherNotificationPlan::where('id', $id)->delete();
-      }
-    } elseif ($id) {
-      $obj = TeacherNotificationPlan::where('id', $id)->delete();
-      if (!$obj) {
-        $this->failed('Delete Failed.');
-      }
-    }
-
-    return $this->success(null, 'Delete succeed.');
   }
 }
