@@ -256,6 +256,13 @@ Route::group(
           Route::post('/', 'TodoNotificationController@store');                                             // 批量添加通知日期
         });
 
+        // 课表
+        Route::group(['prefix' => 'school_timetable'], function(){ // 课表管理
+          Route::get('/', 'SchoolTimetableController@my'); // 个人课表
+          Route::get('/class/{class_code}', 'SchoolTimetableController@getByClass')->where('class_code', '[0-9]{4}\-[1-9][0-9]{0,2}'); // 个人课表
+        });
+
+
       });
     });
   }
