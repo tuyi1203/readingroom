@@ -92,11 +92,17 @@ class TodoNotificationController extends APIBaseController
           continue;
         }
 
+        $tmpTimeArr = [
+          'distribute_food' => '12:00:00',
+          'after_class_service' => '16:00:00',
+        ];
         if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[1])) {
           $data[] = [
             'user_id' => $this->user->id,
             'notification_type' => $row[0],
             'plan_date' => $row[1],
+            'plan_time' => $tmpTimeArr[$row[0]],
+            'plan_datetime' => $row[1].' '.$tmpTimeArr[$row[0]],
           ];
         } else {
           $error[$lineNum] = [
@@ -301,7 +307,7 @@ class TodoNotificationController extends APIBaseController
       ['id', $id],
       ['user_id', $this->user->id],
       ['notification_type', $notificationType]
-    ])->first();
+    ])->firstOrFail();
     $obj->plan_date = $plan_date;
     $obj->plan_time = $plan_time;
     $obj->plan_datetime = $plan_date.' '.$plan_time;
