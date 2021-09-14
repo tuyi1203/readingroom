@@ -46,13 +46,25 @@ trait RmxxSystemApiHelperTrait
       if ($statusCode == 200) {
         $content = $response->getBody()->getContents();
         $data = \json_decode($content, true);
+        //return $data;
+        if($data === false) {
+          Log::error($method . '方法调用失败.' . $content . '. 调用参数：' . \json_encode($params, true));
+          return false;
+        }
+        if (isset($data['success']) && $data['success'] == false) {
+          Log::error($method . '方法调用失败.' . ($data['msg']??$content) . '. 调用参数：' . \json_encode($params, true));
+          return false;
+        }
         if (isset($data['result']['total'])) {
           return $data['result'];
         }
         if (isset($data['result']['data'])) {
           return $data['result']['data'];
         }
-        return $data['result'];
+        if (isset($data['result'])) {
+          return $data['result'];
+        }
+        return $data;
       }
     } catch (\Exception $e) {
       Log::error($method . '方法调用失败.' . $e->getMessage() . '. 调用参数：' . \json_encode($params, true));
