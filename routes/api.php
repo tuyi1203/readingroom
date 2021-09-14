@@ -244,6 +244,18 @@ Route::group(
           });
         });
 
+
+        // 教师通知（延时服务/打饭）
+        Route::group(['prefix' => 'notifications'], function(){ //教师通知系统
+          Route::put('/setting', 'TodoNotificationController@setting');                                     // 开关
+          Route::post('/excel', 'TodoNotificationController@excel');                                        // 上传excel
+          Route::get('/{id}', 'TodoNotificationController@show')->where('id', '[0-9]+');
+          Route::put('/{id}', 'TodoNotificationController@update')->where('id', '[0-9]+');
+          Route::delete('/{id?}', 'TodoNotificationController@destroy');
+          Route::get('/', 'TodoNotificationController@index');                                              // 通知日期列表
+          Route::post('/', 'TodoNotificationController@store');                                             // 批量添加通知日期
+        });
+
         // 课表
         Route::group(['prefix' => 'school_timetable'], function(){ // 课表管理
           Route::get('/class/{class_code}', 'SchoolTimetableController@getByClass')->where('class_code', '[0-9]{4}\-[1-9][0-9]{0,2}'); // 班级课表

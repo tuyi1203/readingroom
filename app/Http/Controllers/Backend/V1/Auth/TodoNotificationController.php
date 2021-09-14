@@ -10,52 +10,17 @@ use App\Models\Backend\FileConf;
 use App\Models\Backend\FileInfo;
 use App\Models\Backend\TeacherNotificationPlan;
 use App\Models\Backend\TeacherNotificationSetting;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
-class TeacherNotificationAttendClassController extends APIBaseController
+class TodoNotificationController extends APIBaseController
 {
-  const NOTIFICATION_TYPE = 'attend_class';
-
   /***
-   * 开关上课通知
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function setting(Request $request): JsonResponse
-  {
-    $validator = Validator::make($request->all(), [
-      'state' => 'required|int|min:0|max:1',
-    ]);
-
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $state = $request->input('state', 0);
-
-    $obj = TeacherNotificationSetting::updateOrCreate([
-      'user_id' => $this->user->id,
-      'notification_type' => self::NOTIFICATION_TYPE,
-    ], [
-      'user_id' => $this->user->id,
-      'notification_type' => self::NOTIFICATION_TYPE,
-      'state' => $state,
-    ]);
-
-    if (!$obj) {
-      return $this->failed('Update failed.');
-    }
-
-    return $this->success([$obj]);
-  }
-
-  /***
-   * 导入上课通知数据
+   * 导入通知数据
    * @param Request $request
    * @return JsonResponse
    */
@@ -127,16 +92,16 @@ class TeacherNotificationAttendClassController extends APIBaseController
           continue;
         }
 
-        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[0])) {
+        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[1])) {
           $data[] = [
             'user_id' => $this->user->id,
-            'notification_type' => self::NOTIFICATION_TYPE,
-            'plan_date' => $row[0],
+            'notification_type' => $row[0],
+            'plan_date' => $row[1],
           ];
         } else {
           $error[$lineNum] = [
-            $row[0],
-            '日期格式错误（' . $row[0] . '）',
+            $row[1],
+            '日期格式错误（' . $row[1] . '）',
           ];
         }
       }
@@ -161,98 +126,73 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
-   * 获取当前教师的上课通知列表
+   * 通知开关
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function setting(Request $request): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
+      'state' => 'required|int|min:0|max:1',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $notificationType = $request->input('type');
+    $state = $request->input('state', 0);
+
+    $obj = TeacherNotificationSetting::updateOrCreate([
+      'user_id' => $this->user->id,
+      'notification_type' => $notificationType,
+    ], [
+      'user_id' => $this->user->id,
+      'notification_type' => $notificationType,
+      'state' => $state,
+    ]);
+
+    if (!$obj) {
+      return $this->failed('Update failed.');
+    }
+
+    return $this->success([$obj]);
+  }
+
+  /***
+   * 获取通知列表
    * @param Request $request
    * @return JsonResponse
    */
   public function index(Request $request): JsonResponse
   {
+    $_where = ['user_id' => $this->user->id];
+    $notificationType = $request->input('type');
+    if($notificationType){
+      $_where['notification_type'] = $notificationType;
+    }
+    $month = $request->input('month');
+    if($month){
+      $_where['month'] = $month;
+    }
+
     $fields = explode(',', $request->input('fields', '*'));
-    $users = TeacherNotificationPlan::filter($this->getParams($request, ['user_id' => $this->user->id, 'notification_type' => self::NOTIFICATION_TYPE]), TeacherNotificationPlanFilter::class)
+    $users = TeacherNotificationPlan::filter($this->getParams($request, $_where), TeacherNotificationPlanFilter::class)
       ->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
 
     return $this->success($users->toArray());
   }
 
   /***
-   * 上课通知单条与多条删除
-   * @param Request $request
-   * @param int|null $id
-   * @return JsonResponse
-   */
-  public function destroy(Request $request, int $id = null): JsonResponse
-  {
-    $ids = $request->input('ids');
-    if($ids){
-      if(!is_array($ids)){
-        return $this->failed('ids is not an array.');
-      }
-
-      foreach ($ids as  $id) {
-        TeacherNotificationPlan::where([
-          ['id', $id],
-          ['user_id', $this->user->id],
-          ['notification_type', self::NOTIFICATION_TYPE]
-        ])->delete();
-      }
-    } elseif ($id) {
-      $obj = TeacherNotificationPlan::where([
-        ['id', $id],
-        ['user_id', $this->user->id],
-        ['notification_type', self::NOTIFICATION_TYPE]
-      ])->delete();
-      if (!$obj) {
-        return $this->failed('Delete Failed.');
-      }
-    }
-
-    return $this->success(null, 'Delete succeed.');
-  }
-
-  /***
-   * 上课通知单条修改
-   * @param Request $request
-   * @param int $id
-   * @return JsonResponse
-   */
-  public function update(Request $request, int $id): JsonResponse
-  {
-    $validator = Validator::make($request->all(), [
-      'plan_date' => 'required|dateFormat:Y-m-d',
-      'plan_time' => 'required|dateFormat:H:i:s',
-      'state' => 'required|int|min:0|max:1',
-    ]);
-
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $plan_date = $request->input('plan_date');
-    $plan_time = $request->input('plan_time');
-    $state = $request->input('state', 0);
-
-    $obj = TeacherNotificationPlan::where([
-      ['id', $id],
-      ['user_id', $this->user->id],
-      ['notification_type', self::NOTIFICATION_TYPE]
-    ])->first();
-    $obj->plan_date = $plan_date;
-    $obj->plan_time = $plan_time;
-    $obj->plan_datetime = $plan_date.' '.$plan_time;
-    $obj->state = $state;
-    $obj->save();
-
-    return $this->success([$obj]);
-  }
-
-  /***
-   * 上课通知单条新增
+   * 通知单条新增
    * @param Request $request
    * @return JsonResponse
    */
   public function store(Request $request): JsonResponse
   {
     $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
       'plan_date' => 'required|dateFormat:Y-m-d',
       'plan_time' => 'required|dateFormat:H:i:s',
       'state' => 'required|int|min:0|max:1',
@@ -262,18 +202,19 @@ class TeacherNotificationAttendClassController extends APIBaseController
       return $this->validateError($validator->errors()->first());
     }
 
+    $notificationType = $request->input('type');
     $plan_date = $request->input('plan_date');
     $plan_time = $request->input('plan_time');
     $state = $request->input('state', 0);
 
     $obj = TeacherNotificationPlan::updateOrCreate([
       'user_id' => $this->user->id,
-      'notification_type' => self::NOTIFICATION_TYPE,
+      'notification_type' => $notificationType,
       'plan_date' => $plan_date,
       'plan_time' => $plan_time,
     ], [
       'user_id' => $this->user->id,
-      'notification_type' => self::NOTIFICATION_TYPE,
+      'notification_type' => $notificationType,
       'plan_date' => $plan_date,
       'plan_time' => $plan_time,
       'plan_datetime' => $plan_date.' '.$plan_time,
@@ -288,17 +229,110 @@ class TeacherNotificationAttendClassController extends APIBaseController
   }
 
   /***
-   * 获取上课通知单条记录
+   * 通知单条与多条删除
+   * @param Request $request
+   * @param int|null $id
+   * @return JsonResponse
+   */
+  public function destroy(Request $request, int $id = null): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $notificationType = $request->input('type');
+    $ids = $request->input('ids', []);
+
+    if($ids){
+      if(!is_array($ids)){
+        return $this->failed('ids is not an array.');
+      }
+
+      foreach ($ids as  $id) {
+        TeacherNotificationPlan::where([
+          ['id', $id],
+          ['user_id', $this->user->id],
+          ['notification_type', $notificationType]
+        ])->delete();
+      }
+    } elseif ($id) {
+      $obj = TeacherNotificationPlan::where([
+        ['id', $id],
+        ['user_id', $this->user->id],
+        ['notification_type', $notificationType]
+      ])->delete();
+      if (!$obj) {
+        return $this->failed('Delete Failed.');
+      }
+    }
+
+    return $this->success(null, 'Delete succeed.');
+  }
+
+  /***
+   * 通知单条修改
+   * @param Request $request
+   * @param int $id
+   * @return JsonResponse
+   */
+  public function update(Request $request, int $id): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
+      'plan_date' => 'required|dateFormat:Y-m-d',
+      'plan_time' => 'required|dateFormat:H:i:s',
+      'state' => 'required|int|min:0|max:1',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $notificationType = $request->input('type');
+    $plan_date = $request->input('plan_date');
+    $plan_time = $request->input('plan_time');
+    $state = $request->input('state', 0);
+
+    $obj = TeacherNotificationPlan::where([
+      ['id', $id],
+      ['user_id', $this->user->id],
+      ['notification_type', $notificationType]
+    ])->first();
+    $obj->plan_date = $plan_date;
+    $obj->plan_time = $plan_time;
+    $obj->plan_datetime = $plan_date.' '.$plan_time;
+    $obj->state = $state;
+    $obj->save();
+
+    return $this->success([$obj]);
+  }
+
+  /***
+   * 获取通知单条记录
    * @param Request $request
    * @param int $id
    * @return JsonResponse
    */
   public function show(Request $request, int $id): JsonResponse
   {
+    $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $notificationType = $request->input('type');
+
     $obj = TeacherNotificationPlan::where([
       ['id', $id],
       ['user_id', $this->user->id],
-      ['notification_type', self::NOTIFICATION_TYPE]
+      ['notification_type', $notificationType]
     ])->firstOrFail();
 
     return $this->success($obj);
