@@ -157,7 +157,7 @@ class TodoNotificationController extends APIBaseController
       return $this->failed('Update failed.');
     }
 
-    return $this->success([$obj]);
+    return $this->success($obj);
   }
 
   /***
@@ -225,7 +225,7 @@ class TodoNotificationController extends APIBaseController
       return $this->failed('Create failed.');
     }
 
-    return $this->success([$obj]);
+    return $this->success($obj);
   }
 
   /***
@@ -264,7 +264,7 @@ class TodoNotificationController extends APIBaseController
         ['id', $id],
         ['user_id', $this->user->id],
         ['notification_type', $notificationType]
-      ])->delete();
+      ])->firstOrFail()->delete();
       if (!$obj) {
         return $this->failed('Delete Failed.');
       }
@@ -308,7 +308,7 @@ class TodoNotificationController extends APIBaseController
     $obj->state = $state;
     $obj->save();
 
-    return $this->success([$obj]);
+    return $this->success($obj);
   }
 
   /***
