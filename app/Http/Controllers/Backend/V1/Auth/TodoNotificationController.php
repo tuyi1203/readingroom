@@ -28,6 +28,7 @@ class TodoNotificationController extends APIBaseController
   {
     /**---Excel文件上传-----------------------------------------------------------------------------------------------*/
     $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
       'bize_type' => 'required|string',
     ]);
 
@@ -35,6 +36,7 @@ class TodoNotificationController extends APIBaseController
       return $this->validateError($validator->errors()->first());
     }
 
+    $notificationType = $request->input('type');
     $file = $request->file('file');
     $originalName = $file->getClientOriginalName(); // 文件原名
     $ext = $file->getClientOriginalExtension();     // 扩展名
@@ -96,18 +98,18 @@ class TodoNotificationController extends APIBaseController
           'distribute_food' => '12:00:00',
           'after_class_service' => '16:00:00',
         ];
-        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[1])) {
+        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[0])) {
           $data[] = [
             'user_id' => $this->user->id,
-            'notification_type' => $row[0],
-            'plan_date' => $row[1],
-            'plan_time' => $tmpTimeArr[$row[0]],
-            'plan_datetime' => $row[1].' '.$tmpTimeArr[$row[0]],
+            'notification_type' => $notificationType,
+            'plan_date' => $row[0],
+            'plan_time' => $tmpTimeArr[$notificationType],
+            'plan_datetime' => $row[0].' '.$tmpTimeArr[$notificationType],
           ];
         } else {
           $error[$lineNum] = [
-            $row[1],
-            '日期格式错误（' . $row[1] . '）',
+            $row[0],
+            '日期格式错误（' . $row[0] . '）',
           ];
         }
       }
@@ -129,6 +131,22 @@ class TodoNotificationController extends APIBaseController
       'excel' => $tmpExcel,
       'error_excel' => $error,
     ]);
+  }
+
+  /**
+   * Excel模板下载
+   * @return JsonResponse
+   */
+  public function excelTemplate()
+  {
+    return Excel::download(new TeacherNotificationPlanExport([
+      ['2021-06-21', ''],
+      ['2021-06-22', ''],
+      ['2021-06-23', ''],
+      ['2021-07-01', ''],
+      ['2021-07-02', ''],
+      ['2021-07-03', ''],
+    ]), '教师通知模板.xlsx');
   }
 
   /***
