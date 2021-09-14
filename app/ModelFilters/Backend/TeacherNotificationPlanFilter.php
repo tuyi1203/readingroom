@@ -23,4 +23,11 @@ class TeacherNotificationPlanFilter extends ModelFilter
   {
     return $this->where('notification_type', $type);
   }
+
+  public function month($month)
+  {
+    $ts = strtotime($month.'-01 00:00:00');
+    return $this->where('plan_datetime', '>=', date('Y-m-d 00:00:00', $ts))
+      ->where('plan_datetime', '<=', date('Y-m-t 23:59:59', $ts));
+  }
 }
