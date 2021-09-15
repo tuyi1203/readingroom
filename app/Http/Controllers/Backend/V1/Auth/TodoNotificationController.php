@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\V1\Auth;
 
 use App\Exports\TeacherNotificationPlanExport;
 use App\Http\Controllers\Backend\V1\APIBaseController;
+use App\Http\Requests\Api\TodoNotificationRequest;
 use App\Imports\TeacherNotificationPlanImport;
 use App\ModelFilters\Backend\TeacherNotificationPlanFilter;
 use App\Models\Backend\FileConf;
@@ -19,6 +20,41 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TodoNotificationController extends APIBaseController
 {
+  /***
+   * 通知开关
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function setting(Request $request): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'type' => 'required|string',
+      'state' => 'required|int|min:0|max:1',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->validateError($validator->errors()->first());
+    }
+
+    $notificationType = $request->input('type');
+    $state = $request->input('state', 0);
+
+    $obj = TeacherNotificationSetting::updateOrCreate([
+      'user_id' => $this->user->id,
+      'notification_type' => $notificationType,
+    ], [
+      'user_id' => $this->user->id,
+      'notification_type' => $notificationType,
+      'state' => $state,
+    ]);
+
+    if (!$obj) {
+      return $this->failed('Update failed.');
+    }
+
+    return $this->success($obj);
+  }
+
   /***
    * 导入通知数据
    * @param Request $request
@@ -149,40 +185,6 @@ class TodoNotificationController extends APIBaseController
     ]), '教师通知模板.xlsx');
   }
 
-  /***
-   * 通知开关
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function setting(Request $request): JsonResponse
-  {
-    $validator = Validator::make($request->all(), [
-      'type' => 'required|string',
-      'state' => 'required|int|min:0|max:1',
-    ]);
-
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $notificationType = $request->input('type');
-    $state = $request->input('state', 0);
-
-    $obj = TeacherNotificationSetting::updateOrCreate([
-      'user_id' => $this->user->id,
-      'notification_type' => $notificationType,
-    ], [
-      'user_id' => $this->user->id,
-      'notification_type' => $notificationType,
-      'state' => $state,
-    ]);
-
-    if (!$obj) {
-      return $this->failed('Update failed.');
-    }
-
-    return $this->success($obj);
-  }
 
   /***
    * 获取通知列表
@@ -191,6 +193,8 @@ class TodoNotificationController extends APIBaseController
    */
   public function index(Request $request): JsonResponse
   {
+    //$this->checkPermission('notify_manage');
+
     $_where = ['user_id' => $this->user->id];
     $notificationType = $request->input('type');
     if($notificationType){
@@ -213,23 +217,14 @@ class TodoNotificationController extends APIBaseController
    * @param Request $request
    * @return JsonResponse
    */
-  public function store(Request $request): JsonResponse
+  public function store(TodoNotificationRequest $request): JsonResponse
   {
-    $validator = Validator::make($request->all(), [
-      'type' => 'required|string',
-      'plan_date' => 'required|dateFormat:Y-m-d',
-      'plan_time' => 'required|dateFormat:H:i:s',
-      'state' => 'required|int|min:0|max:1',
-    ]);
+    //$this->checkPermission('notify_manage');
 
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $notificationType = $request->input('type');
-    $plan_date = $request->input('plan_date');
-    $plan_time = $request->input('plan_time');
-    $state = $request->input('state', 0);
+    $notificationType = $request->type;
+    $plan_date = $request->plan_date;
+    $plan_time = $request->plan_time;
+    $state = $request->state;
 
     $obj = TeacherNotificationPlan::updateOrCreate([
       'user_id' => $this->user->id,
@@ -254,27 +249,17 @@ class TodoNotificationController extends APIBaseController
 
   /***
    * 通知单条与多条删除
-   * @param Request $request
+   * @param TodoNotificationRequest $request
    * @param int|null $id
    * @return JsonResponse
    */
-  public function destroy(Request $request, int $id = null): JsonResponse
+  public function destroy(TodoNotificationRequest $request, int $id = null): JsonResponse
   {
-    $validator = Validator::make($request->all(), [
-      'type' => 'required|string',
-    ]);
+    //$this->checkPermission('notify_manage');
+    $notificationType = $request->type;
 
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $notificationType = $request->input('type');
-    $ids = $request->input('ids', []);
-
-    if($ids){
-      if(!is_array($ids)){
-        return $this->failed('ids is not an array.');
-      }
+    if(empty($id)){
+      $ids = $request->ids;
 
       foreach ($ids as  $id) {
         TeacherNotificationPlan::where([
@@ -283,7 +268,7 @@ class TodoNotificationController extends APIBaseController
           ['notification_type', $notificationType]
         ])->delete();
       }
-    } elseif ($id) {
+    } else {
       $obj = TeacherNotificationPlan::where([
         ['id', $id],
         ['user_id', $this->user->id],
@@ -299,27 +284,18 @@ class TodoNotificationController extends APIBaseController
 
   /***
    * 通知单条修改
-   * @param Request $request
+   * @param TodoNotificationRequest $request
    * @param int $id
    * @return JsonResponse
    */
-  public function update(Request $request, int $id): JsonResponse
+  public function update(TodoNotificationRequest $request, int $id): JsonResponse
   {
-    $validator = Validator::make($request->all(), [
-      'type' => 'required|string',
-      'plan_date' => 'required|dateFormat:Y-m-d',
-      'plan_time' => 'required|dateFormat:H:i:s',
-      'state' => 'required|int|min:0|max:1',
-    ]);
+    //$this->checkPermission('notify_manage');
 
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $notificationType = $request->input('type');
-    $plan_date = $request->input('plan_date');
-    $plan_time = $request->input('plan_time');
-    $state = $request->input('state', 0);
+    $notificationType = $request->type;
+    $plan_date = $request->plan_date;
+    $plan_time = $request->plan_time;
+    $state = $request->state;
 
     $obj = TeacherNotificationPlan::where([
       ['id', $id],
@@ -337,21 +313,14 @@ class TodoNotificationController extends APIBaseController
 
   /***
    * 获取通知单条记录
-   * @param Request $request
+   * @param TodoNotificationRequest $request
    * @param int $id
    * @return JsonResponse
    */
-  public function show(Request $request, int $id): JsonResponse
+  public function show(TodoNotificationRequest $request, int $id): JsonResponse
   {
-    $validator = Validator::make($request->all(), [
-      'type' => 'required|string',
-    ]);
-
-    if ($validator->fails()) {
-      return $this->validateError($validator->errors()->first());
-    }
-
-    $notificationType = $request->input('type');
+    //$this->checkPermission('notify_manage');
+    $notificationType = $request->type;
 
     $obj = TeacherNotificationPlan::where([
       ['id', $id],
