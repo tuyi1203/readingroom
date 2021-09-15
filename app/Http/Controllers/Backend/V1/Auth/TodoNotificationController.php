@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\V1\APIBaseController;
 use App\Http\Requests\Api\TodoNotificationRequest;
 use App\Imports\TeacherNotificationPlanImport;
 use App\ModelFilters\Backend\TeacherNotificationPlanFilter;
+use App\ModelFilters\Backend\TeacherNotificationSettingFilter;
 use App\Models\Backend\FileConf;
 use App\Models\Backend\FileInfo;
 use App\Models\Backend\TeacherNotificationPlan;
@@ -21,12 +22,14 @@ use Maatwebsite\Excel\Facades\Excel;
 class TodoNotificationController extends APIBaseController
 {
   /***
-   * 通知开关
+   * 通知开关修改
    * @param Request $request
    * @return JsonResponse
    */
   public function setting(Request $request): JsonResponse
   {
+    //$this->checkPermission('setting_manage');
+
     $validator = Validator::make($request->all(), [
       'type' => 'required|string',
       'state' => 'required|int|min:0|max:1',
@@ -54,6 +57,29 @@ class TodoNotificationController extends APIBaseController
 
     return $this->success($obj);
   }
+
+  /***
+   * 通知开关查询
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function settingIndex(Request $request): JsonResponse
+  {
+    //$this->checkPermission('setting_manage');
+
+    $_where = ['user_id' => $this->user->id];
+    $notificationType = $request->input('type');
+    if($notificationType){
+      $_where['notification_type'] = $notificationType;
+    }
+
+    $fields = explode(',', $request->input('fields', '*'));
+    $users = TeacherNotificationSetting::filter($this->getParams($request, $_where), TeacherNotificationSettingFilter::class)
+      ->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
+
+    return $this->success($users->toArray());
+  }
+
 
   /***
    * 导入通知数据

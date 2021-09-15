@@ -247,7 +247,8 @@ Route::group(
 
         // 教师通知（延时服务/打饭）
         Route::group(['prefix' => 'notifications'], function(){ //教师通知系统
-          Route::put('/setting', 'TodoNotificationController@setting');                                     // 开关
+          Route::get('/setting/index', 'TodoNotificationController@settingIndex');                          // 通知开关查询
+          Route::put('/setting', 'TodoNotificationController@setting');                                     // 通知开关修改
           Route::get('/excel/template', 'TodoNotificationController@excelTemplate');
           Route::post('/excel', 'TodoNotificationController@excel');
           Route::get('/{id}', 'TodoNotificationController@show')->where('id', '[0-9]+');
