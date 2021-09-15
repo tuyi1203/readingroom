@@ -247,10 +247,10 @@ class TodoNotificationController extends APIBaseController
   {
     //$this->checkPermission('notify_manage');
 
-    $notificationType = $request->type;
-    $plan_date = $request->plan_date;
-    $plan_time = $request->plan_time;
-    $state = $request->state;
+    $notificationType = $request->input('type');
+    $plan_date = $request->input('plan_date');
+    $plan_time = $request->input('plan_time');
+    $state = $request->input('state', 0);
 
     $obj = TeacherNotificationPlan::updateOrCreate([
       'user_id' => $this->user->id,
@@ -282,10 +282,10 @@ class TodoNotificationController extends APIBaseController
   public function destroy(TodoNotificationRequest $request, int $id = null): JsonResponse
   {
     //$this->checkPermission('notify_manage');
-    $notificationType = $request->type;
+    $notificationType = $request->input('type');
 
     if(empty($id)){
-      $ids = $request->ids;
+      $ids = $request->input('ids');
 
       foreach ($ids as  $id) {
         TeacherNotificationPlan::where([
@@ -318,10 +318,10 @@ class TodoNotificationController extends APIBaseController
   {
     //$this->checkPermission('notify_manage');
 
-    $notificationType = $request->type;
-    $plan_date = $request->plan_date;
-    $plan_time = $request->plan_time;
-    $state = $request->state;
+    $notificationType = $request->input('type');
+    $plan_date = $request->input('plan_date');
+    $plan_time = $request->input('plan_time');
+    $state = $request->input('state', 0);
 
     $obj = TeacherNotificationPlan::where([
       ['id', $id],
@@ -346,7 +346,7 @@ class TodoNotificationController extends APIBaseController
   public function show(TodoNotificationRequest $request, int $id): JsonResponse
   {
     //$this->checkPermission('notify_manage');
-    $notificationType = $request->type;
+    $notificationType = $request->input('type');
 
     $obj = TeacherNotificationPlan::where([
       ['id', $id],

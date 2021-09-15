@@ -31,7 +31,7 @@ class TodoNotificationRequest extends FormRequest
       case 'DELETE':
         return [
           'type' => 'required|string',
-          'ids'  => 'required|array',
+          'ids'  => 'array',
         ];
         break;
     }
@@ -59,7 +59,6 @@ class TodoNotificationRequest extends FormRequest
       'state.integer'         => '状态只能是数字',
       'state.min'             => '状态只能是数字0或1',
       'state.max'             => '状态只能是数字0或1',
-      'ids.required'          => '参数ids不能为空',
       'ids.array'             => '参数ids只能是数组格式',
     ];
   }*/
