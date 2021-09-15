@@ -40,7 +40,7 @@ class FileController extends APIBaseController
         "id" => $item->id,
         "bize_type" => $item->bize_type,
         "bize_id" => $item->bize_id,
-        "file_url" => env('APP_URL') . $item->relative_path . $item->file_path . '/' . $item->new_name,
+        "file_url" => config('app.url') . $item->relative_path . $item->file_path . '/' . $item->new_name,
         'created_at' => $item->created_at,
         "original_name" => $item->original_name,
       ];
@@ -71,7 +71,7 @@ class FileController extends APIBaseController
         "id" => $item->id,
         "bize_type" => $item->bize_type,
         "bize_id" => $item->bize_id,
-        "file_url" => env('APP_URL') . $item->relative_path . $item->file_path . '/' . $item->new_name,
+        "file_url" => config('app.url') . $item->relative_path . $item->file_path . '/' . $item->new_name,
         'created_at' => $item->created_at,
         "original_name" => $item->original_name,
       ];

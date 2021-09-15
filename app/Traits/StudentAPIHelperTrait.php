@@ -11,7 +11,7 @@ trait StudentAPIHelperTrait
 
   public function getToken()
   {
-    $token = ThirdPartyToken::where('third_party_name', env('STUDENT_APP_NAME'))
+    $token = ThirdPartyToken::where('third_party_name', config('rmxx.student_app_name'))
       ->where('token_type', 'Bearer')
       ->orderBy('expire_at', 'desc')
       ->limit(1)
@@ -83,7 +83,7 @@ trait StudentAPIHelperTrait
   private function getAndSaveNewToken()
   {
     $client = new Client();
-    $baseUrl = env('STUDENT_TOKEN_URL');
+    $baseUrl = config('rmxx.student_token_url');
 
     $response = $client->request('post', $baseUrl,
       [
@@ -92,10 +92,10 @@ trait StudentAPIHelperTrait
           'Accept' => 'application/json',
         ],//设置请求头为json
         'json' => [
-          'grant_type' => env('STUDENT_GRANT_TYPE'),
-          'client_id' => env('STUDENT_APP_ID'),
-          'client_secret' => env('STUDENT_APP_SECRET'),
-          'scope' => env('STUDENT_APP_SCOPE'),
+          'grant_type' => config('rmxx.student_grant_type'),
+          'client_id' => config('rmxx.student_app_id'),
+          'client_secret' => config('rmxx.student_app_secret'),
+          'scope' => config('rmxx.student_app_scope'),
         ]]);
 
     $statusCode = $response->getStatusCode();
@@ -109,7 +109,7 @@ trait StudentAPIHelperTrait
     $content = json_decode($content, true);
 
     return ThirdPartyToken::create([
-      'third_party_name' => env('STUDENT_APP_NAME'),
+      'third_party_name' => config('rmxx.student_app_name'),
       'token_type' => $content['token_type'],
       'access_token' => $content['access_token'],
       'expire_at' => date('Y-m-d H:i:s', time() + $content['expires_in']),

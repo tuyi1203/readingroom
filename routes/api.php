@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(
   [
     'prefix' => 'v1',
-    'domain' => env('APP_DEV_DOMAIN'),
+    'domain' => config('rmxx.app_dev_domain'),
     'namespace' => 'Backend',
     'middleware' => 'backend',
   ],

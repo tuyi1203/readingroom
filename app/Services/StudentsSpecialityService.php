@@ -34,7 +34,7 @@ class StudentsSpecialityService extends BaseService
   public function getInfos($params)
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/infos',
+      config('rmxx.student_app_url') . '/students/speciality/infos',
       "GET",
       $params
     );
@@ -48,7 +48,7 @@ class StudentsSpecialityService extends BaseService
   public function getAwards($params)
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/awards',
+      config('rmxx.student_app_url') . '/students/speciality/awards',
       "GET",
       $params
     );
@@ -62,7 +62,7 @@ class StudentsSpecialityService extends BaseService
   public function getInfos4Output($params)
   {
     $infoData = $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/infos',
+      config('rmxx.student_app_url') . '/students/speciality/infos',
       "GET",
       $params
     )['data'];
@@ -102,7 +102,7 @@ class StudentsSpecialityService extends BaseService
   public function getAwards4Output($params)
   {
     $awardData = $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/awards',
+      config('rmxx.student_app_url') . '/students/speciality/awards',
       "GET",
       $params
     )['data'];
@@ -142,7 +142,7 @@ class StudentsSpecialityService extends BaseService
   public function getInfoNames($params)
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/get_info_names',
+      config('rmxx.student_app_url') . '/students/speciality/get_info_names',
       "GET",
       $params
     );
@@ -156,7 +156,7 @@ class StudentsSpecialityService extends BaseService
   public function getSpecialityTypes($params)
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/get_speciality_types',
+      config('rmxx.student_app_url') . '/students/speciality/get_speciality_types',
       "GET",
       $params
     );

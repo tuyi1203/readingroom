@@ -14,7 +14,7 @@ trait StudentCommonAPITrait
   public function getCampusClassList()
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/get_campus_classes',
+      config('rmxx.student_app_url') . '/students/speciality/get_campus_classes',
       "GET"
     );
   }
@@ -26,7 +26,7 @@ trait StudentCommonAPITrait
   public function getSpecialityTypeList()
   {
     return $this->sendRequest(
-      env('STUDENT_APP_URL') . '/students/speciality/get_speciality_types',
+      config('rmxx.student_app_url') . '/students/speciality/get_speciality_types',
       "GET"
     );
   }
