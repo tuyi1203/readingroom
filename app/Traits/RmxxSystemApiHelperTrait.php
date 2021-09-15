@@ -12,9 +12,9 @@ trait RmxxSystemApiHelperTrait
   {
     $requestTime = date('Y-m-d H:i:s');
     return [
-      'requestor' => env('RMXX_SYSTEM_API_ID'),
+      'requestor' => config('rmxx.sys_api_id'),
       'requestTime' => $requestTime,
-      'digest' => md5($requestTime . env('RMXX_SYSTEM_API_KEY')),
+      'digest' => md5($requestTime . config('rmxx.sys_api_key')),
     ];
   }
 
@@ -30,7 +30,7 @@ trait RmxxSystemApiHelperTrait
   {
     try {
       $params = is_array($params) ? array_merge($this->getToken(),$params) : $this->getToken();
-      $url = env('RMXX_SYSTEM_API_URL') . $url;
+      $url = config('rmxx.sys_api_url') . $url;
       $client = new Client();
       $response = $client->request($method, $url,
         [

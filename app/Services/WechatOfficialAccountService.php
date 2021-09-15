@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Backend\TeacherNotificationsView;
-use Illuminate\Support\Facades\App;
 
 class WechatOfficialAccountService
 {
@@ -12,7 +11,7 @@ class WechatOfficialAccountService
     $weChatApp = app('wechat.official_account');
     $weChatApp->template_message->send([
       'touser' => 'o2zBzwW1jBrvHzoh9VJA4S7cpbSY',//$notification->open_id,
-      'template_id' => env('TEMPLATE_MESSAGE_ID_'. strtoupper($notification->notification_type)),
+      'template_id' => config('rmxx.tpl_msg_id_'. strtolower($notification->notification_type)),
       //'url' => 'https://easywechat.org',
       /*'miniprogram' => [
         'appid' => 'xxxxxxx',
