@@ -25,8 +25,7 @@ class EnableCrossRequestMiddleware
     ];
 
     $response = $next($request);
-
-    $allow_origin = explode(',', env('ALLOW_ORIGIN'));
+    $allow_origin = explode(',', config('rmxx.allow_origin'));
     if (in_array($origin, $allow_origin)) {
       if ($request->isMethod('OPTIONS')) {
         return response()->json('{"method":"OPTIONS"}', 200, $headers);
