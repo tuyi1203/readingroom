@@ -17,7 +17,7 @@ class TeacherNotificationSeeder extends Seeder
 
     $fileConfig = new FileConf();
     $fileConfig->bize_type = 'teacher/notification/plan';
-    $fileConfig->file_type_limit = '';
+    $fileConfig->file_type_limit = 'application/vnd.ms-excel,application/msexcel,application/x-msexcel,application/x-ms-excel,application/x-excel,application/x-dos_ms_excel,application/x-xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,';
     $fileConfig->file_size_limit = 2048000;
     $fileConfig->path = '/';
     $fileConfig->description = '教师提醒';

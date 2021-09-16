@@ -1,6 +1,7 @@
 <?php
 return [
   'app_dev_domain' => env('APP_DEV_DOMAIN'),
+  'allow_origin' => env('ALLOW_ORIGIN'),
 
    # 人民小学系统
   'sys_api_url' => env('RMXX_SYSTEM_API_URL', 'https://www.cqrm.com'),

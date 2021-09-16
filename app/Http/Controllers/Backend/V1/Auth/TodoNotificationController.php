@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 
 class TodoNotificationController extends APIBaseController
 {
@@ -97,25 +99,27 @@ class TodoNotificationController extends APIBaseController
     if ($validator->fails()) {
       return $this->validateError($validator->errors()->first());
     }
-
     $notificationType = $request->input('type');
-    $file = $request->file('file');
-    $originalName = $file->getClientOriginalName(); // 文件原名
-    $ext = $file->getClientOriginalExtension();     // 扩展名
-    $realPath = $file->getRealPath();               //临时文件的绝对路径
-    $fileSize = $file->getClientSize();
-    $fileMimeType = $file->getClientMimeType();
 
-    if (!in_array($ext, ['xls','xlsx','xlsb','xlsm','xlst'])) {
-      return $this->failed('请上传Excel文件');
-    }
+
 
     if (!$request->hasFile('file')) {
       return $this->failed('请选择上传的文件');
     }
-
+    $file = $request->file('file');
     if (!$file->isValid()) {
       return $this->failed('文件上传失败');
+    }
+
+
+    $originalName = $file->getClientOriginalName(); // 文件原名
+    $ext = $file->getClientOriginalExtension();     // 扩展名
+    $realPath = $file->getRealPath();               //临时文件的绝对路径
+    $fileSize = $file->getSize();
+    $fileMimeType = $file->getClientMimeType();
+
+    if (!in_array($ext, ['xls','xlsx','xlsb','xlsm','xlst'])) {
+      return $this->failed('请上传Excel文件');
     }
 
     $fileConf = FileConf::where('bize_type', $request->input('bize_type'))->where('enabled', 1)->first();
@@ -125,7 +129,7 @@ class TodoNotificationController extends APIBaseController
 
     $newFileName = (string)Str::uuid(32)->getHex() . '.' . $ext; // 文件新名称
     // 使用我们新建的uploads本地存储空间（目录）
-    $newPath = $fileConf->path . date("Y_m_d_H");
+    $newPath = $fileConf->path . date("Y_m_d");
     $bool = Storage::disk('upload')->put($newPath . DIRECTORY_SEPARATOR . $newFileName, file_get_contents($realPath));
     if (!$bool) {
       return $this->failed('文件上传失败');
@@ -160,7 +164,7 @@ class TodoNotificationController extends APIBaseController
           'distribute_food' => '12:00:00',
           'after_class_service' => '16:00:00',
         ];
-        if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $row[0])) {
+        if (preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $row[0])) {
           $data[] = [
             'user_id' => $this->user->id,
             'notification_type' => $notificationType,
@@ -197,7 +201,7 @@ class TodoNotificationController extends APIBaseController
 
   /**
    * Excel模板下载
-   * @return JsonResponse
+   * @return BinaryFileResponse
    */
   public function excelTemplate()
   {
