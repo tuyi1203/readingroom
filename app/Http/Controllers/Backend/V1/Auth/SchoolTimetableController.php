@@ -14,7 +14,8 @@ class SchoolTimetableController extends APIBaseController
    * @param RmxxSystemApiService $service
    * @return JsonResponse
    */
-  public function my(RmxxSystemApiService $service) {
+  public function my(RmxxSystemApiService $service): JsonResponse
+  {
     $mobile = $this->user->userInfo->mobile;
     $result = $service->getSchooTimetableList([
       'tel' => $mobile

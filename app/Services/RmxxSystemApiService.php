@@ -123,7 +123,7 @@ class RmxxSystemApiService
           $case = 'G';
         }
         if (!is_null($index)) {
-          $teachers['rows'][$index]['duser'] = (array)$notificationUser;
+          $teachers['rows'][$index]['dUser'] = (array)$notificationUser;
           $teachers['rows'][$index]['dCase'] = $case;
         }
       }
@@ -166,12 +166,12 @@ class RmxxSystemApiService
           $case = 'f';
         }
 
-        if (is_null($index) || empty($teachers['rows'][$index]['duser'])) {
-          //continue;
+        if (is_null($index) || empty($teachers['rows'][$index]['dUser'])) {
+          continue;
         }
-        $dUser = $teachers['rows'][$index]['duser']??[];
+        $dUser = $teachers['rows'][$index]['dUser']??[];
         $tUser = $teachers['rows'][$index]??[];
-        unset($tUser['duser']);
+        unset($tUser['dUser']);
         $data[$dayOfWeek][$orderOfDay][] = array_merge($item, [
           'dUser' => $dUser,
           'tUser' => $tUser,

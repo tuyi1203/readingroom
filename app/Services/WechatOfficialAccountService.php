@@ -10,8 +10,10 @@ class WechatOfficialAccountService
   public static function sendNotification(TeacherNotificationsView $notification) {
     echo 'in'."\n";
     $weChatApp = app('wechat.official_account');
+
+    // TODO csk83 正式使用需要根据服务号来通知
     $weChatApp->template_message->send([
-      'touser' => 'o2zBzwW1jBrvHzoh9VJA4S7cpbSY',//$notification->open_id,
+      'touser' => $notification->open_id,
       'template_id' => config('rmxx.tpl_msg_id_'. strtolower($notification->notification_type)),
       //'url' => 'https://easywechat.org',
       /*'miniprogram' => [

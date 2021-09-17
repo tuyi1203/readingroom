@@ -14,7 +14,7 @@ class CheckNotification extends Command
      *
      * @var string
      */
-    protected $signature = 'notification:check';
+    protected $signature = 'check:notification';
 
     /**
      * The console command description.
@@ -40,13 +40,13 @@ class CheckNotification extends Command
      */
     public function handle()
     {
-      $this->info("Check Notification \n".date('Y-m-d H:i:s'));
+      //$this->info("Check Notification \n".date('Y-m-d H:i:s'));
       $cursor = TeacherNotificationsView::where([
         ['plan_datetime', '<=', date('Y-m-d H:i:s', strtotime('+10 minutes'))],
         ['state', '=', 1],
       ])->orderBy('plan_datetime', 'ASC')->cursor();
       foreach ($cursor as $notification) {
-        $this->info($notification);
+        //$this->info($notification);
         // 标记进入队列
         DB::table('teacher_notification_plans')->where('id', $notification->id)->update(['state' => 2]);
         SendNotification::dispatch($notification);
