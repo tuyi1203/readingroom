@@ -4,6 +4,7 @@ namespace App\Models\Backend;
 
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TeacherNotificationPlan extends Model
 {
@@ -19,4 +20,9 @@ class TeacherNotificationPlan extends Model
     'plan_datetime',
     'state',
   ];
+
+  public function content(): HasOne
+  {
+    return $this->hasOne('App\Models\Backend\TeacherNotificationContent', 'plan_id');
+  }
 }

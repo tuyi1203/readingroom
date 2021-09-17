@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\SendNotification;
 use App\Models\Backend\TeacherNotificationsView;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CheckNotification extends Command
 {
@@ -41,12 +42,13 @@ class CheckNotification extends Command
     {
       $this->info("Check Notification \n".date('Y-m-d H:i:s'));
       $cursor = TeacherNotificationsView::where([
+        ['plan_datetime', '<=', date('Y-m-d H:i:s', strtotime('+10 minutes'))],
         ['state', '=', 1],
-        ['plan_date', '=', date('Y-m-d')],
-        ['plan_datetime', '>=', date('Y-m-d H:i:s')]
       ])->orderBy('plan_datetime', 'ASC')->cursor();
       foreach ($cursor as $notification) {
         $this->info($notification);
+        // 标记进入队列
+        DB::table('teacher_notification_plans')->where('id', $notification->id)->update(['state' => 2]);
         SendNotification::dispatch($notification);
       }
     }

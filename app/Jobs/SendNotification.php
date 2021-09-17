@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class SendNotification implements ShouldQueue
 {
@@ -35,6 +36,8 @@ class SendNotification implements ShouldQueue
     public function handle(WechatOfficialAccountService $wechatProcess)
     {
       echo 'test'."\n";
+      // 标记开始处理
+      DB::table('teacher_notification_plans')->where('id', $this->notification->id)->update(['state' => 3]);
       $wechatProcess::sendNotification($this->notification);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Backend\TeacherNotificationsView;
+use Illuminate\Support\Facades\DB;
 
 class WechatOfficialAccountService
 {
@@ -25,6 +26,7 @@ class WechatOfficialAccountService
         'remark' => '测试'.date('Y-m-d H:i:s'),
       ],
     ]);
+    DB::table('teacher_notification_plans')->where('id', $notification->id)->update(['state' => 4]);
     echo 'out'."\n";
   }
 }

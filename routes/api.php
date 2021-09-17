@@ -262,7 +262,9 @@ Route::group(
         Route::group(['prefix' => 'school_timetable'], function(){ // 课表管理
           Route::get('/class/{class_code}', 'SchoolTimetableController@getByClass')->where('class_code', '[0-9]{4}\-[1-9][0-9]{0,2}'); // 班级课表
           Route::get('/my', 'SchoolTimetableController@my'); // 个人课表
-          Route::get('/', 'SchoolTimetableController@getAll'); // 所有课表
+          Route::get('/tree', 'SchoolTimetableController@getAllTree'); // 所有课表树形结构
+          Route::get('/test', 'SchoolTimetableController@tests'); // test
+          Route::get('/', 'SchoolTimetableController@getAllList'); // 所有课表
         });
 
 

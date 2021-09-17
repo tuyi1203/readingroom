@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType as ExcelDataType;
+use PhpOffice\PhpSpreadsheet\IOFactory as ExcelIOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
@@ -149,33 +152,52 @@ class TodoNotificationController extends APIBaseController
       'del_flg' => 0,
     ]);
 
-
     /**---数据导入-----------------------------------------------------------------------------------------------*/
-    $tmpExcel = Excel::toArray(new TeacherNotificationPlanImport, $newPath . DIRECTORY_SEPARATOR . $newFileName);
+    $tmpExcel = [];
+    $spreadSheet = ExcelIOFactory::load(storage_path('app/secure_upload'.$newPath . DIRECTORY_SEPARATOR . $newFileName));
+    $workSheet = $spreadSheet->getActiveSheet();
+    $highestRow = $workSheet->getHighestRow(); // e.g. 10
+    $highestColumn = $workSheet->getHighestColumn(); // e.g 'F'
+    $highestColumn++;
+    for ($row = 2; $row <= $highestRow; ++$row) {
+      $aCell = $workSheet->getCell('A' . $row);
+      if ($aCell->getDataType() == ExcelDataType::TYPE_NUMERIC) {
+        $aValue = ExcelDate::excelToDateTimeObject($aCell->getValue());
+      } else if($aCell->getDataType() == ExcelDataType::TYPE_STRING && Trim($aCell->getValue())!=''){
+        $aValue = new \DateTime(date('Y-m-d H:i:s',strtotime($aCell->getValue())));
+      } else {
+        continue;
+      }
+      $tmpExcel[$row]['A'] =$aValue->format('Y-m-d');
+      for ($col = 'B'; $col != $highestColumn; ++$col) {
+        $cell = $workSheet->getCell($col . $row);
+        $tmpExcel[$row][$col] = $cell->getValue();;
+      }
+    }
+    //return $this->success($tmpExcel);
+
+
+    $tmpTimeArr = [
+      'distribute_food' => '12:00:00',
+      'after_class_service' => '16:00:00',
+    ];
+
     $error = [];//导入记录与错误提示信息
     $data = [];//有效数据
-    if ($tmpExcel[0]) {
-      foreach ($tmpExcel[0] as $lineNum => $row) {
-        if ($lineNum == 0) {
-          continue;
-        }
-
-        $tmpTimeArr = [
-          'distribute_food' => '12:00:00',
-          'after_class_service' => '16:00:00',
-        ];
-        if (preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", $row[0])) {
+    if (!empty($tmpExcel)) {
+      foreach ($tmpExcel as $lineNum => $row) {
+        if ('1970-01-01' != $row['A']) {
           $data[] = [
             'user_id' => $this->user->id,
             'notification_type' => $notificationType,
-            'plan_date' => $row[0],
+            'plan_date' => $row['A'],
             'plan_time' => $tmpTimeArr[$notificationType],
-            'plan_datetime' => $row[0].' '.$tmpTimeArr[$notificationType],
+            'plan_datetime' => $row['A'].' '.$tmpTimeArr[$notificationType],
           ];
         } else {
           $error[$lineNum] = [
-            $row[0],
-            '日期格式错误（' . $row[0] . '）',
+            $row['A'],
+            '日期格式错误（A'.$lineNum.'）',
           ];
         }
       }
@@ -236,8 +258,8 @@ class TodoNotificationController extends APIBaseController
     }
 
     $fields = explode(',', $request->input('fields', '*'));
-    $users = TeacherNotificationPlan::filter($this->getParams($request, $_where), TeacherNotificationPlanFilter::class)
-      ->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
+    $users = TeacherNotificationPlan::filter($this->getParams($request, $_where), TeacherNotificationPlanFilter::class)->orderBy('plan_datetime')->get();
+      ///->paginate($this->getPageSize($request), $fields, 'page', $this->getCurrentPage($request));
 
     return $this->success($users->toArray());
   }
