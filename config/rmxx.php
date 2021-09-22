@@ -24,7 +24,7 @@ return [
   'tpl_msg_id_distribute_food'     => env('TEMPLATE_MESSAGE_ID_DISTRIBUTE_FOOD'),
 
   # 消息提前发送
-  'notification_time' => '+10 minutes',
+  'notification_time' => '+6 minutes',
 
   # 课堂时间对照表
   'class_time_map' => [

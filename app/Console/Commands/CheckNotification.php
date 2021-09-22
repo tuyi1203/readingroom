@@ -42,7 +42,8 @@ class CheckNotification extends Command
     {
       //$this->info("Check Notification \n".date('Y-m-d H:i:s'));
       $cursor = TeacherNotificationsView::where([
-        ['plan_datetime', '<=', date('Y-m-d H:i:s', strtotime('+10 minutes'))],
+        ['plan_datetime', '<=', date('Y-m-d H:i:s', strtotime(config('rmxx.notification_time')))],
+        ['plan_state', '=', 1],
         ['state', '=', 1],
       ])->orderBy('plan_datetime', 'ASC')->cursor();
       foreach ($cursor as $notification) {

@@ -20,6 +20,7 @@ class RmxxSystemApiService
           if (preg_match('/^([1-9][0-9]{3})级([1-9][0-9]*)班$/', trim($item['classNo']), $matches)) {
             list($gradeClass, $stuGrade, $stuClass) = $matches;
             //$data[$stuGrade][$stuClass][$item['dayOfWeek']][$item['orderOfDay']] = $item;
+            unset($item['userName']);
             $data[$stuGrade.'级'][$stuClass.'班'][] = $item;
           }
         }
@@ -144,7 +145,7 @@ class RmxxSystemApiService
 
         $teacher = empty($item['teacher']) ? '_' : trim($item['teacher']);
         $subject = empty($item['subject']) ? '_' : trim($item['subject']);
-        $mobile = empty($item['tel']) ? '_' : trim($item['tel']);
+        $mobile = empty($item['userName']) ? '_' : trim($item['userName']);
 
         if (($teacher!='_') && isset($nameMobileSubjectList[$teacher][$mobile][$subject]) && count($nameMobileSubjectList[$teacher][$mobile][$subject])===1) {
           $index = $nameMobileSubjectList[$teacher][$mobile][$subject][0];
