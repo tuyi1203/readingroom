@@ -43,7 +43,7 @@ class WechatOfficialAccountService
           ],
         ]);
       }
-    } else if ($notification->notification_type == 'after_class_serivce') {
+    } else if ($notification->notification_type == 'after_class_service') {
       $msg = array_merge($msg, [
         'data' => [
           'first' =>  '课后延时即将开始',

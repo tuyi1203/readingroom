@@ -10,7 +10,7 @@ class RmxxSystemApiService
 {
   use RmxxSystemCommonApiTrait;
 
-  public function getSchoolTimetableTree(): array
+  public function getSchoolTimetableTree(string $mobile): array
   {
     $data = [];
     $schoolTimetables = $this->getSchooTimetableList([]);
@@ -20,6 +20,7 @@ class RmxxSystemApiService
           if (preg_match('/^([1-9][0-9]{3})级([1-9][0-9]*)班$/', trim($item['classNo']), $matches)) {
             list($gradeClass, $stuGrade, $stuClass) = $matches;
             //$data[$stuGrade][$stuClass][$item['dayOfWeek']][$item['orderOfDay']] = $item;
+            $item['isMine'] = ($item['userName'] == $mobile) ? 1 : 0;
             unset($item['userName']);
             $data[$stuGrade.'级'][$stuClass.'班'][] = $item;
           }

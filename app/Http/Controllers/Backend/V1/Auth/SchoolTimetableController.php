@@ -64,7 +64,8 @@ class SchoolTimetableController extends APIBaseController
    */
   public function getAllTree(RmxxSystemApiService $service): JsonResponse
   {
-    $result = $service->getSchoolTimetableTree();
+    $mobile = $this->user->userInfo->mobile;
+    $result = $service->getSchoolTimetableTree($mobile);
     return $this->success($result);
   }
 
