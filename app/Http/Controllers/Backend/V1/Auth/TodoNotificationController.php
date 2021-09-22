@@ -193,6 +193,7 @@ class TodoNotificationController extends APIBaseController
             'plan_date' => $row['A'],
             'plan_time' => $tmpTimeArr[$notificationType],
             'plan_datetime' => $row['A'].' '.$tmpTimeArr[$notificationType],
+            'state' => 1,
           ];
         } else {
           $error[$lineNum] = [
