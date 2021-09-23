@@ -20,7 +20,7 @@ class CreateTeacherNotificationPlansTable extends Migration
       $table->date('plan_date')->comment('通知日期');
       $table->time('plan_time')->comment('通知时间');
       $table->dateTime('plan_datetime')->comment('日期时间');
-      $table->boolean('state')->default(0)->comment('状态 0未发送 1已发送');
+      $table->boolean('state')->default(0)->comment('状态 1未发送 2进入队列 3处理队列 4完成发送');
       $table->timestamps();
     });
   }
